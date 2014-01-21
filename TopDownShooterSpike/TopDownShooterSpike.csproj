@@ -38,9 +38,11 @@
     <StartupObject>TopDownShooterSpike.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Effects\FadeEffect.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="Image.cs" />
+    <Compile Include="ImageEffect.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenManager.cs" />

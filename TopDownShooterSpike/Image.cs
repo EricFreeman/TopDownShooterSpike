@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TopDownShooterSpike.Effects;
 
 namespace TopDownShooterSpike
 {
@@ -19,14 +21,53 @@ namespace TopDownShooterSpike
         private ContentManager _manager;
         private RenderTarget2D _renderTarget;
 
+        private Dictionary<string, ImageEffect> _effectList;
+        public string Effects;
+        public bool IsActive;
+
+        public FadeEffect FadeEffect;
+
+        void SetEffect<T>(ref T effect)
+        {
+            if (effect == null)
+                effect = (T) Activator.CreateInstance(typeof (T));
+            else
+            {
+                (effect as ImageEffect).IsActive = true;
+                var obj = this;
+                (effect as ImageEffect).LoadContent(ref obj);
+            }
+            _effectList.Add(effect.GetType().Name, (effect as ImageEffect));
+        }
+
+        public void ActivateEffect(string effect)
+        {
+            if (_effectList.ContainsKey(effect))
+            {
+                _effectList[effect].IsActive = true;
+                var obj = this;
+                _effectList[effect].LoadContent(ref obj);
+            }
+        }
+
+        public void DeactivateEffect(string effect)
+        {
+            if (_effectList.ContainsKey(effect))
+            {
+                _effectList[effect].IsActive = false;
+                _effectList[effect].UnloadContent();
+            }
+        }
+
         public Image()
         {
-            Text = Path = String.Empty;
+            Text = Path = Effects = String.Empty;
             FontName = "Fonts/SampleFont";
             Position = Vector2.Zero;
             Scale = Vector2.One;
             Alpha = 1.0f;
             SourceRect = Rectangle.Empty;
+            _effectList = new Dictionary<string, ImageEffect>();
         }
 
         public void LoadContent()
@@ -59,16 +100,35 @@ namespace TopDownShooterSpike
 
             Texture = _renderTarget;
             ScreenManager.Instance.GraphicsDevice.SetRenderTarget(null);
+
+            SetEffect<FadeEffect>(ref FadeEffect);
+
+            if (Effects != string.Empty)
+            {
+                string[] split = Effects.Split(':');
+                foreach (var item in split)
+                {
+                    ActivateEffect(item);
+                }
+            }
         }
 
         public void UnloadContent()
         {
-           _manager.Unload();
+            _manager.Unload();
+            foreach (var imageEffect in _effectList)
+            {
+                DeactivateEffect(imageEffect.Key);
+            }
         }
 
         public void Update(GameTime gameTime)
         {
-            
+            foreach (var imageEffect in _effectList)
+            {
+                if(imageEffect.Value.IsActive)
+                    imageEffect.Value.Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

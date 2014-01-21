@@ -2,6 +2,8 @@
 <SplashScreen>
   <Image>
     <Path>gfx/logo</Path>
+    <Effects>FadeEffect</Effects>
+    <IsActive>true</IsActive>
     <Position>
       <X>0</X>
       <Y>0</Y>
