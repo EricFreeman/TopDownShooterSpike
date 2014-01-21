@@ -12,7 +12,10 @@ namespace TopDownShooterSpike
         public Vector2 Dimensions { get; private set; }
         public ContentManager Content { get; private set; }
         public GameScreen CurrentScreen;
-        public XmlManager<GameScreen> XmlGameScreenManager; 
+        public XmlManager<GameScreen> XmlGameScreenManager;
+
+        public GraphicsDevice GraphicsDevice;
+        public SpriteBatch SpriteBatch;
 
         public static ScreenManager Instance
         {

@@ -37,6 +37,8 @@ namespace TopDownShooterSpike
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            ScreenManager.Instance.GraphicsDevice = GraphicsDevice;
+            ScreenManager.Instance.SpriteBatch = _spriteBatch;
             ScreenManager.Instance.LoadContent(Content);
         }
 
