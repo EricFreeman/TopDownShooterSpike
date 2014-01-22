@@ -9,6 +9,12 @@ namespace TopDownShooterSpike
     public class GameScreen
     {
         protected ContentManager Content;
+        public string XmlPath;
+
+        public GameScreen()
+        {
+            XmlPath = "Content/Screens/" + GetType().Name + ".xml";
+        }
 
         public virtual void LoadContent()
         {

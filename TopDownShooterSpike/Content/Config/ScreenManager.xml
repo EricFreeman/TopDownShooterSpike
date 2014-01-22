@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ScreenManager>
+  <Image>
+    <Path>gfx/FadeImage</Path>
+    <Effects>FadeEffect</Effects>
+    <Scale>
+      <X>640</X>
+      <Y>480</Y>
+    </Scale>
+    <Position>
+      <X>320</X>
+      <Y>240</Y>
+    </Position>
+  </Image>
+  <Dimensions>
+    <X>640</X>
+    <Y>480</Y>
+  </Dimensions>
+</ScreenManager>
