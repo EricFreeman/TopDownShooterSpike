@@ -81,7 +81,11 @@ namespace TopDownShooterSpike
             var font = _manager.Load<SpriteFont>(FontName);
 
             dimensions.X += Texture != null ? Texture.Width : 0;
-            dimensions.Y += Texture != null ? Texture.Height : 0;
+            dimensions.X += font.MeasureString(Text).X;
+            if (Texture != null)
+                dimensions.Y += Math.Max(Texture.Height, font.MeasureString(Text).Y);
+            else
+                dimensions.Y = font.MeasureString(Text).Y;
 
             if(SourceRect == Rectangle.Empty)
                 SourceRect = new Rectangle(0, 0, (int)dimensions.X, (int)dimensions.Y);
@@ -101,7 +105,7 @@ namespace TopDownShooterSpike
             Texture = _renderTarget;
             ScreenManager.Instance.GraphicsDevice.SetRenderTarget(null);
 
-            SetEffect<FadeEffect>(ref FadeEffect);
+            SetEffect(ref FadeEffect);
 
             if (Effects != string.Empty)
             {
