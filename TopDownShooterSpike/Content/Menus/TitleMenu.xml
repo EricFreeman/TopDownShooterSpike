@@ -3,6 +3,8 @@
   <Axis>Y</Axis>
   <Effects>FadeEffect</Effects>
   <Item>
+    <LinkType>Menu</LinkType>
+    <LinkId>Content/Menus/NewGameMenu.xml</LinkId>
     <Image>
       <Text>New Game</Text>
     </Image>

@@ -31,6 +31,21 @@ namespace TopDownShooterSpike.Menus
             }
         }
 
+        public int ItemNumber
+        {
+            get { return _itemNumber; }
+        }
+
+        public void Transition(float alpha)
+        {
+            foreach (var item in Items)
+            {
+                item.Image.IsActive = true;
+                item.Image.Alpha = alpha;
+                item.Image.FadeEffect.Increase = alpha == 0f;
+            }
+        }
+
         private void AlignMenuItems()
         {
             Vector2 dimensions = Items.Aggregate(Vector2.Zero, (current, item) => current + new Vector2(item.Image.SourceRect.Width, item.Image.SourceRect.Height));

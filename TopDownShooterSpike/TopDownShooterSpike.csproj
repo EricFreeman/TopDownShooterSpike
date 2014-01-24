@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenManager.cs" />
     <Compile Include="Screens\SplashScreen.cs" />
+    <Compile Include="Screens\TempGame.cs" />
     <Compile Include="Screens\TitleScreen.cs" />
     <Compile Include="XmlManager.cs" />
   </ItemGroup>
@@ -87,12 +88,17 @@
     <Content Include="Content\gfx\Player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Menus\NewGameMenu.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Menus\TitleMenu.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Screens\TempGame.xml" />
     <Content Include="Icon.ico" />
     <Content Include="Content\Screens\SplashScreen.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup />

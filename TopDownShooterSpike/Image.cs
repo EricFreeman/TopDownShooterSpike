@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -57,6 +58,29 @@ namespace TopDownShooterSpike
                 _effectList[effect].IsActive = false;
                 _effectList[effect].UnloadContent();
             }
+        }
+
+        public void StoreEffects()
+        {
+            Effects = string.Empty;
+            foreach (var effect in _effectList)
+            {
+                if (effect.Value.IsActive)
+                    Effects += effect.Key + ":";
+            }
+
+            if(Effects != string.Empty)
+                Effects.Remove(Effects.Length - 1);
+        }
+
+        public void RestoreEffects()
+        {
+            foreach (var effect in _effectList)
+                DeactivateEffect(effect.Key);
+
+            string[] split = Effects.Split(':');
+            foreach (var e in split)
+                ActivateEffect(e);
         }
 
         public Image()

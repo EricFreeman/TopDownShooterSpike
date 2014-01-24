@@ -40,15 +40,6 @@ namespace TopDownShooterSpike
             s.XmlGameScreenManager.Type = typeof (SplashScreen);
             s.CurrentScreen = s.XmlGameScreenManager.Load("Content/Screens/SplashScreen.xml");
             return s;
-//            var s = new ScreenManager()
-//            {
-//                Dimensions = new Vector2(640, 480),
-//                XmlGameScreenManager = new XmlManager<GameScreen>()
-//            };
-//            s.XmlGameScreenManager.Type = typeof(SplashScreen);
-//            s.CurrentScreen = s.XmlGameScreenManager.Load("Content/screens/SplashScreen.xml");
-//
-//            return s;
         }
 
         public void ChangeScreens(string screenName)
