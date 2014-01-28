@@ -8,8 +8,8 @@ namespace XNAContentCompiler
 {
     static class Program
     {
-        private const string OutputDirectory = "./content";
-        private const string InputDirectory = "./source";
+        static string OutputDirectory = "./content";
+        static string InputDirectory = "./source";
 
         private static readonly string[] HelpOptions = {"help", "h"};
 
@@ -21,6 +21,8 @@ namespace XNAContentCompiler
         {
             bool fileWatch = "watch".Equals(args.FirstOrDefault());
             bool displayHelp = args.Any(HelpOptions.Contains);
+
+            bool fileListDefined = args.Length > 2 && !fileWatch;
 
             if (displayHelp)
             {
@@ -36,8 +38,10 @@ namespace XNAContentCompiler
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Form1());
             }
-            else 
+            else if(args.Length >= 2)
             {
+                OutputDirectory = args[0];
+                InputDirectory = args[1];
 
                 if (displayHelp)
                 {
@@ -85,7 +89,8 @@ namespace XNAContentCompiler
                 }
                 else if (DirectoryExists(InputDirectory))
                 {
-                    CompileFiles(args);
+                    var files = fileListDefined ? args.Skip(2) : Directory.GetFiles(InputDirectory);
+                    CompileFiles(files.ToArray());
                 }
                 else
                 {

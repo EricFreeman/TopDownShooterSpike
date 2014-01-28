@@ -1,0 +1,26 @@
+require 'rake/clean'
+
+CLOBBER.include('**/*.xnb', '**/bin/*')
+
+desc 'builds the solution and compiles content'
+task :default => ['compile:solution', 'compile:content']
+
+desc 'Watches for content file changes'
+task :watch => ['compile:watch']
+
+desc 'builds the solution'
+task :build => ['compile:solution']
+
+namespace :compile do
+
+  task :content do
+    sh 'start "./lib/Content Compiler/bin/XNAContentCompiler.exe source content"'
+  end
+
+  task :watch do
+  end
+
+  task :solution do
+  end
+
+end
