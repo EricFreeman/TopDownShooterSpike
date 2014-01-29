@@ -1,17 +1,141 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
+using XNAContentCompiler.Console;
 
 namespace XNAContentCompiler
 {
-    static class Program
+    public class Program
     {
-        static string OutputDirectory = "./content";
-        static string InputDirectory = "./source";
+        const string OutputDirectory = "./content";
+        const string InputDirectory = "./source";
 
         private static readonly string[] HelpOptions = {"help", "h"};
+
+        private readonly ConsoleExecutor _conExec;
+        private readonly ILogger _logger;
+
+        public Program()
+        {
+            _logger = new ConsoleLogger();
+            _conExec = new ConsoleExecutor(_logger);
+
+
+            _conExec.AddCommand("watch", InitFileWatch, strings => strings.Count() != 2,
+                                "Watches the input directory for file changes.");
+
+            _conExec.AddCommand("build", ExecAssetsBuild, strings => strings.Count() >= 2,
+                                "Builds the assets in the input directory and copies the artifacts to the output directory.");
+
+            _conExec.AddCommand("build-file", ExecAssetBuild, strings => strings.Count() >= 2,
+                                "Builds the assets in the input directory and copies the artifacts to the output directory.");
+
+            new[] {"h", "help"}.ToList()
+                               .ForEach(commandString => _conExec.AddCommand(commandString, 
+                                        (logger, args) => logger.Message(_conExec.CommandDescriptions.Aggregate((acc, item) => acc + string.Format("{0}\n", item)))));
+        }
+
+        public void Execute(string[] args)
+        {
+            var inputModel = new CommandInputModel(args);
+            var completedSuccessfully = _conExec.Execute(inputModel); 
+
+            _logger.Message("\n");
+
+            if(completedSuccessfully)
+                _logger.Success("Build Finished Successfully.") ;
+            else
+                _logger.Error("Build Failed.");
+        }
+
+        private void ExecAssetsBuild(ILogger logger, string[] arg)
+        {
+            var inputDirectory = Path.GetFullPath(arg[0]);
+            var outputDirectory = Path.GetFullPath(arg[1]);
+
+            var files = Directory.GetFiles(inputDirectory, "*", SearchOption.AllDirectories).Select(Path.GetFullPath);
+
+            BuildFiles(files, outputDirectory);
+        }
+
+        private void ExecAssetBuild(ILogger logger, string[] arg)
+        {
+            var outputDirectory = Path.GetFullPath(arg[0]);
+            var files = arg.Skip(1).Select(Path.GetFullPath);
+
+             BuildFiles(files, outputDirectory);
+        }
+
+        private void InitFileWatch(ILogger logger, string[] arg)
+        {
+            var inputDirectory = Path.GetFullPath(arg[0]);
+            var outputDirectory = Path.GetFullPath(arg[1]);
+
+            FileWatch(inputDirectory, outputDirectory);
+
+            _logger.Message(String.Format("Watching {0}...", inputDirectory));
+        }
+
+        public void BuildFiles(IEnumerable<string> files, string outputDirectory)
+        {
+            if (!files.Any())
+                throw new ArgumentNullException("files");
+
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                throw new ArgumentNullException("outputDirectory");
+
+
+            _logger.Success("Building {0}....", Path.GetDirectoryName(files.First()));
+            var contentBuilder = new MSBuildContentBuilder(outputDirectory);
+
+            files.ToList().ForEach(filePath =>
+            {
+                var name = Path.GetFileName(filePath);
+                _logger.Message("Queueing {0}....", filePath);
+                contentBuilder.Add(filePath, name);
+            });
+
+            contentBuilder.Build();
+
+            var buildDirectory = contentBuilder.OutputDirectory;
+            
+            _logger.Success("\nCopying files into {0}....\n", outputDirectory);
+            // copy files from build directory into output
+            CopyFiles(buildDirectory, outputDirectory);
+
+            _logger.Success("\nDeleting build artifacts...\n");
+            // delete build directory
+            DeleteDirectory(buildDirectory);
+        }
+
+        public void FileWatch(string inputDirectory, string outputDirectory)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CopyFiles(string source, string outputDir)
+        {
+            var fullPath = Path.GetFullPath(source);
+            var fullOutputDir = Path.GetFullPath(outputDir);
+
+            var files = Directory.GetFiles(fullPath, "*.xnb", SearchOption.AllDirectories);
+
+            files.ToList().ForEach(filePath =>
+            {
+                var fileName = Path.GetFileName(filePath);
+                var finalPath = Path.Combine(fullOutputDir, fileName);
+                _logger.Message("\t{0}....", finalPath);
+                File.Copy(filePath, finalPath);
+            });
+        }
+
+        private void DeleteDirectory(string directory)
+        {
+            if(Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
 
         /// <summary>
         /// The main entry point for the application.
@@ -19,136 +143,17 @@ namespace XNAContentCompiler
         [STAThread]
         static void Main(string[] args)
         {
-            bool fileWatch = "watch".Equals(args.FirstOrDefault());
-            bool displayHelp = args.Any(HelpOptions.Contains);
-
-            bool fileListDefined = args.Length > 2 && !fileWatch;
-
-            if (displayHelp)
+            if (args.Any())
             {
-                Console.WriteLine(@"first argument: input directory");
-                Console.WriteLine(@"second argument: output directory");
-                Console.WriteLine(@"Third argument is optionally...");
-                Console.WriteLine(@"	 watch: watches the input directory for file changes.");
-                Console.WriteLine(@"      A space separated list of relative files located in the input directory");
+                var p = new Program();
+                p.Execute(args);
             }
-            if (args.Length <= 0)
+            else
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Form1());
             }
-            else if(args.Length >= 2)
-            {
-                OutputDirectory = args[0];
-                InputDirectory = args[1];
-
-                if (displayHelp)
-                {
-                    Console.WriteLine("");
-                    Console.ReadLine();
-                }
-                else if (fileWatch)
-                {
-                    bool running = true;
-
-                    var thread = new Thread(() =>
-                    {
-                        Console.WriteLine(@"Watching {0}....", InputDirectory);
-
-                        var watcher = new FileSystemWatcher(InputDirectory);
-                        watcher.BeginInit();
-                        watcher.Changed += (sender, eventArgs) =>
-                        {
-                            if (eventArgs.ChangeType == WatcherChangeTypes.Changed)
-                            {
-                                Console.Write(@"{0} changed...", eventArgs.Name);
-                                CompileFiles(eventArgs.FullPath);
-                            }
-                        };
-                        watcher.Filter = "*.*";
-                        watcher.EndInit();
-
-                        while (running)
-                        {
-                            Thread.Sleep(1000);
-
-                            if (Console.KeyAvailable && Console.ReadKey().KeyChar == 'q')
-                                running = false;
-                        }
-                    })
-                    {
-                        IsBackground = false
-                    };
-
-                    thread.Start();
-
-
-                    Thread.CurrentThread.Join();
-                    Console.WriteLine(@"Thread watching terminated..");
-                }
-                else if (DirectoryExists(InputDirectory))
-                {
-                    var files = fileListDefined ? args.Skip(2) : Directory.GetFiles(InputDirectory);
-                    CompileFiles(files.ToArray());
-                }
-                else
-                {
-                    Console.WriteLine(@"Put source files into a {0} folder along side this tool.", InputDirectory);
-                }
-            }
-        }
-
-        private static void CompileFiles(params string[] files)
-        {
-            // create output directory
-            if (!DirectoryExists(OutputDirectory))
-                Directory.CreateDirectory(OutputDirectory);
-
-            using (var contentBuilder = new ContentBuilder())
-            {
-                var fileArguments = files.Where(IsValidFile).ToList();
-
-                if (fileArguments.Any())
-                    fileArguments.ForEach(file => contentBuilder.Add(file, Path.GetFileName(file)));
-
-                contentBuilder.Build();
-
-                var tempDir = contentBuilder.OutputDirectory;
-
-                CopyOutputFilesToContentDirectory(tempDir, OutputDirectory);
-            }
-        }
-
-        private static void CopyOutputFilesToContentDirectory(string source, string destination)
-        {
-            var filesToCopy = Directory.GetFiles(source, "*.xnb").ToList();
-
-            Console.ForegroundColor = ConsoleColor.Green;
-                filesToCopy.ForEach(file =>
-                {
-                    var fileName = Path.GetFileName(file);
-                    var filePath = Path.Combine(destination, fileName);
-
-                    Console.Write(@"   {0}...", fileName);
-                    File.Copy(file, filePath, true);
-                    Console.WriteLine(@"....Copied");
-                });
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Directory.Delete(source);
-
-        }
-
-        public static bool DirectoryExists(string path)
-        {
-            return Directory.Exists(path);
-        }
-
-        public static bool IsValidFile(string file)
-        {
-            var invalidCharacters = Path.GetInvalidPathChars().Concat(Path.GetInvalidFileNameChars());
-            return file.ToCharArray().Any(item => invalidCharacters.Any(innerItem => item == innerItem));
         }
     }
 }

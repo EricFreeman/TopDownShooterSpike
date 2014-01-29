@@ -1,6 +1,11 @@
 require 'rake/clean'
 
-CLOBBER.include('**/*.xnb', '**/bin/*')
+CONTENT_ASSETS = 'TopDownShooterSpike\Content'
+CONTENT_BIN = 'TopDownShooterSpike\bin\WindowsGL\Debug\Content'
+CONTENT_COMPILER_EXE = '"./lib/Content Compiler/bin/XNAContentCompiler.exe"'
+
+CLOBBER.include('**/bin/*')
+CLEAN.include("#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
 task :default => ['compile:solution', 'compile:content']
@@ -14,7 +19,7 @@ task :build => ['compile:solution']
 namespace :compile do
 
   task :content do
-    sh 'start "./lib/Content Compiler/bin/XNAContentCompiler.exe source content"'
+    sh %{#{CONTENT_COMPILER_EXE} #{CONTENT_ASSETS} #{CONTENT_BIN}}
   end
 
   task :watch do
