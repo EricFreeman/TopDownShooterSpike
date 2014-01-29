@@ -9,6 +9,8 @@ namespace XNAContentCompiler
         /// </summary>
         string OutputDirectory { get; }
 
+        string BuildArtifactsDirectory { get; }
+
         /// <summary>
         /// Builds all the content files which have been added to the project,
         /// dynamically creating .xnb files in the OutputDirectory.

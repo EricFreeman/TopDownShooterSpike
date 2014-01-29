@@ -18,11 +18,13 @@ task :build => ['compile:solution']
 
 namespace :compile do
 
-  task :content do
-    sh %{#{CONTENT_COMPILER_EXE} #{CONTENT_ASSETS} #{CONTENT_BIN}}
+  desc 'compiles content assets'
+  task :content => ['clean'] do
+    sh %{#{CONTENT_COMPILER_EXE} build #{CONTENT_ASSETS} #{CONTENT_BIN}}
   end
 
   task :watch do
+    sh %{#{CONTENT_COMPILER_EXE} watch #{CONTENT_ASSETS} #{CONTENT_BIN}}
   end
 
   task :solution do

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.AccessControl;
 using System.Windows.Forms;
 using XNAContentCompiler.Console;
 
@@ -9,11 +11,6 @@ namespace XNAContentCompiler
 {
     public class Program
     {
-        const string OutputDirectory = "./content";
-        const string InputDirectory = "./source";
-
-        private static readonly string[] HelpOptions = {"help", "h"};
-
         private readonly ConsoleExecutor _conExec;
         private readonly ILogger _logger;
 
@@ -34,7 +31,7 @@ namespace XNAContentCompiler
 
             new[] {"h", "help"}.ToList()
                                .ForEach(commandString => _conExec.AddCommand(commandString, 
-                                        (logger, args) => logger.Message(_conExec.CommandDescriptions.Aggregate((acc, item) => acc + string.Format("{0}\n", item)))));
+                                        (logger, args) => logger.Success(_conExec.CommandDescriptions.Aggregate((acc, item) => acc + string.Format("{0}\n", item)))));
         }
 
         public void Execute(string[] args)
@@ -55,7 +52,11 @@ namespace XNAContentCompiler
             var inputDirectory = Path.GetFullPath(arg[0]);
             var outputDirectory = Path.GetFullPath(arg[1]);
 
-            var files = Directory.GetFiles(inputDirectory, "*", SearchOption.AllDirectories).Select(Path.GetFullPath);
+            Environment.CurrentDirectory = inputDirectory;
+
+            var files =
+                Directory.GetFiles(inputDirectory, "*", SearchOption.AllDirectories)
+                    .Select(filePath => filePath.Replace(inputDirectory + "\\", ""));
 
             BuildFiles(files, outputDirectory);
         }
@@ -63,7 +64,9 @@ namespace XNAContentCompiler
         private void ExecAssetBuild(ILogger logger, string[] arg)
         {
             var outputDirectory = Path.GetFullPath(arg[0]);
-            var files = arg.Skip(1).Select(Path.GetFullPath);
+            var files = arg.Skip(1);
+
+            Environment.CurrentDirectory = Assembly.GetEntryAssembly().Location;
 
              BuildFiles(files, outputDirectory);
         }
@@ -86,28 +89,41 @@ namespace XNAContentCompiler
             if (string.IsNullOrWhiteSpace(outputDirectory))
                 throw new ArgumentNullException("outputDirectory");
 
+            var targetDirectory = Environment.CurrentDirectory;
+            _logger.Success("Building {0}....\n", targetDirectory);
+            var contentBuilder = new MSBuildContentBuilder();
 
-            _logger.Success("Building {0}....", Path.GetDirectoryName(files.First()));
-            var contentBuilder = new MSBuildContentBuilder(outputDirectory);
+            var tempBuildItemDirectory = contentBuilder.OutputDirectory;
 
-            files.ToList().ForEach(filePath =>
+            _logger.Success("Queueing files for build....");
+            files.Where(file => contentBuilder.SupportedFileTypes.Contains(Path.GetExtension(file)))
+                 .ToList()
+                 .ForEach(filePath =>
+                 {
+                     var fullPath = Path.Combine(targetDirectory, filePath);
+                     var transformedFilePath = Path.Combine(Path.GetDirectoryName(filePath), 
+                                                            Path.GetFileNameWithoutExtension(filePath));
+
+                     _logger.Message("\t{0}", transformedFilePath);
+                     contentBuilder.Add(fullPath, transformedFilePath);
+                 });
+
+            var buildErrors = contentBuilder.Build();
+            _logger.Error(buildErrors);
+
+            if (string.IsNullOrWhiteSpace(buildErrors))
             {
-                var name = Path.GetFileName(filePath);
-                _logger.Message("Queueing {0}....", filePath);
-                contentBuilder.Add(filePath, name);
-            });
+                var buildDirectory = contentBuilder.BuildArtifactsDirectory;
+                // copy files from build directory into output
+                CopyFiles(buildDirectory, outputDirectory);
+            }
+            else
+            {
+                throw new InvalidOperationException(buildErrors);
+            }
 
-            contentBuilder.Build();
-
-            var buildDirectory = contentBuilder.OutputDirectory;
-            
-            _logger.Success("\nCopying files into {0}....\n", outputDirectory);
-            // copy files from build directory into output
-            CopyFiles(buildDirectory, outputDirectory);
-
-            _logger.Success("\nDeleting build artifacts...\n");
             // delete build directory
-            DeleteDirectory(buildDirectory);
+            DeleteDirectory(tempBuildItemDirectory);
         }
 
         public void FileWatch(string inputDirectory, string outputDirectory)
@@ -122,19 +138,33 @@ namespace XNAContentCompiler
 
             var files = Directory.GetFiles(fullPath, "*.xnb", SearchOption.AllDirectories);
 
-            files.ToList().ForEach(filePath =>
+            if (!Directory.Exists(fullOutputDir))
             {
-                var fileName = Path.GetFileName(filePath);
-                var finalPath = Path.Combine(fullOutputDir, fileName);
-                _logger.Message("\t{0}....", finalPath);
-                File.Copy(filePath, finalPath);
-            });
+                _logger.Warn("Directory doesn't exist. Creating {0}.....", fullOutputDir);
+                Directory.CreateDirectory(fullOutputDir);
+            }
+
+            _logger.Success("\nCopying files...\nTarget: {0}\n", outputDir);
+            files.Select(filePath => filePath.Replace(source, "").Trim('\\'))
+                 .Select(assetName => Tuple.Create(assetName, Path.Combine(source, assetName), Path.Combine(fullOutputDir, assetName)))
+                 .ToList().ForEach(tuple =>
+                 {
+                     var destinationDirectory = Path.GetDirectoryName(tuple.Item3);
+                     if (!Directory.Exists(destinationDirectory))
+                         Directory.CreateDirectory(destinationDirectory);
+
+                     _logger.Message("\t{0}", tuple.Item1);
+                     File.Copy(tuple.Item2, tuple.Item3);
+                });
         }
 
         private void DeleteDirectory(string directory)
         {
-            if(Directory.Exists(directory))
+            if (Directory.Exists(directory))
+            {
+                _logger.Warn("\nDeleting {0}\n", directory);
                 Directory.Delete(directory, true);
+            }
         }
 
         /// <summary>
