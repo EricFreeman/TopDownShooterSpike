@@ -16,6 +16,11 @@ task :watch => ['compile:watch']
 desc 'builds the solution'
 task :build => ['compile:solution']
 
+desc 'opens content compiler gui'
+task :tool do
+  sh %{#{CONTENT_COMPILER_EXE}}
+end
+
 namespace :compile do
 
   desc 'compiles content assets'
