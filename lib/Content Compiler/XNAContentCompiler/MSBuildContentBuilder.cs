@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,13 @@ namespace XNAContentCompiler
 {
     public class MSBuildContentBuilder : IContentBuilder
     {
+        public struct ImporterContext
+        {
+            public string SourceAssetDirectory { get; set;  }
+            public string TargetDirectory { get; set;  }
+            public string AssetName { get; set;  }
+        }
+
         private static int _directorySalt = 0xCAFE; 
 
         // What importers or processors should we load?
@@ -49,6 +57,9 @@ namespace XNAContentCompiler
         private ProjectRootElement _projectRootElement;
         private BuildParameters _buildParameters;
 
+        // fileExtension / files
+        private readonly IDictionary<string, Tuple<Func<ImporterContext, string>, List<ImporterContext>>> _secondaryImporters;
+
 
         /// <summary>
         /// Initializes a new instance of <see cref="MSBuildContentBuilder"/>
@@ -72,6 +83,8 @@ namespace XNAContentCompiler
 
                 new ComboItem(".spritefont", "FontDescriptionImporter", "FontDescriptionProcessor")
             };
+
+            _secondaryImporters = new ConcurrentDictionary<string, Tuple<Func<ImporterContext, string>, List<ImporterContext>>>();
 
             CreateBuildProject();
         }
@@ -149,23 +162,26 @@ namespace XNAContentCompiler
 
             BuildManager.DefaultBuildManager.EndBuild();
 
+            var content = BuildArtifactsDirectory;
+
             var output = new StringBuilder();
 
-            // If the build failed, return an error string.
             if (submission.BuildResult.OverallResult == BuildResultCode.Failure)
-            {
                 output.Append(string.Join("\n", _errorLogger.Errors.ToArray()));
-            }
 
+            // handle error output
+            var secondaryImporterErrors = _secondaryImporters.Where(kvp => kvp.Value.Item2.Any())
+                                                                .Select(kvp => kvp.Value)
+                                                                .SelectMany(item => item.Item2.Select(file =>
+                                                                {
+                                                                    var errorResult = item.Item1.Invoke(file);
+                                                                    return string.IsNullOrWhiteSpace(errorResult) ? null : string.Format("{0}: {1}\n", file.AssetName, errorResult);
+                                                                }))
+                                                                .Where(outputString => !string.IsNullOrWhiteSpace(outputString))
+                                                                .Aggregate("", (acc, item) => acc + "\n" + item);
 
+            output.AppendLine(secondaryImporterErrors);
             return output.ToString();
-        }
-
-
-        public void Add(ComboItem item)
-        {
-            ComboItem importer = _importers.FindByName(Path.GetExtension(item.Value).ToLower());
-            Add(item.Value, Path.GetFileNameWithoutExtension(item.Name), importer.Value, importer.Other);
         }
 
         public void Add(string filename, string name)
@@ -181,18 +197,35 @@ namespace XNAContentCompiler
         /// </summary>
         public void Add(string filename, string name, string importer, string processor)
         {
-            ProjectItem item = _buildProject.AddItem("Compile", filename)[0];
+            var fileExtension = Path.GetExtension(filename) ?? "";
+            var isContentBuildItem = !_secondaryImporters.ContainsKey(fileExtension);
 
-            item.SetMetadataValue("Link", Path.GetFileName(filename));
-            item.SetMetadataValue("Name", name);
+            if (isContentBuildItem)
+            {
+                ProjectItem item = _buildProject.AddItem("Compile", filename)[0];
 
-            if (!string.IsNullOrEmpty(importer))
-                item.SetMetadataValue("Importer", importer);
+                item.SetMetadataValue("Link", Path.GetFileName(filename));
+                item.SetMetadataValue("Name", name);
 
-            if (!string.IsNullOrEmpty(processor))
-                item.SetMetadataValue("Processor", processor);
+                if (!string.IsNullOrEmpty(importer))
+                    item.SetMetadataValue("Importer", importer);
 
-            _projectItems.Add(item);
+                if (!string.IsNullOrEmpty(processor))
+                    item.SetMetadataValue("Processor", processor);
+
+                _projectItems.Add(item);
+            }
+            else
+            {
+                var secondaryImporter = _secondaryImporters[fileExtension];
+                var fileTuple = new ImporterContext
+                {
+                    AssetName = name + fileExtension,
+                    TargetDirectory = BuildArtifactsDirectory,
+                    SourceAssetDirectory = filename.Replace(name + fileExtension, "")
+                };
+                secondaryImporter.Item2.Add(fileTuple);
+            }
         }
 
         public void Clear()
@@ -204,7 +237,7 @@ namespace XNAContentCompiler
 
         public string OutputDirectory
         {
-            get { return Path.Combine(_tempBuildDirectory); }
+            get { return _tempBuildDirectory; }
         }
 
         public string BuildArtifactsDirectory
@@ -214,8 +247,21 @@ namespace XNAContentCompiler
 
         public IEnumerable<string> SupportedFileTypes
         {
-            get { return _importers.Select(comboItem => comboItem.Name); }
+            get { return _importers.Select(comboItem => comboItem.Name).Concat(_secondaryImporters.Keys); }
         }
 
+        public void AddSecondaryImporter(IEnumerable<string> extensions, Func<ImporterContext, string> processorFunc)
+        {
+            if (extensions.Any(_secondaryImporters.ContainsKey))
+            {
+                throw new ArgumentException("One or more of the specified extensions have already been added.");
+            }
+
+            extensions.ToList().ForEach(extension =>
+            {
+                Tuple<Func<ImporterContext, string>, List<ImporterContext>> tuple = Tuple.Create(processorFunc, new List<ImporterContext>());
+                _secondaryImporters.Add(extension, tuple);
+            });
+        }
     }
 }

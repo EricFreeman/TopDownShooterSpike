@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.AccessControl;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using XNAContentCompiler.Console;
 
 namespace XNAContentCompiler
@@ -18,7 +18,6 @@ namespace XNAContentCompiler
         {
             _logger = new ConsoleLogger();
             _conExec = new ConsoleExecutor(_logger);
-
 
             _conExec.AddCommand("watch", InitFileWatch, strings => strings.Count() != 2,
                                 "Watches the input directory for file changes.");
@@ -54,9 +53,8 @@ namespace XNAContentCompiler
 
             Environment.CurrentDirectory = inputDirectory;
 
-            var files =
-                Directory.GetFiles(inputDirectory, "*", SearchOption.AllDirectories)
-                    .Select(filePath => filePath.Replace(inputDirectory + "\\", ""));
+            var files = Directory.GetFiles(inputDirectory, "*", SearchOption.AllDirectories)
+                                 .Select(filePath => filePath.Replace(inputDirectory + "\\", ""));
 
             BuildFiles(files, outputDirectory);
         }
@@ -91,21 +89,25 @@ namespace XNAContentCompiler
 
             var targetDirectory = Environment.CurrentDirectory;
             _logger.Success("Building {0}....\n", targetDirectory);
-            var contentBuilder = new MSBuildContentBuilder();
+
+            var contentBuilder = CreateContentBuilder();
 
             var tempBuildItemDirectory = contentBuilder.OutputDirectory;
 
             _logger.Success("Queueing files for build....");
             files.Where(file => contentBuilder.SupportedFileTypes.Contains(Path.GetExtension(file)))
-                 .ToList()
-                 .ForEach(filePath =>
+                 .Select(path =>
                  {
-                     var fullPath = Path.Combine(targetDirectory, filePath);
-                     var transformedFilePath = Path.Combine(Path.GetDirectoryName(filePath), 
-                                                            Path.GetFileNameWithoutExtension(filePath));
-
-                     _logger.Message("\t{0}", transformedFilePath);
-                     contentBuilder.Add(fullPath, transformedFilePath);
+                     var fullPath = Path.Combine(targetDirectory, path);
+                     var transformedFilePath = Path.Combine(Path.GetDirectoryName(path), 
+                                                            Path.GetFileNameWithoutExtension(path));
+                     return Tuple.Create(path, fullPath, transformedFilePath);
+                 })
+                 .ToList()
+                 .ForEach(fileTuple =>
+                 {
+                     _logger.Message("\t{0}", fileTuple.Item2);
+                     contentBuilder.Add(fileTuple.Item2, fileTuple.Item3);
                  });
 
             var buildErrors = contentBuilder.Build();
@@ -118,9 +120,7 @@ namespace XNAContentCompiler
                 CopyFiles(buildDirectory, outputDirectory);
             }
             else
-            {
                 throw new InvalidOperationException(buildErrors);
-            }
 
             // delete build directory
             DeleteDirectory(tempBuildItemDirectory);
@@ -128,7 +128,7 @@ namespace XNAContentCompiler
 
         public void FileWatch(string inputDirectory, string outputDirectory)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Bug Adam to implement this.");
         }
 
         private void CopyFiles(string source, string outputDir)
@@ -136,7 +136,7 @@ namespace XNAContentCompiler
             var fullPath = Path.GetFullPath(source);
             var fullOutputDir = Path.GetFullPath(outputDir);
 
-            var files = Directory.GetFiles(fullPath, "*.xnb", SearchOption.AllDirectories);
+            var files = Directory.GetFiles(fullPath, "*", SearchOption.AllDirectories);
 
             if (!Directory.Exists(fullOutputDir))
             {
@@ -154,7 +154,7 @@ namespace XNAContentCompiler
                          Directory.CreateDirectory(destinationDirectory);
 
                      _logger.Message("\t{0}", tuple.Item1);
-                     File.Copy(tuple.Item2, tuple.Item3);
+                     File.Copy(tuple.Item2, tuple.Item3, true);
                 });
         }
 
@@ -165,6 +165,43 @@ namespace XNAContentCompiler
                 _logger.Warn("\nDeleting {0}\n", directory);
                 Directory.Delete(directory, true);
             }
+        }
+
+
+        private IContentBuilder CreateContentBuilder()
+        {
+            var contentBuilder = new MSBuildContentBuilder();
+
+            contentBuilder.AddSecondaryImporter(new[] {".xml", ".config"}, HandleXML);
+
+            return contentBuilder;
+        }
+
+
+        private string HandleXML(MSBuildContentBuilder.ImporterContext context)
+        {
+            var output = "";
+            try
+            {
+                var sourceFile = Path.Combine(context.SourceAssetDirectory, context.AssetName);
+                var destinationFile = Path.Combine(context.TargetDirectory, context.AssetName);
+                var destinationDirectory = Path.GetDirectoryName(destinationFile);
+
+                if (!Directory.Exists(destinationDirectory))
+                    Directory.CreateDirectory(destinationDirectory);
+                
+                File.Copy(sourceFile, destinationFile, true);
+            }  
+            catch (Exception e)
+            {
+                _logger.Error(e.ToString());
+                output = "Error occured while file copying";
+
+            }
+
+            return output;
+            // copy file from input directory
+            // write it into the output directory
         }
 
         /// <summary>

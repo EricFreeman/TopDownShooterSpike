@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace XNAContentCompiler
 {
@@ -24,5 +25,10 @@ namespace XNAContentCompiler
         /// Removes all content files from the MSBuild project.
         /// </summary>
         void Clear();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        IEnumerable<string> SupportedFileTypes { get; }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
-using System.Reflection;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
@@ -213,6 +212,11 @@ namespace XNAContentCompiler
             buildProject.RemoveItems(projectItems);
 
             projectItems.Clear();
+        }
+
+        IEnumerable<string> IContentBuilder.SupportedFileTypes
+        {
+            get { throw new NotImplementedException(); }
         }
 
 
