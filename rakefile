@@ -3,16 +3,23 @@ require 'rake/clean'
 PACKAGES = './Packages'
 LIB = './lib'
 
-CONTENT_ASSETS = 'TopDownShooterSpike\Content'
-CONTENT_BIN = 'TopDownShooterSpike\bin\WindowsGL\Debug\Content'
+OUTPUT_DIR = %{bin\\WindowsGL\\Debug}
+
+TOP_DOWN_SHOOTER = %{TopDownShooterSpike}
+FUTURES = %{TDS.Futures}
+
+CONTENT_ASSETS = '\Content'
+CONTENT_BIN = "#{OUTPUT_DIR}\\Content"
 CONTENT_COMPILER_EXE = %{"#{LIB}/Content Compiler/bin/XNAContentCompiler.exe"}
 
 
 CLOBBER.include(PACKAGES, '**/bin/*')
-CLEAN.include("#{CONTENT_BIN}")
+CLEAN.include("**/#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
 task :default => ['compile:solution', 'compile:content']
+
+task :futures => ["compile:content[#{FUTURES}]"]
 
 desc 'Watches for content file changes'
 task :watch => ['compile:watch']
@@ -23,8 +30,12 @@ task :build => ['compile:solution']
 namespace :compile do
 
   desc 'compiles content assets'
-  task :content => ['clean'] do
-    sh %{#{CONTENT_COMPILER_EXE} build #{CONTENT_ASSETS} #{CONTENT_BIN}}
+  task :content, [:project] do |t, args|
+    args.with_defaults(:project => 'TopDownShooterSpike')
+    puts "Building content for #{args.project}."
+    inputPath = %{src\\#{args.project}\\#{CONTENT_ASSETS}}
+    outputPath = %{src\\#{args.project}\\#{CONTENT_BIN}}
+    content_compile(inputPath, outputPath)
   end
 
   task :watch do
@@ -38,4 +49,9 @@ namespace :compile do
   task :build_dependencies do
     # build all .slns in the lib folder, copy artifacts to /Packages
   end
+
+  def content_compile(input, output)
+    system(%{#{CONTENT_COMPILER_EXE} build #{input} #{output}})
+  end
+
 end

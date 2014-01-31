@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TopDownShooterSpike", "TopDownShooterSpike\TopDownShooterSpike.csproj", "{0448A6D5-E403-4488-A38E-277CD21F03E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDS.Futures", "TDS.Futures\TDS.Futures.csproj", "{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Android|Any CPU = Android|Any CPU
@@ -79,6 +81,51 @@ Global
 		{0448A6D5-E403-4488-A38E-277CD21F03E5}.Windows8|Mixed Platforms.Build.0 = Release|x86
 		{0448A6D5-E403-4488-A38E-277CD21F03E5}.Windows8|x86.ActiveCfg = Release|x86
 		{0448A6D5-E403-4488-A38E-277CD21F03E5}.Windows8|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Android|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Android|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Android|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Android|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Android|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Debug|x86.ActiveCfg = Debug|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Debug|x86.Build.0 = Debug|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.iOS|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.iOS|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.iOS|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.iOS|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.iOS|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Linux|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Linux|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Linux|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Linux|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Linux|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.OSX|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.OSX|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.OSX|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.OSX|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.OSX|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.PSM|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.PSM|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.PSM|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.PSM|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.PSM|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Release|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Release|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Release|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Release|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows|x86.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows8|Any CPU.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows8|Mixed Platforms.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows8|Mixed Platforms.Build.0 = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows8|x86.ActiveCfg = Release|x86
+		{8FBD695F-ABE7-4DE6-A7B1-4446EF8F1033}.Windows8|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
