@@ -1,10 +1,14 @@
 require 'rake/clean'
 
+PACKAGES = './Packages'
+LIB = './lib'
+
 CONTENT_ASSETS = 'TopDownShooterSpike\Content'
 CONTENT_BIN = 'TopDownShooterSpike\bin\WindowsGL\Debug\Content'
-CONTENT_COMPILER_EXE = '"./lib/Content Compiler/bin/XNAContentCompiler.exe"'
+CONTENT_COMPILER_EXE = %{"#{LIB}/Content Compiler/bin/XNAContentCompiler.exe"}
 
-CLOBBER.include('**/bin/*')
+
+CLOBBER.include(PACKAGES, '**/bin/*')
 CLEAN.include("#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
@@ -28,6 +32,10 @@ namespace :compile do
   end
 
   task :solution do
+    # build TopDownShooterSpike
   end
 
+  task :build_dependencies do
+    # build all .slns in the lib folder, copy artifacts to /Packages
+  end
 end
