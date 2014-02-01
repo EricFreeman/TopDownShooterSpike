@@ -162,8 +162,6 @@ namespace XNAContentCompiler
 
             BuildManager.DefaultBuildManager.EndBuild();
 
-            var content = BuildArtifactsDirectory;
-
             var output = new StringBuilder();
 
             if (submission.BuildResult.OverallResult == BuildResultCode.Failure)
@@ -195,20 +193,25 @@ namespace XNAContentCompiler
         /// be autodetected based on the file extension, and if you leave the
         /// processor null, data will be passed through without any processing.
         /// </summary>
-        public void Add(string filename, string name, string importer, string processor)
+        public void Add(string filename, string name, string importerString, string processor)
         {
             var fileExtension = Path.GetExtension(filename) ?? "";
+
             var isContentBuildItem = !_secondaryImporters.ContainsKey(fileExtension);
+            var importer = _importers.FindByName(fileExtension.ToLower());
 
             if (isContentBuildItem)
             {
+                importerString = importer.Value;
+                processor = importer.Other;
+                
                 ProjectItem item = _buildProject.AddItem("Compile", filename)[0];
 
                 item.SetMetadataValue("Link", Path.GetFileName(filename));
                 item.SetMetadataValue("Name", name);
 
-                if (!string.IsNullOrEmpty(importer))
-                    item.SetMetadataValue("Importer", importer);
+                if (!string.IsNullOrEmpty(importerString))
+                    item.SetMetadataValue("Importer", importerString);
 
                 if (!string.IsNullOrEmpty(processor))
                     item.SetMetadataValue("Processor", processor);
