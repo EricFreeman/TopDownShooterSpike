@@ -7,6 +7,8 @@ namespace TopDownShooterSpike
 {
     public class AudioManager
     {
+        #region Properties
+
         private List<SoundEffectInstance> _backgroundMusic = new List<SoundEffectInstance>(); // list of current background music - 0 is current 1 is the music being faded in
 
         private float _currentFadeTicks; // ticks until new song is faded in
@@ -20,6 +22,10 @@ namespace TopDownShooterSpike
         {
             get { return _instance ?? (_instance = new AudioManager()); }
         }
+
+        #endregion
+
+        #region Play
 
         /// <summary>
         /// Play one time sound effects
@@ -78,6 +84,14 @@ namespace TopDownShooterSpike
             _isFading = true;
         }
 
+        #endregion
+
+        #region Hooks
+
+        /// <summary>
+        /// Update the fading in and out of songs
+        /// </summary>
+        /// <param name="gameTime"></param>
         public void Update(GameTime gameTime)
         {
             if (_isFading)
@@ -101,9 +115,15 @@ namespace TopDownShooterSpike
             }
         }
 
-        public SoundEffectInstance Copy(ref SoundEffectInstance t)
+        /// <summary>
+        /// Removes everything from memory
+        /// </summary>
+        public void UnloadContent()
         {
-            return t;
+            _backgroundMusic.Clear();
+            _instance = null;
         }
+
+        #endregion
     }
 }

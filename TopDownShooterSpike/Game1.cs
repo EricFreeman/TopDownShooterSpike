@@ -46,6 +46,7 @@ namespace TopDownShooterSpike
         protected override void UnloadContent()
         {
             ScreenManager.Instance.UnloadContent();
+            AudioManager.Instance.UnloadContent();
         }
 
         protected override void Update(GameTime gameTime)

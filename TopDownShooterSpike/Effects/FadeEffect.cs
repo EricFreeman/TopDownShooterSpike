@@ -13,16 +13,6 @@ namespace TopDownShooterSpike.Effects
             Increase = false;
         }
 
-        public override void LoadContent(ref Image image)
-        {
-            base.LoadContent(ref image);
-        }
-
-        public override void UnloadContent()
-        {
-            base.UnloadContent();
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
