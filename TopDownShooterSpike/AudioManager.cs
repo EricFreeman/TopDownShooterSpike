@@ -1,18 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using OpenTK.Graphics.OpenGL;
 
 namespace TopDownShooterSpike
 {
     public class AudioManager
     {
-        private SoundEffectInstance _backgroundSong; // the current background song
-        private SoundEffectInstance _fadeInSong;     // the new song that's about to fade in once the current background song fades out
+        private List<SoundEffectInstance> _backgroundMusic = new List<SoundEffectInstance>(); // list of current background music - 0 is current 1 is the music being faded in
 
         private float _currentFadeTicks; // ticks until new song is faded in
         public int FadeTicks; // ticks it takes to fade in/out in seconds
@@ -48,10 +43,12 @@ namespace TopDownShooterSpike
                 return;
             }
 
-            _fadeInSong = _manager.Load<SoundEffect>("sfx/" + name).CreateInstance();
-            _fadeInSong.Volume = 0;
-            _fadeInSong.IsLooped = isLooped;
-            _fadeInSong.Play();
+            _backgroundMusic.Add(_manager.Load<SoundEffect>("sfx/" + name).CreateInstance());
+            var index = _backgroundMusic.Count - 1;
+
+            _backgroundMusic[index].Volume = 0;
+            _backgroundMusic[index].IsLooped = isLooped;
+            _backgroundMusic[index].Play();
             _currentFadeTicks = FadeTicks;
             _isFading = true;
         }
@@ -62,10 +59,11 @@ namespace TopDownShooterSpike
         /// <param name="name"></param>
         public void PlayBackgroundMusic(string name, bool isLooped = true)
         {
-            _backgroundSong = _manager.Load<SoundEffect>("sfx/" + name).CreateInstance();
-            _backgroundSong.Volume = 100;
-            _backgroundSong.IsLooped = isLooped;
-            _backgroundSong.Play();
+            _backgroundMusic.Clear();
+            _backgroundMusic.Add(_manager.Load<SoundEffect>("sfx/" + name).CreateInstance());
+            _backgroundMusic[0].Volume = 100;
+            _backgroundMusic[0].IsLooped = isLooped;
+            _backgroundMusic[0].Play();
             _isFading = false;
         }
 
@@ -74,7 +72,9 @@ namespace TopDownShooterSpike
         /// </summary>
         public void FadeOutBackgroundMusic()
         {
-            _fadeInSong = null;
+            if(_backgroundMusic.Count > 1)
+                _backgroundMusic.RemoveAt(1);
+
             _isFading = true;
         }
 
@@ -82,9 +82,9 @@ namespace TopDownShooterSpike
         {
             if (_isFading)
             {
-                if (_currentFadeTicks == 0 && _fadeInSong != null)
+                if (_currentFadeTicks == 0 && _backgroundMusic.Count > 1)
                 {
-                    _fadeInSong.Dispose();
+                    _backgroundMusic.RemoveAt(0);
                     _isFading = false;
                 }
                 else
@@ -92,11 +92,11 @@ namespace TopDownShooterSpike
                     _currentFadeTicks -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                     _currentFadeTicks = _currentFadeTicks < 0 ? 0 : _currentFadeTicks;
 
-                    if(_backgroundSong != null)
-                        _backgroundSong.Volume = _currentFadeTicks / (FadeTicks * 1.0f);
+                    if (_backgroundMusic.Count > 0)
+                        _backgroundMusic[0].Volume = _currentFadeTicks / (FadeTicks * 1.0f);
 
-                    if(_fadeInSong != null)
-                        _fadeInSong.Volume = 100 - (_currentFadeTicks / (FadeTicks * 1.0f));
+                    if(_backgroundMusic.Count > 1)
+                        _backgroundMusic[1].Volume = 100 - (_currentFadeTicks / (FadeTicks * 1.0f));
                 }
             }
         }
