@@ -8,7 +8,6 @@ namespace TopDownShooterSpike
         private KeyboardState _currentKeyState, _previousKeyState;
 
         private static InputManager _instance;
-
         public static InputManager Instance
         {
             get { return _instance ?? (_instance = new InputManager()); }

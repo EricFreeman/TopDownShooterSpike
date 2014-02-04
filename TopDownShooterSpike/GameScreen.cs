@@ -1,6 +1,4 @@
-﻿using System;
-using System.Xml.Serialization;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,6 +8,7 @@ namespace TopDownShooterSpike
     {
         protected ContentManager Content;
         public string XmlPath;
+        public string Music;
 
         public GameScreen()
         {
@@ -19,6 +18,11 @@ namespace TopDownShooterSpike
         public virtual void LoadContent()
         {
             Content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+
+            if(Music != string.Empty)
+                AudioManager.Instance.FadeInBackgroundMusic(Music);
+            else
+                AudioManager.Instance.FadeOutBackgroundMusic();
         }
 
         public virtual void UnloadContent()

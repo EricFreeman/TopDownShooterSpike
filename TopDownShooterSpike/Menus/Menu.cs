@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
@@ -14,6 +13,7 @@ namespace TopDownShooterSpike.Menus
         public event EventHandler OnMenuChange;
         public string Axis;
         public string Effects;
+        public string Music;
 
         [XmlElement("Item")] 
         public List<MenuItem> Items;
@@ -70,6 +70,7 @@ namespace TopDownShooterSpike.Menus
             Effects = string.Empty;
             Axis = "Y";
             Items = new List<MenuItem>();
+            Music = string.Empty;
         }
 
         public void LoadContent()
@@ -84,6 +85,19 @@ namespace TopDownShooterSpike.Menus
                 }
             }
             AlignMenuItems();
+            PlayMusic();
+        }
+
+        public void PlayMusic()
+        {
+            if (Music != string.Empty)
+            {
+                AudioManager.Instance.FadeInBackgroundMusic(Music);
+            }
+            else
+            {
+                AudioManager.Instance.FadeOutBackgroundMusic();
+            }
         }
 
         public void UnloadContent()

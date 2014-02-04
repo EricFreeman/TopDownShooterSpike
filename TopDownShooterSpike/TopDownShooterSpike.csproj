@@ -38,6 +38,7 @@
     <StartupObject>TopDownShooterSpike.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AudioManager.cs" />
     <Compile Include="Effects\FadeEffect.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameScreen.cs" />
@@ -78,6 +79,7 @@
     </Content>
     <Content Include="Content\Config\ScreenManager.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Content\gfx\FadeImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -95,6 +97,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Screens\TempGame.xml" />
+    <Content Include="Content\sfx\Company Theme.wav" />
+    <Content Include="Content\sfx\Menu Theme.wav" />
     <Content Include="Icon.ico" />
     <Content Include="Content\Screens\SplashScreen.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

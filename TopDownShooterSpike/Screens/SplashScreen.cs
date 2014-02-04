@@ -12,6 +12,8 @@ namespace TopDownShooterSpike.Screens
         {
             base.LoadContent();
             Image.LoadContent();
+            AudioManager.Instance.FadeOutBackgroundMusic();
+            AudioManager.Instance.PlayBackgroundMusic(Music, false);
         }
 
         public override void UnloadContent()

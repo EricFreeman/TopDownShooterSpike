@@ -40,6 +40,7 @@ namespace TopDownShooterSpike
             ScreenManager.Instance.GraphicsDevice = GraphicsDevice;
             ScreenManager.Instance.SpriteBatch = _spriteBatch;
             ScreenManager.Instance.LoadContent(Content);
+            AudioManager.Instance.FadeTicks = 1;
         }
 
         protected override void UnloadContent()
@@ -53,6 +54,7 @@ namespace TopDownShooterSpike
                 Exit();
 
             ScreenManager.Instance.Update(gameTime);
+            AudioManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
         }
