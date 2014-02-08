@@ -10,6 +10,7 @@ namespace TopDownShooterSpike
         #region Properties
 
         private List<SoundEffectInstance> _backgroundMusic = new List<SoundEffectInstance>(); // list of current background music - 0 is current 1 is the music being faded in
+        private string _lastSong;
 
         private float _currentFadeTicks; // ticks until new song is faded in
         public int FadeTicks; // ticks it takes to fade in/out in seconds
@@ -48,6 +49,8 @@ namespace TopDownShooterSpike
                 FadeOutBackgroundMusic();
                 return;
             }
+            else if (_backgroundMusic.Count > 0 && _lastSong == name)
+                return;
 
             _backgroundMusic.Add(_manager.Load<SoundEffect>("sfx/" + name).CreateInstance());
             var index = _backgroundMusic.Count - 1;
@@ -57,6 +60,7 @@ namespace TopDownShooterSpike
             _backgroundMusic[index].Play();
             _currentFadeTicks = FadeTicks;
             _isFading = true;
+            _lastSong = name;
         }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace TopDownShooterSpike
             _backgroundMusic[0].IsLooped = isLooped;
             _backgroundMusic[0].Play();
             _isFading = false;
+            _lastSong = name;
         }
 
         /// <summary>
@@ -82,6 +87,7 @@ namespace TopDownShooterSpike
                 _backgroundMusic.RemoveAt(1);
 
             _isFading = true;
+            _lastSong = string.Empty;
         }
 
         #endregion
