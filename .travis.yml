@@ -1,0 +1,12 @@
+language: ruby
+
+install:
+  - sudo apt-get install mono-devel mono-gmcs
+
+
+script:
+  - xbuild "lib/Content Compiler/XNAContentCompiler.sln"
+  - gem install rake
+  - gem install bundler
+  - bundle install
+  - bundle exec rake travis-ci
