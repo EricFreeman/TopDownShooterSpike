@@ -10,7 +10,9 @@ namespace TopDownShooterSpike.World
     {
         public Tile[,] _map;
         private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+
         private Texture2D wall = _manager.Load<Texture2D>("gfx/wall");
+        private Texture2D wallCap = _manager.Load<Texture2D>("gfx/wall cap");
 
         public void LoadContent(string name)
         {
@@ -32,7 +34,7 @@ namespace TopDownShooterSpike.World
                     _map[x, y] = new Tile
                     {
                         Image = _manager.Load<Texture2D>("gfx/Tiles/" + curr.SelectSingleNode("Tile").InnerText + ".png"),
-                        Walls = curr.SelectSingleNode("Walls") != null ? curr.SelectSingleNode("Walls").InnerText.Split(',') : new string[4]
+                        Walls = curr.SelectSingleNode("Walls") != null ? curr.SelectSingleNode("Walls").InnerText.Split(',') : new string[2]
                     };
                 }
             }
@@ -57,13 +59,36 @@ namespace TopDownShooterSpike.World
                     spriteBatch.Draw(_map[x, y].Image, new Vector2(x * 64, y * 64), Color.White);
 
                     if (_map[x, y].Walls[0] == "1")
-                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64), Color.White);
+                    {
+                        spriteBatch.Draw(wall, new Vector2(x*64, y*64), Color.White);
+                    }
                     if (_map[x, y].Walls[1] == "1")
-                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64 + 16), new Rectangle(0, 0, 16, 64), Color.White, (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
-                    if (_map[x, y].Walls[2] == "1")
-                        spriteBatch.Draw(wall, new Vector2(x * 64 + 64, y * 64), Color.White);
-                    if (_map[x, y].Walls[3] == "1")
-                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64 + 64), new Rectangle(0, 0, 16, 64), Color.White, (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                    {
+                        spriteBatch.Draw(wall, new Vector2(x*64, y*64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
+                            (float) (Math.PI*1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                    }
+                }
+            }
+
+            
+            for (int x = 0; x < _map.GetLength(0); x++)
+            {
+                for (int y = 0; y < _map.GetLength(1); y++)
+                {
+                    if (_map[x, y].Walls[0] == "1")
+                    {
+                        if (0 < y - 1 && _map[x, y - 1].Walls[0] != "1")
+                            spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
+                        if (_map[x, y].Walls[1] != "0")
+                            spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
+                        if (_map.GetLength(1) > y + 1 && _map[x, y + 1].Walls[1] != "0")
+                            spriteBatch.Draw(wallCap, new Vector2(x * 64, (y + 1) * 64), Color.White);
+                    }
+                    if (_map[x, y].Walls[1] == "1")
+                    {
+                        if (_map.GetLength(0) > x + 1 && _map[x + 1, y].Walls[1] != "1")
+                            spriteBatch.Draw(wallCap, new Vector2((x + 1) * 64, y * 64), Color.White);
+                    }
                 }
             }
         }
