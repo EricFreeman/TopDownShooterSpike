@@ -38,6 +38,8 @@
     <StartupObject>TopDownShooterSpike.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameHelpers\Camera.cs" />
+    <Compile Include="GameHelpers\Player.cs" />
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Effects\FadeEffect.cs" />
     <Compile Include="Game1.cs" />

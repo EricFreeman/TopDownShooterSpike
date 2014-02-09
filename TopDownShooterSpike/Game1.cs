@@ -64,9 +64,11 @@ namespace TopDownShooterSpike
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, ScreenManager.Instance.Camera.GetTransformation());
             ScreenManager.Instance.Draw(_spriteBatch);
             _spriteBatch.End();
+
+            //begin the spritebatch without transformations and stuff to draw the hub, crosshairs, etc here
 
             base.Draw(gameTime);
         }

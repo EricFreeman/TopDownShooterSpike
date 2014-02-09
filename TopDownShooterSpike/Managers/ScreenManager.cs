@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TopDownShooterSpike.GameHelpers;
 using TopDownShooterSpike.Screens;
 
 namespace TopDownShooterSpike
@@ -26,6 +27,9 @@ namespace TopDownShooterSpike
         [XmlIgnore]
         public bool IsTransitioning { get; private set; }
 
+        [XmlIgnore] 
+        public Camera Camera;
+
         public static ScreenManager Instance
         {
             get { return _instance ?? (_instance = Initialize()); }
@@ -38,6 +42,7 @@ namespace TopDownShooterSpike
             s.XmlGameScreenManager = new XmlManager<GameScreen>();
             s.XmlGameScreenManager.Type = typeof (TempGame);
             s.CurrentScreen = s.XmlGameScreenManager.Load("Content/Screens/TempGame.xml");
+            s.Camera = new Camera();
             return s;
         }
 
@@ -80,6 +85,7 @@ namespace TopDownShooterSpike
             Content = new ContentManager(content.ServiceProvider, "Content");
             CurrentScreen.LoadContent();
             Image.LoadContent();
+            Camera.Pos = new Vector2(GraphicsDevice.Viewport.Width/2f, GraphicsDevice.Viewport.Height/2f);
         }
 
         public void UnloadContent()

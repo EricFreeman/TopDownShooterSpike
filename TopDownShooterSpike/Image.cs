@@ -10,10 +10,11 @@ namespace TopDownShooterSpike
 {
     public class Image
     {
-        public float Alpha;
+        public float Alpha, Rotation;
         public string Text, FontName, Path;
         public Vector2 Position, Scale;
         public Rectangle SourceRect;
+        public Vector2 PubOffset;
 
         [XmlIgnore]
         public Texture2D Texture;
@@ -86,7 +87,7 @@ namespace TopDownShooterSpike
         {
             Text = Path = Effects = String.Empty;
             FontName = "Fonts/SampleFont";
-            Position = Vector2.Zero;
+            Position = PubOffset = Vector2.Zero;
             Scale = Vector2.One;
             Alpha = 1.0f;
             SourceRect = Rectangle.Empty;
@@ -161,7 +162,7 @@ namespace TopDownShooterSpike
         {
             _origin = new Vector2(SourceRect.Width/2f, SourceRect.Height/2f);
 
-            spriteBatch.Draw(Texture, Position + _origin, SourceRect, Color.White * Alpha, 0.0f, _origin, Scale, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(Texture, Position + _origin, null, Color.White * Alpha, Rotation, _origin + PubOffset, Scale, SpriteEffects.None, 0.0f);
         }
     }
 }

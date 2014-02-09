@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TopDownShooterSpike.GameHelpers;
 using TopDownShooterSpike.World;
 
 namespace TopDownShooterSpike.Screens
@@ -12,6 +13,9 @@ namespace TopDownShooterSpike.Screens
         [XmlIgnore]
         public Map Map;
 
+        [XmlIgnore] 
+        public Player Player;
+
         public override void LoadContent()
         {
             base.LoadContent();
@@ -19,6 +23,9 @@ namespace TopDownShooterSpike.Screens
 
             Map = new Map();
             Map.LoadContent("TestLevel");
+
+            Player = new Player();
+            Player.LoadContent();
         }
 
         public override void UnloadContent()
@@ -30,6 +37,7 @@ namespace TopDownShooterSpike.Screens
         {
             base.Update(gameTime);
             Image.Update(gameTime);
+            Player.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -37,6 +45,7 @@ namespace TopDownShooterSpike.Screens
             base.Draw(spriteBatch);
             Image.Draw(spriteBatch);
             Map.Draw(spriteBatch);
+            Player.Draw(spriteBatch);
         }
     }
 }
