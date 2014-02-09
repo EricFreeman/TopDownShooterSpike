@@ -36,8 +36,8 @@ namespace TopDownShooterSpike
             var xml = new XmlManager<ScreenManager>();
             var s = xml.Load("Content/Config/ScreenManager.xml");
             s.XmlGameScreenManager = new XmlManager<GameScreen>();
-            s.XmlGameScreenManager.Type = typeof (SplashScreen);
-            s.CurrentScreen = s.XmlGameScreenManager.Load("Content/Screens/SplashScreen.xml");
+            s.XmlGameScreenManager.Type = typeof (TempGame);
+            s.CurrentScreen = s.XmlGameScreenManager.Load("Content/Screens/TempGame.xml");
             return s;
         }
 

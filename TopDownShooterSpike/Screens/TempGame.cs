@@ -24,8 +24,6 @@ namespace TopDownShooterSpike.Screens
         public override void UnloadContent()
         {
             base.UnloadContent();
-            Image.UnloadContent();
-            Map.UnloadContent();
         }
 
         public override void Update(GameTime gameTime)

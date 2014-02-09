@@ -27,7 +27,6 @@ namespace TopDownShooterSpike
 
         public virtual void UnloadContent()
         {
-            Content.Unload();
         }
 
         public virtual void Update(GameTime gameTime)
