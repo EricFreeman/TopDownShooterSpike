@@ -142,7 +142,6 @@ namespace TopDownShooterSpike
 
         public void UnloadContent()
         {
-            _manager.Unload();
             foreach (var imageEffect in _effectList)
             {
                 DeactivateEffect(imageEffect.Key);

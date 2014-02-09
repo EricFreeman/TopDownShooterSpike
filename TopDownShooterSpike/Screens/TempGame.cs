@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using TopDownShooterSpike.World;
 
 namespace TopDownShooterSpike.Screens
 {
@@ -7,22 +9,23 @@ namespace TopDownShooterSpike.Screens
     {
         public Image Image;
 
-        public TempGame()
-        {
-            if(Image == null)
-                Image = new Image() {Text = "Fix screen not loading from xml!"};
-        }
+        [XmlIgnore]
+        public Map Map;
 
         public override void LoadContent()
         {
             base.LoadContent();
             Image.LoadContent();
+
+            Map = new Map();
+            Map.LoadContent("TestLevel");
         }
 
         public override void UnloadContent()
         {
             base.UnloadContent();
             Image.UnloadContent();
+            Map.UnloadContent();
         }
 
         public override void Update(GameTime gameTime)
@@ -35,6 +38,7 @@ namespace TopDownShooterSpike.Screens
         {
             base.Draw(spriteBatch);
             Image.Draw(spriteBatch);
+            Map.Draw(spriteBatch);
         }
     }
 }
