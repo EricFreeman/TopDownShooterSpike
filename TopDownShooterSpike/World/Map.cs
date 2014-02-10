@@ -42,17 +42,17 @@ namespace TopDownShooterSpike.World
 
         public void UnloadContent()
         {
-            
+
         }
 
         public void Update(GameTime gameTime)
         {
-            
+
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int x = 0; x < _map.GetLength(0); x ++)
+            for (int x = 0; x < _map.GetLength(0); x++)
             {
                 for (int y = 0; y < _map.GetLength(1); y++)
                 {
@@ -60,33 +60,37 @@ namespace TopDownShooterSpike.World
 
                     if (_map[x, y].Walls[0] == "1")
                     {
-                        spriteBatch.Draw(wall, new Vector2(x*64, y*64), Color.White);
+                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64), Color.White);
                     }
                     if (_map[x, y].Walls[1] == "1")
                     {
-                        spriteBatch.Draw(wall, new Vector2(x*64, y*64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
-                            (float) (Math.PI*1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
+                            (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
                     }
                 }
             }
 
-            
+
             for (int x = 0; x < _map.GetLength(0); x++)
             {
                 for (int y = 0; y < _map.GetLength(1); y++)
                 {
                     if (_map[x, y].Walls[0] == "1")
                     {
-                        if (0 < y - 1 && _map[x, y - 1].Walls[0] != "1")
+                        if (_map[x, y - 1].Walls[0] != "1")
                             spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
-                        if (_map[x, y].Walls[1] != "0")
-                            spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
-                        if (_map.GetLength(1) > y + 1 && _map[x, y + 1].Walls[1] != "0")
-                            spriteBatch.Draw(wallCap, new Vector2(x * 64, (y + 1) * 64), Color.White);
+                        if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] != "1" && _map[x - 1, y + 1].Walls[1] != "1")
+                            spriteBatch.Draw(wallCap, new Vector2(x * 64, (y + 1) * 64 - 16), Color.White);
                     }
                     if (_map[x, y].Walls[1] == "1")
                     {
-                        if (_map.GetLength(0) > x + 1 && _map[x + 1, y].Walls[1] != "1")
+                        if (_map[x - 1, y].Walls[1] != "1")
+                            spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
+                        if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] != "1")
+                            spriteBatch.Draw(wallCap, new Vector2((x + 1) * 64 - 16, y * 64), Color.White);
+
+                        //literally only for the bottom right corner which has trouble "capping" because cap needs to be where there is no wall
+                        else if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] == "1")
                             spriteBatch.Draw(wallCap, new Vector2((x + 1) * 64, y * 64), Color.White);
                     }
                 }
