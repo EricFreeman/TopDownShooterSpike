@@ -50,10 +50,19 @@
     <Column>
       <Tile>2</Tile>
       <Walls>1,1</Walls>
+      <Item>
+        <Type>Chair</Type>
+        <Rotation>17</Rotation>
+        <Position>10,0</Position>
+      </Item>
     </Column>
     <Column>
       <Tile>2</Tile>
-      <Walls>0,1</Walls>
+      <Walls>0,1</Walls><Item>
+        <Type>Chair</Type>
+        <Rotation>-3</Rotation>
+        <Position>0,5</Position>
+      </Item>
     </Column>
     <Column>
       <Tile>2</Tile>
@@ -202,6 +211,10 @@
     <Column>
       <Tile>1</Tile>
       <Walls>1,1</Walls>
+      <Item>
+        <Type>Toilet</Type>
+        <Position>4,16</Position>
+      </Item>
     </Column>
     <Column>
       <Tile>1</Tile>
@@ -293,6 +306,7 @@
     </Column>
     <Column>
       <Tile>0</Tile>
+      <Walls>0,1</Walls>
     </Column>
     <Column>
       <Tile>0</Tile>

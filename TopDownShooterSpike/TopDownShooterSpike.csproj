@@ -89,6 +89,12 @@
     <Content Include="Content\gfx\FadeImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\gfx\Items\Chair.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\gfx\Items\Toilet.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\gfx\logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

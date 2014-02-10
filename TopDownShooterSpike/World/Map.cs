@@ -11,8 +11,8 @@ namespace TopDownShooterSpike.World
         public Tile[,] _map;
         private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
-        private Texture2D wall = _manager.Load<Texture2D>("gfx/wall");
-        private Texture2D wallCap = _manager.Load<Texture2D>("gfx/wall cap");
+        private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
+        private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
 
         public void LoadContent(string name)
         {
@@ -36,6 +36,27 @@ namespace TopDownShooterSpike.World
                         Image = _manager.Load<Texture2D>("gfx/Tiles/" + curr.SelectSingleNode("Tile").InnerText + ".png"),
                         Walls = curr.SelectSingleNode("Walls") != null ? curr.SelectSingleNode("Walls").InnerText.Split(',') : new string[2]
                     };
+
+                    var item = curr.SelectSingleNode("Item");
+                    if (item != null)
+                    {
+                        var image = new Image
+                        {
+                            Texture = _manager.Load<Texture2D>("gfx/Items/" + item.SelectSingleNode("Type").InnerText)
+                        };
+                        if (item.SelectSingleNode("Rotation") != null)
+                            image.Rotation = int.Parse(item.SelectSingleNode("Rotation").InnerText)*
+                                             (float) (Math.PI/180f);
+                        if (item.SelectSingleNode("Position") != null)
+                        {
+                            var pos = item.SelectSingleNode("Position").InnerText.Split(',');
+                            image.Position = new Vector2(int.Parse(pos[0]), int.Parse(pos[1]));
+                        }
+
+                        image.LoadContent();
+
+                        _map[x, y].Item = image;
+                    }
                 }
             }
         }
@@ -52,24 +73,39 @@ namespace TopDownShooterSpike.World
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            #region Floors, Walls, and Items
+
             for (int x = 0; x < _map.GetLength(0); x++)
             {
                 for (int y = 0; y < _map.GetLength(1); y++)
                 {
+                    //floor
                     spriteBatch.Draw(_map[x, y].Image, new Vector2(x * 64, y * 64), Color.White);
+
+                    //item
+                    if(_map[x, y].Item != null)
+                        spriteBatch.Draw(_map[x, y].Item.Texture, new Vector2(x * 64, y * 64) + _map[x, y].Item.Position, null,
+                            Color.White, _map[x,y].Item.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+
+                    #region Walls
 
                     if (_map[x, y].Walls[0] == "1")
                     {
-                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64), Color.White);
+                        spriteBatch.Draw(_wall, new Vector2(x * 64, y * 64), Color.White);
                     }
                     if (_map[x, y].Walls[1] == "1")
                     {
-                        spriteBatch.Draw(wall, new Vector2(x * 64, y * 64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
+                        spriteBatch.Draw(_wall, new Vector2(x * 64, y * 64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
                             (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
                     }
+
+                    #endregion
                 }
             }
 
+            #endregion
+
+            #region Wall Caps
 
             for (int x = 0; x < _map.GetLength(0); x++)
             {
@@ -78,23 +114,25 @@ namespace TopDownShooterSpike.World
                     if (_map[x, y].Walls[0] == "1")
                     {
                         if (_map[x, y - 1].Walls[0] != "1")
-                            spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
+                            spriteBatch.Draw(_wallCap, new Vector2(x * 64, y * 64), Color.White);
                         if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] != "1" && _map[x - 1, y + 1].Walls[1] != "1")
-                            spriteBatch.Draw(wallCap, new Vector2(x * 64, (y + 1) * 64 - 16), Color.White);
+                            spriteBatch.Draw(_wallCap, new Vector2(x * 64, (y + 1) * 64 - 16), Color.White);
                     }
                     if (_map[x, y].Walls[1] == "1")
                     {
                         if (_map[x - 1, y].Walls[1] != "1")
-                            spriteBatch.Draw(wallCap, new Vector2(x * 64, y * 64), Color.White);
+                            spriteBatch.Draw(_wallCap, new Vector2(x * 64, y * 64), Color.White);
                         if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] != "1")
-                            spriteBatch.Draw(wallCap, new Vector2((x + 1) * 64 - 16, y * 64), Color.White);
+                            spriteBatch.Draw(_wallCap, new Vector2((x + 1) * 64 - 16, y * 64), Color.White);
 
                         //literally only for the bottom right corner which has trouble "capping" because cap needs to be where there is no wall
                         else if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] == "1")
-                            spriteBatch.Draw(wallCap, new Vector2((x + 1) * 64, y * 64), Color.White);
+                            spriteBatch.Draw(_wallCap, new Vector2((x + 1) * 64, y * 64), Color.White);
                     }
                 }
             }
+
+            #endregion
         }
     }
 }
