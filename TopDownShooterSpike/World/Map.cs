@@ -81,13 +81,21 @@ namespace TopDownShooterSpike.World
                         CollisionBox = new List<Rectangle>()
                     };
 
-                    //collision
-                    if (curr.SelectSingleNode("Collision") != null)
+                    if (curr.SelectSingleNode("Collision") != null && curr.SelectSingleNode("Collision").InnerText == string.Empty)
                     {
+                        //full tiles
                         _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 64, 64));
                     }
                     else
                     {
+                        //partial tiles
+                        if (curr.SelectSingleNode("Collision") != null)
+                        {
+                            var col = curr.SelectSingleNode("Collision").InnerText.Split(',');
+                            _map[x, y].CollisionBox.Add(new Rectangle((x * 64) + int.Parse(col[0]), (y * 64) + int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3])));
+                        }
+
+                        //walls
                         if (_map[x, y].Walls[0] == "1")
                             _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 16, 64));
                         if (_map[x, y].Walls[1] == "1")
@@ -155,6 +163,22 @@ namespace TopDownShooterSpike.World
                         spriteBatch.Draw(_wall, new Vector2(x * 64, y * 64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
                             (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
                     }
+
+                    #endregion
+
+                    #region Collision Boxes
+
+//                    foreach (var rec in _map[x, y].CollisionBox)
+//                    {
+//                        var rect = new Texture2D(ScreenManager.Instance.GraphicsDevice, rec.Width, rec.Height);
+//
+//                        var data = new Color[80 * 30];
+//                        for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
+//                        rect.SetData(data);
+//
+//                        var coor = new Vector2(rec.X, rec.Y);
+//                        spriteBatch.Draw(rect, coor, Color.White * .4f);
+//                    }
 
                     #endregion
                 }

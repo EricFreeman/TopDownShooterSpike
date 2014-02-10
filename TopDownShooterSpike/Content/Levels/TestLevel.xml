@@ -65,6 +65,7 @@
         <Rotation>-3</Rotation>
         <Position>0,5</Position>
       </Item>
+      <Collision>18,20,27,25</Collision>
     </Column>
     <Column>
       <Tile>2</Tile>
