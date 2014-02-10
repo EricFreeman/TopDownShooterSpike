@@ -26,6 +26,7 @@ namespace TopDownShooterSpike.Screens
 
             Player = new Player();
             Player.LoadContent();
+            Player.Image.Position = new Vector2(200, 200);
         }
 
         public override void UnloadContent()
@@ -37,7 +38,7 @@ namespace TopDownShooterSpike.Screens
         {
             base.Update(gameTime);
             Image.Update(gameTime);
-            Player.Update(gameTime);
+            Player.Update(gameTime, Map);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

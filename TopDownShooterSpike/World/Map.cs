@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,48 @@ namespace TopDownShooterSpike.World
 
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
+
+        #region Helper Methods
+
+        public List<Tile> CloseTiles(Vector2 pos)
+        {
+            var x = (int)pos.X/64;
+            var y = (int)pos.Y/64;
+
+            var rtn = new List<Tile>();
+
+            rtn.Add(_map[x, y]);
+            
+            if(x - 1 >= 0)
+                rtn.Add(_map[x - 1, y]);
+
+            if(x + 1 < _map.GetLength(0))
+                rtn.Add(_map[x + 1, y]);
+
+            if(y - 1 >= 0)
+                rtn.Add(_map[x, y - 1]);
+
+            if (x - 1 >= 0 && y - 1 >= 0)
+                rtn.Add(_map[x - 1, y - 1]);
+
+            if (x + 1 < _map.GetLength(0) && y - 1 >= 0)
+                rtn.Add(_map[x + 1, y - 1]);
+
+            if(y + 1 < _map.GetLength(1))
+                rtn.Add(_map[x, y + 1]);
+
+            if (x - 1 >= 0 && y + 1 < _map.GetLength(1))
+                rtn.Add(_map[x - 1, y + 1]);
+
+            if (x + 1 < _map.GetLength(0) && y + 1 < _map.GetLength(1))
+                rtn.Add(_map[x + 1, y + 1]);
+
+            return rtn;
+        }
+
+        #endregion
+
+        #region Hooks
 
         public void LoadContent(string name)
         {
@@ -34,8 +77,22 @@ namespace TopDownShooterSpike.World
                     _map[x, y] = new Tile
                     {
                         Image = _manager.Load<Texture2D>("gfx/Tiles/" + curr.SelectSingleNode("Tile").InnerText + ".png"),
-                        Walls = curr.SelectSingleNode("Walls") != null ? curr.SelectSingleNode("Walls").InnerText.Split(',') : new string[2]
+                        Walls = curr.SelectSingleNode("Walls") != null ? curr.SelectSingleNode("Walls").InnerText.Split(',') : new string[2],
+                        CollisionBox = new List<Rectangle>()
                     };
+
+                    //collision
+                    if (curr.SelectSingleNode("Collision") != null)
+                    {
+                        _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 64, 64));
+                    }
+                    else
+                    {
+                        if (_map[x, y].Walls[0] == "1")
+                            _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 16, 64));
+                        if (_map[x, y].Walls[1] == "1")
+                            _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 64, 16));
+                    }
 
                     var item = curr.SelectSingleNode("Item");
                     if (item != null)
@@ -134,5 +191,7 @@ namespace TopDownShooterSpike.World
 
             #endregion
         }
+
+        #endregion
     }
 }

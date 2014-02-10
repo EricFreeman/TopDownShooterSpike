@@ -55,10 +55,12 @@
         <Rotation>17</Rotation>
         <Position>10,0</Position>
       </Item>
+      <Collision />
     </Column>
     <Column>
       <Tile>2</Tile>
-      <Walls>0,1</Walls><Item>
+      <Walls>0,1</Walls>
+      <Item>
         <Type>Chair</Type>
         <Rotation>-3</Rotation>
         <Position>0,5</Position>

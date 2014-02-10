@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TopDownShooterSpike.World;
 
 namespace TopDownShooterSpike.GameHelpers
 {
@@ -9,6 +11,7 @@ namespace TopDownShooterSpike.GameHelpers
     {
         public Image Image;
         public float Speed;
+        public int CharacterWidth = 8;
 
         public void LoadContent()
         {
@@ -21,15 +24,21 @@ namespace TopDownShooterSpike.GameHelpers
             Speed = 5;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Map map)
         {
-            if (InputManager.Instance.KeyDown(Keys.W, Keys.Up))
+            var tiles = map.CloseTiles(Image.Position);
+
+            if (InputManager.Instance.KeyDown(Keys.W, Keys.Up) &&
+                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X), (int)Math.Round(Image.Position.Y) - (int)Math.Round((Speed + CharacterWidth)))))))
                 Image.Position.Y -= Speed;
-            if (InputManager.Instance.KeyDown(Keys.S, Keys.Down))
+            if (InputManager.Instance.KeyDown(Keys.S, Keys.Down) &&
+                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X), (int)Math.Round(Image.Position.Y) + (int)Math.Round((Speed + CharacterWidth)))))))
                 Image.Position.Y += Speed;
-            if (InputManager.Instance.KeyDown(Keys.A, Keys.Left))
+            if (InputManager.Instance.KeyDown(Keys.A, Keys.Left) &&
+                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X) - (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y))))))
                 Image.Position.X -= Speed;
-            if (InputManager.Instance.KeyDown(Keys.D, Keys.Right))
+            if (InputManager.Instance.KeyDown(Keys.D, Keys.Right) &&
+                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X) + (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y))))))
                 Image.Position.X += Speed;
 
             var v = ScreenManager.Instance.GraphicsDevice.Viewport;

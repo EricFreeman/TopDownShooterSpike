@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TopDownShooterSpike.World
@@ -9,7 +10,6 @@ namespace TopDownShooterSpike.World
         public Image Item; // the optional item you can place in a tile
 
         public string[] Walls;
-        public bool Collision;
-        public Rectangle CollisionBox;
+        public List<Rectangle> CollisionBox;
     }
 }
