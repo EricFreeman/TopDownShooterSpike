@@ -17,12 +17,20 @@ namespace TopDownShooterSpike.World
 
         #region Helper Methods
 
+        /// <summary>
+        /// Return all tiles that are 1 or less tiles away
+        /// TODO: Make it work with variable length input for vision and hearing checks
+        /// </summary>
+        /// <param name="pos">Return tiles close to this position</param>
+        /// <returns></returns>
         public List<Tile> CloseTiles(Vector2 pos)
         {
             var x = (int)pos.X/64;
             var y = (int)pos.Y/64;
 
             var rtn = new List<Tile>();
+
+            #region Rug
 
             rtn.Add(_map[x, y]);
             
@@ -50,12 +58,16 @@ namespace TopDownShooterSpike.World
             if (x + 1 < _map.GetLength(0) && y + 1 < _map.GetLength(1))
                 rtn.Add(_map[x + 1, y + 1]);
 
+            #endregion
+
             return rtn;
         }
 
         #endregion
 
         #region Hooks
+
+        #region Load Content
 
         public void LoadContent(string name)
         {
@@ -73,58 +85,74 @@ namespace TopDownShooterSpike.World
                 var columns = rows[y].SelectNodes("Column");
                 for (int x = 0; x < columns.Count; x++)
                 {
-                    var curr = rows[y].SelectNodes("Column")[x];
-                    _map[x, y] = new Tile
+                    var currentNode = rows[y].SelectNodes("Column")[x];
+                    var current = new Tile
                     {
-                        Image = _manager.Load<Texture2D>("gfx/Tiles/" + curr.SelectSingleNode("Tile").InnerText + ".png"),
-                        Walls = curr.SelectSingleNode("Walls") != null ? curr.SelectSingleNode("Walls").InnerText.Split(',') : new string[2],
+                        Image = _manager.Load<Texture2D>("gfx/Tiles/" + currentNode.SelectSingleNode("Tile").InnerText + ".png"),
+                        Walls = currentNode.SelectSingleNode("Walls") != null ? currentNode.SelectSingleNode("Walls").InnerText.Split(',') : new string[2],
                         CollisionBox = new List<Rectangle>()
                     };
 
-                    if (curr.SelectSingleNode("Collision") != null && curr.SelectSingleNode("Collision").InnerText == string.Empty)
-                    {
-                        //full tiles
-                        _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 64, 64));
-                    }
-                    else
-                    {
-                        //partial tiles
-                        if (curr.SelectSingleNode("Collision") != null)
-                        {
-                            var col = curr.SelectSingleNode("Collision").InnerText.Split(',');
-                            _map[x, y].CollisionBox.Add(new Rectangle((x * 64) + int.Parse(col[0]), (y * 64) + int.Parse(col[1]), int.Parse(col[2]), int.Parse(col[3])));
-                        }
+                    CreateCollision(currentNode, current, x, y);
+                    current.Item = CreateItem(currentNode);
 
-                        //walls
-                        if (_map[x, y].Walls[0] == "1")
-                            _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 16, 64));
-                        if (_map[x, y].Walls[1] == "1")
-                            _map[x, y].CollisionBox.Add(new Rectangle(x*64, y*64, 64, 16));
-                    }
-
-                    var item = curr.SelectSingleNode("Item");
-                    if (item != null)
-                    {
-                        var image = new Image
-                        {
-                            Texture = _manager.Load<Texture2D>("gfx/Items/" + item.SelectSingleNode("Type").InnerText)
-                        };
-                        if (item.SelectSingleNode("Rotation") != null)
-                            image.Rotation = int.Parse(item.SelectSingleNode("Rotation").InnerText)*
-                                             (float) (Math.PI/180f);
-                        if (item.SelectSingleNode("Position") != null)
-                        {
-                            var pos = item.SelectSingleNode("Position").InnerText.Split(',');
-                            image.Position = new Vector2(int.Parse(pos[0]), int.Parse(pos[1]));
-                        }
-
-                        image.LoadContent();
-
-                        _map[x, y].Item = image;
-                    }
+                    _map[x, y] = current;
                 }
             }
         }
+
+        private static void CreateCollision(XmlNode currentNode, Tile current, int x, int y)
+        {
+            if (currentNode.SelectSingleNode("Collision") != null &&
+                currentNode.SelectSingleNode("Collision").InnerText == string.Empty)
+            {
+                //full tiles
+                current.CollisionBox.Add(new Rectangle(x*64, y*64, 64, 64));
+            }
+            else
+            {
+                //partial tiles
+                if (currentNode.SelectSingleNode("Collision") != null)
+                {
+                    var col = currentNode.SelectSingleNode("Collision").InnerText.Split(',');
+                    current.CollisionBox.Add(new Rectangle((x*64) + int.Parse(col[0]), (y*64) + int.Parse(col[1]),
+                        int.Parse(col[2]), int.Parse(col[3])));
+                }
+
+                //walls
+                if (current.Walls[0] == "1")
+                    current.CollisionBox.Add(new Rectangle(x*64, y*64, 16, 64));
+                if (current.Walls[1] == "1")
+                    current.CollisionBox.Add(new Rectangle(x*64, y*64, 64, 16));
+            }
+        }
+
+        private Image CreateItem(XmlNode currentNode)
+        {
+            var item = currentNode.SelectSingleNode("Item");
+            if (item != null)
+            {
+                var image = new Image
+                {
+                    Texture = _manager.Load<Texture2D>("gfx/Items/" + item.SelectSingleNode("Type").InnerText)
+                };
+                if (item.SelectSingleNode("Rotation") != null)
+                    image.Rotation = int.Parse(item.SelectSingleNode("Rotation").InnerText) *
+                                     (float)(Math.PI / 180f);
+                if (item.SelectSingleNode("Position") != null)
+                {
+                    var pos = item.SelectSingleNode("Position").InnerText.Split(',');
+                    image.Position = new Vector2(int.Parse(pos[0]), int.Parse(pos[1]));
+                }
+
+                image.LoadContent();
+                return image;
+            }
+
+            return null;
+        }
+
+        #endregion
 
         public void UnloadContent()
         {
