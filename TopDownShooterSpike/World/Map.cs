@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,6 +15,8 @@ namespace TopDownShooterSpike.World
 
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
+
+        private List<Image> _wallCaps = new List<Image>();
 
         #region Helper Methods
 
@@ -99,6 +102,8 @@ namespace TopDownShooterSpike.World
                     _map[x, y] = current;
                 }
             }
+
+            FindWallCaps();
         }
 
         private static void CreateCollision(XmlNode currentNode, Tile current, int x, int y)
@@ -150,6 +155,45 @@ namespace TopDownShooterSpike.World
             }
 
             return null;
+        }
+
+        private void FindWallCaps()
+        {
+            for (int x = 0; x < _map.GetLength(0); x++)
+            {
+                for (int y = 0; y < _map.GetLength(1); y++)
+                {
+                    if (_map[x, y].Walls[0] == "1")
+                    {
+                        if (_map[x, y - 1].Walls[0] != "1")
+                            AddCap(new Vector2(x * 64, y * 64));
+                        if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] != "1" && _map[x - 1, y + 1].Walls[1] != "1")
+                            AddCap(new Vector2(x * 64, (y + 1) * 64 - 16));
+                        if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] == "1")
+                            AddCap(new Vector2(x * 64, (y + 1) * 64));
+                    }
+                    if (_map[x, y].Walls[1] == "1")
+                    {
+                        if (_map[x - 1, y].Walls[1] != "1")
+                            AddCap(new Vector2(x * 64, y * 64));
+                        if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] != "1")
+                            AddCap(new Vector2((x + 1)* 64 - 16, y * 64));
+
+                        //literally only for the bottom right corner which has trouble "capping" because cap needs to be where there is no wall
+                        else if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] == "1")
+                            AddCap(new Vector2((x + 1) * 64, y * 64));
+                    }
+                }
+            }
+        }
+
+        private void AddCap(Vector2 pos)
+        {
+            _wallCaps.Add(new Image()
+            {
+                Texture = _wallCap,
+                Position = pos
+            });
         }
 
         #endregion
@@ -216,29 +260,9 @@ namespace TopDownShooterSpike.World
 
             #region Wall Caps
 
-            for (int x = 0; x < _map.GetLength(0); x++)
+            foreach (var cap in _wallCaps)
             {
-                for (int y = 0; y < _map.GetLength(1); y++)
-                {
-                    if (_map[x, y].Walls[0] == "1")
-                    {
-                        if (_map[x, y - 1].Walls[0] != "1")
-                            spriteBatch.Draw(_wallCap, new Vector2(x * 64, y * 64), Color.White);
-                        if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] != "1" && _map[x - 1, y + 1].Walls[1] != "1")
-                            spriteBatch.Draw(_wallCap, new Vector2(x * 64, (y + 1) * 64 - 16), Color.White);
-                    }
-                    if (_map[x, y].Walls[1] == "1")
-                    {
-                        if (_map[x - 1, y].Walls[1] != "1")
-                            spriteBatch.Draw(_wallCap, new Vector2(x * 64, y * 64), Color.White);
-                        if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] != "1")
-                            spriteBatch.Draw(_wallCap, new Vector2((x + 1) * 64 - 16, y * 64), Color.White);
-
-                        //literally only for the bottom right corner which has trouble "capping" because cap needs to be where there is no wall
-                        else if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] == "1")
-                            spriteBatch.Draw(_wallCap, new Vector2((x + 1) * 64, y * 64), Color.White);
-                    }
-                }
+                cap.Draw(spriteBatch);
             }
 
             #endregion
