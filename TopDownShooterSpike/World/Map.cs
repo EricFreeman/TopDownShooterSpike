@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +16,7 @@ namespace TopDownShooterSpike.World
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
 
-        private List<Image> _wallCaps = new List<Image>();
+        private readonly List<Image> _wallCaps = new List<Image>();
 
         #region Helper Methods
 
@@ -189,11 +189,13 @@ namespace TopDownShooterSpike.World
 
         private void AddCap(Vector2 pos)
         {
-            _wallCaps.Add(new Image()
-            {
-                Texture = _wallCap,
-                Position = pos
-            });
+            //don't need to draw the caps twice
+            if(_wallCaps.All(x => x.Position != pos))
+                _wallCaps.Add(new Image()
+                {
+                    Texture = _wallCap,
+                    Position = pos
+                });
         }
 
         #endregion
