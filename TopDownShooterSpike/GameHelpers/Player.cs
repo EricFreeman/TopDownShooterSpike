@@ -3,15 +3,22 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TopDownShooterSpike.Managers;
 using TopDownShooterSpike.World;
 
 namespace TopDownShooterSpike.GameHelpers
 {
     public class Player
     {
+        #region Properties
+
         public Image Image;
         public float Speed;
         public int CharacterWidth = 8;
+
+        #endregion
+
+        #region Hooks
 
         public void LoadContent()
         {
@@ -52,5 +59,7 @@ namespace TopDownShooterSpike.GameHelpers
         {
             Image.Draw(spriteBatch);
         }
+
+        #endregion
     }
 }

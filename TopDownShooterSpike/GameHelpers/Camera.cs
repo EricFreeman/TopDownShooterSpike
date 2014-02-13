@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.GameHelpers
 {

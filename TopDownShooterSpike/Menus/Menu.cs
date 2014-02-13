@@ -5,6 +5,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Menus
 {

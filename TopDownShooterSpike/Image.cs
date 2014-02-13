@@ -5,11 +5,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Effects;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike
 {
     public class Image
     {
+        #region Properties
+
         public float Alpha, Rotation;
         public string Text, FontName, Path;
         public Vector2 Position, Scale;
@@ -28,10 +31,29 @@ namespace TopDownShooterSpike
 
         public FadeEffect FadeEffect;
 
+        #endregion
+
+        #region Constructor
+
+        public Image()
+        {
+            Text = Path = Effects = String.Empty;
+            FontName = "Fonts/SampleFont";
+            Position = PubOffset = Vector2.Zero;
+            Scale = Vector2.One;
+            Alpha = 1.0f;
+            SourceRect = Rectangle.Empty;
+            _effectList = new Dictionary<string, ImageEffect>();
+        }
+
+        #endregion
+
+        #region Effects
+
         void SetEffect<T>(ref T effect)
         {
             if (effect == null)
-                effect = (T) Activator.CreateInstance(typeof (T));
+                effect = (T)Activator.CreateInstance(typeof(T));
             else
             {
                 (effect as ImageEffect).IsActive = true;
@@ -69,7 +91,7 @@ namespace TopDownShooterSpike
                     Effects += effect.Key + ":";
             }
 
-            if(Effects != string.Empty)
+            if (Effects != string.Empty)
                 Effects.Remove(Effects.Length - 1);
         }
 
@@ -83,16 +105,9 @@ namespace TopDownShooterSpike
                 ActivateEffect(e);
         }
 
-        public Image()
-        {
-            Text = Path = Effects = String.Empty;
-            FontName = "Fonts/SampleFont";
-            Position = PubOffset = Vector2.Zero;
-            Scale = Vector2.One;
-            Alpha = 1.0f;
-            SourceRect = Rectangle.Empty;
-            _effectList = new Dictionary<string, ImageEffect>();
-        }
+        #endregion
+
+        #region Hooks
 
         public void LoadContent()
         {
@@ -164,5 +179,7 @@ namespace TopDownShooterSpike
 
             spriteBatch.Draw(Texture, Position + _origin, null, Color.White * Alpha, Rotation, _origin + PubOffset, Scale, SpriteEffects.None, 0.0f);
         }
+
+        #endregion
     }
 }

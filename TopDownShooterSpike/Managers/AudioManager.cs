@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 
-namespace TopDownShooterSpike
+namespace TopDownShooterSpike.Managers
 {
     public class AudioManager
     {

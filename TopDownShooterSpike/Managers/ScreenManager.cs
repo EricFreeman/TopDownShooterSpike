@@ -7,10 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.GameHelpers;
 using TopDownShooterSpike.Screens;
 
-namespace TopDownShooterSpike
+namespace TopDownShooterSpike.Managers
 {
     public class ScreenManager
     {
+        #region Properties
+
         private static ScreenManager _instance;
         public Vector2 Dimensions { get; set; }
         [XmlIgnore]
@@ -35,6 +37,10 @@ namespace TopDownShooterSpike
             get { return _instance ?? (_instance = Initialize()); }
         }
 
+        #endregion
+
+        #region Initializer
+
         private static ScreenManager Initialize()
         {
             var xml = new XmlManager<ScreenManager>();
@@ -45,6 +51,10 @@ namespace TopDownShooterSpike
             s.Camera = new Camera();
             return s;
         }
+
+        #endregion
+
+        #region Transitions
 
         public void ChangeScreens(string screenName)
         {
@@ -80,6 +90,10 @@ namespace TopDownShooterSpike
             }
         }
 
+        #endregion
+
+        #region Hooks
+
         public void LoadContent(ContentManager content)
         {
             Content = new ContentManager(content.ServiceProvider, "Content");
@@ -108,5 +122,7 @@ namespace TopDownShooterSpike
             if(IsTransitioning)
                 Image.Draw(spriteBatch);
         }
+
+        #endregion
     }
 }

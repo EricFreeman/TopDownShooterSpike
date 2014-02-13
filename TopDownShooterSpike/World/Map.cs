@@ -5,18 +5,23 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.World
 {
     public class Map
     {
+        #region Properties
+
         public Tile[,] _map;
-        private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+        private readonly List<Image> _wallCaps = new List<Image>();
 
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
 
-        private readonly List<Image> _wallCaps = new List<Image>();
+        private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+
+        #endregion
 
         #region Helper Methods
 

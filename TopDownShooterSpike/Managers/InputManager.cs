@@ -2,10 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace TopDownShooterSpike
+namespace TopDownShooterSpike.Managers
 {
     public class InputManager
     {
+        #region Properties
+
         private KeyboardState _currentKeyState, _previousKeyState;
         private MouseState _currentMouseState, _previousMouseState;
 
@@ -14,6 +16,10 @@ namespace TopDownShooterSpike
         {
             get { return _instance ?? (_instance = new InputManager()); }
         }
+
+        #endregion
+
+        #region Hooks
 
         public void Update()
         {
@@ -26,6 +32,8 @@ namespace TopDownShooterSpike
                 _currentMouseState = Mouse.GetState();
             }
         }
+
+        #endregion
 
         #region Keyboard
 

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Xml.Serialization;
 
-namespace TopDownShooterSpike
+namespace TopDownShooterSpike.Managers
 {
     public class XmlManager<T>
     {
