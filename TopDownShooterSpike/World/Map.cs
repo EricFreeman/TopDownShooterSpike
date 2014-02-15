@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -17,8 +16,13 @@ namespace TopDownShooterSpike.World
         public Tile[,] _map;
         private readonly List<Image> _wallCaps = new List<Image>();
 
+        private List<Image> _doors = new List<Image>();
+        private List<Image> _doorCaps = new List<Image>();
+
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
+        private readonly Texture2D _doorTexture = _manager.Load<Texture2D>("gfx/door");
+        private readonly Texture2D _doorCapTexture = _manager.Load<Texture2D>("gfx/door cap");
 
         private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
@@ -107,6 +111,7 @@ namespace TopDownShooterSpike.World
 
                     CreateCollision(currentNode, current, x, y);
                     current.Item = CreateItem(currentNode);
+                    CreateDoor(currentNode, x, y);
 
                     _map[x, y] = current;
                 }
@@ -115,8 +120,48 @@ namespace TopDownShooterSpike.World
             FindWallCaps();
         }
 
+        private void CreateDoor(XmlNode currentNode, int x, int y)
+        {
+            var door = currentNode.SelectSingleNode("Door");
+            if (door != null)
+            {
+                var doorPos = door.InnerText.Split(',');
+
+                if (doorPos[0] == "1")
+                {
+                    _doors.Add(new Image
+                    {
+                        Texture = _doorTexture,
+                        Position = new Vector2(x * TILE_SIZE + (WALL_SIZE / 2), y * TILE_SIZE + (WALL_SIZE / 2)),
+                        PubOffset = new Vector2(WALL_SIZE / 2, WALL_SIZE / 2)
+                    });
+                    _doorCaps.Add(new Image
+                    {
+                        Texture = _doorCapTexture,
+                        Position = new Vector2(x * TILE_SIZE, y * TILE_SIZE)
+                    });
+                }
+                if (doorPos[1] == "1")
+                {
+                    _doors.Add(new Image
+                    {
+                        Texture = _doorTexture,
+                        Rotation = -90f * (float)Math.PI / 180f,
+                        Position = new Vector2(x * TILE_SIZE + (WALL_SIZE / 2), y * TILE_SIZE + (WALL_SIZE / 2)),
+                        PubOffset = new Vector2(WALL_SIZE / 2, WALL_SIZE / 2)
+                    });
+                    _doorCaps.Add(new Image
+                    {
+                        Texture = _doorCapTexture,
+                        Position = new Vector2(x * TILE_SIZE, y * TILE_SIZE)
+                    });
+                }
+            }
+        }
+
         private static void CreateCollision(XmlNode currentNode, Tile current, int x, int y)
         {
+            // if there is no innertext, collision is full cell
             if (currentNode.SelectSingleNode("Collision") != null &&
                 currentNode.SelectSingleNode("Collision").InnerText == string.Empty)
             {
@@ -251,17 +296,17 @@ namespace TopDownShooterSpike.World
 
                     #region Collision Boxes
 
-//                    foreach (var rec in _map[x, y].CollisionBox)
-//                    {
-//                        var rect = new Texture2D(ScreenManager.Instance.GraphicsDevice, rec.Width, rec.Height);
-//
-//                        var data = new Color[80 * 30];
-//                        for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
-//                        rect.SetData(data);
-//
-//                        var coor = new Vector2(rec.X, rec.Y);
-//                        spriteBatch.Draw(rect, coor, Color.White * .4f);
-//                    }
+                    //                    foreach (var rec in _map[x, y].CollisionBox)
+                    //                    {
+                    //                        var rect = new Texture2D(ScreenManager.Instance.GraphicsDevice, rec.Width, rec.Height);
+                    //
+                    //                        var data = new Color[80 * 30];
+                    //                        for (int i = 0; i < data.Length; ++i) data[i] = Color.Chocolate;
+                    //                        rect.SetData(data);
+                    //
+                    //                        var coor = new Vector2(rec.X, rec.Y);
+                    //                        spriteBatch.Draw(rect, coor, Color.White * .4f);
+                    //                    }
 
                     #endregion
                 }
@@ -269,11 +314,21 @@ namespace TopDownShooterSpike.World
 
             #endregion
 
+            #region Doors
+
+            foreach (var door in _doors)
+                door.Draw(spriteBatch);
+
+            foreach (var cap in _doorCaps)
+                cap.Draw(spriteBatch);
+
+            #endregion
+
             #region Wall Caps
 
             foreach (var cap in _wallCaps)
                 cap.Draw(spriteBatch);
-            
+
 
             #endregion
         }

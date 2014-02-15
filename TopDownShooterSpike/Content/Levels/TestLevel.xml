@@ -55,7 +55,7 @@
         <Rotation>17</Rotation>
         <Position>10,0</Position>
       </Item>
-      <Collision />
+      <Collision>20,25,25,25</Collision>
     </Column>
     <Column>
       <Tile>2</Tile>
@@ -166,6 +166,7 @@
     </Column>
     <Column>
       <Tile>4</Tile>
+      <Door>0,1</Door>
     </Column>
     <Column>
       <Tile>3</Tile>
@@ -204,6 +205,7 @@
     </Column>
     <Column>
       <Tile>3</Tile>
+      <Door>1,0</Door>
     </Column>
     <Column>
       <Tile>3</Tile>
@@ -290,6 +292,7 @@
     </Column>
     <Column>
       <Tile>2</Tile>
+      <Door>0,1</Door>
     </Column>
     <Column>
       <Tile>2</Tile>
@@ -297,6 +300,7 @@
     </Column>
     <Column>
       <Tile>2</Tile>
+      <Door>0,1</Door>
     </Column>
     <Column>
       <Tile>0</Tile>

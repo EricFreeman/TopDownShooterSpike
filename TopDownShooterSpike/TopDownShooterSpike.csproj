@@ -86,6 +86,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Content\gfx\door cap.png" />
+    <Content Include="Content\gfx\door.png" />
     <Content Include="Content\gfx\FadeImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
