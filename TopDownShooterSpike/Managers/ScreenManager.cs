@@ -58,7 +58,7 @@ namespace TopDownShooterSpike.Managers
 
         public void ChangeScreens(string screenName)
         {
-            var screen = Type.GetType(GetType().Namespace + ".Screens." + screenName);
+            var screen = Type.GetType(GetType().Namespace.Replace(".Managers", "") + ".Screens." + screenName);
             NewScreen = (GameScreen) Activator.CreateInstance(screen);
             Image.IsActive = true;
             Image.FadeEffect.Increase = true;

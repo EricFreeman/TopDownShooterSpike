@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -21,6 +22,9 @@ namespace TopDownShooterSpike.World
 
         private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
+        private const int TILE_SIZE = 64;
+        private const int WALL_SIZE = 16;
+
         #endregion
 
         #region Helper Methods
@@ -33,22 +37,22 @@ namespace TopDownShooterSpike.World
         /// <returns></returns>
         public List<Tile> CloseTiles(Vector2 pos)
         {
-            var x = (int)pos.X/64;
-            var y = (int)pos.Y/64;
+            var x = (int)pos.X / TILE_SIZE;
+            var y = (int)pos.Y / TILE_SIZE;
 
             var rtn = new List<Tile>();
 
             #region Rug
 
             rtn.Add(_map[x, y]);
-            
-            if(x - 1 >= 0)
+
+            if (x - 1 >= 0)
                 rtn.Add(_map[x - 1, y]);
 
-            if(x + 1 < _map.GetLength(0))
+            if (x + 1 < _map.GetLength(0))
                 rtn.Add(_map[x + 1, y]);
 
-            if(y - 1 >= 0)
+            if (y - 1 >= 0)
                 rtn.Add(_map[x, y - 1]);
 
             if (x - 1 >= 0 && y - 1 >= 0)
@@ -57,7 +61,7 @@ namespace TopDownShooterSpike.World
             if (x + 1 < _map.GetLength(0) && y - 1 >= 0)
                 rtn.Add(_map[x + 1, y - 1]);
 
-            if(y + 1 < _map.GetLength(1))
+            if (y + 1 < _map.GetLength(1))
                 rtn.Add(_map[x, y + 1]);
 
             if (x - 1 >= 0 && y + 1 < _map.GetLength(1))
@@ -117,7 +121,7 @@ namespace TopDownShooterSpike.World
                 currentNode.SelectSingleNode("Collision").InnerText == string.Empty)
             {
                 //full tiles
-                current.CollisionBox.Add(new Rectangle(x*64, y*64, 64, 64));
+                current.CollisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
             }
             else
             {
@@ -125,15 +129,15 @@ namespace TopDownShooterSpike.World
                 if (currentNode.SelectSingleNode("Collision") != null)
                 {
                     var col = currentNode.SelectSingleNode("Collision").InnerText.Split(',');
-                    current.CollisionBox.Add(new Rectangle((x*64) + int.Parse(col[0]), (y*64) + int.Parse(col[1]),
+                    current.CollisionBox.Add(new Rectangle((x * TILE_SIZE) + int.Parse(col[0]), (y * TILE_SIZE) + int.Parse(col[1]),
                         int.Parse(col[2]), int.Parse(col[3])));
                 }
 
                 //walls
                 if (current.Walls[0] == "1")
-                    current.CollisionBox.Add(new Rectangle(x*64, y*64, 16, 64));
+                    current.CollisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, WALL_SIZE, TILE_SIZE));
                 if (current.Walls[1] == "1")
-                    current.CollisionBox.Add(new Rectangle(x*64, y*64, 64, 16));
+                    current.CollisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, WALL_SIZE));
             }
         }
 
@@ -171,22 +175,22 @@ namespace TopDownShooterSpike.World
                     if (_map[x, y].Walls[0] == "1")
                     {
                         if (_map[x, y - 1].Walls[0] != "1")
-                            AddCap(new Vector2(x * 64, y * 64));
+                            AddCap(new Vector2(x * TILE_SIZE, y * TILE_SIZE));
                         if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] != "1" && _map[x - 1, y + 1].Walls[1] != "1")
-                            AddCap(new Vector2(x * 64, (y + 1) * 64 - 16));
+                            AddCap(new Vector2(x * TILE_SIZE, (y + 1) * TILE_SIZE - WALL_SIZE));
                         if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] == "1")
-                            AddCap(new Vector2(x * 64, (y + 1) * 64));
+                            AddCap(new Vector2(x * TILE_SIZE, (y + 1) * TILE_SIZE));
                     }
                     if (_map[x, y].Walls[1] == "1")
                     {
                         if (_map[x - 1, y].Walls[1] != "1")
-                            AddCap(new Vector2(x * 64, y * 64));
+                            AddCap(new Vector2(x * TILE_SIZE, y * TILE_SIZE));
                         if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] != "1")
-                            AddCap(new Vector2((x + 1)* 64 - 16, y * 64));
+                            AddCap(new Vector2((x + 1) * TILE_SIZE - WALL_SIZE, y * TILE_SIZE));
 
                         //literally only for the bottom right corner which has trouble "capping" because cap needs to be where there is no wall
                         else if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] == "1")
-                            AddCap(new Vector2((x + 1) * 64, y * 64));
+                            AddCap(new Vector2((x + 1) * TILE_SIZE, y * TILE_SIZE));
                     }
                 }
             }
@@ -195,7 +199,7 @@ namespace TopDownShooterSpike.World
         private void AddCap(Vector2 pos)
         {
             //don't need to draw the caps twice
-            if(_wallCaps.All(x => x.Position != pos))
+            if (_wallCaps.All(x => x.Position != pos))
                 _wallCaps.Add(new Image()
                 {
                     Texture = _wallCap,
@@ -224,22 +228,22 @@ namespace TopDownShooterSpike.World
                 for (int y = 0; y < _map.GetLength(1); y++)
                 {
                     //floor
-                    spriteBatch.Draw(_map[x, y].Image, new Vector2(x * 64, y * 64), Color.White);
+                    spriteBatch.Draw(_map[x, y].Image, new Vector2(x * TILE_SIZE, y * TILE_SIZE), Color.White);
 
                     //item
-                    if(_map[x, y].Item != null)
-                        spriteBatch.Draw(_map[x, y].Item.Texture, new Vector2(x * 64, y * 64) + _map[x, y].Item.Position, null,
-                            Color.White, _map[x,y].Item.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                    if (_map[x, y].Item != null)
+                        spriteBatch.Draw(_map[x, y].Item.Texture, new Vector2(x * TILE_SIZE, y * TILE_SIZE) + _map[x, y].Item.Position, null,
+                            Color.White, _map[x, y].Item.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
                     #region Walls
 
                     if (_map[x, y].Walls[0] == "1")
                     {
-                        spriteBatch.Draw(_wall, new Vector2(x * 64, y * 64), Color.White);
+                        spriteBatch.Draw(_wall, new Vector2(x * TILE_SIZE, y * TILE_SIZE), Color.White);
                     }
                     if (_map[x, y].Walls[1] == "1")
                     {
-                        spriteBatch.Draw(_wall, new Vector2(x * 64, y * 64 + 16), new Rectangle(0, 0, 16, 64), Color.White,
+                        spriteBatch.Draw(_wall, new Vector2(x * TILE_SIZE, y * TILE_SIZE + WALL_SIZE), new Rectangle(0, 0, WALL_SIZE, TILE_SIZE), Color.White,
                             (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
                     }
 
@@ -268,9 +272,8 @@ namespace TopDownShooterSpike.World
             #region Wall Caps
 
             foreach (var cap in _wallCaps)
-            {
                 cap.Draw(spriteBatch);
-            }
+            
 
             #endregion
         }
