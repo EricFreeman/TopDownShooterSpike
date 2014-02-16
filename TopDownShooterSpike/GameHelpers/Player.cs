@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -48,11 +49,18 @@ namespace TopDownShooterSpike.GameHelpers
                 !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X) + (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y))))))
                 Image.Position.X += Speed;
 
+            CheckDoors();
+
             var v = ScreenManager.Instance.GraphicsDevice.Viewport;
             var direction = new Vector2(v.Width/2f, v.Height/2f) - InputManager.Instance.GetMousePostion();
             Image.Rotation = (float)(Math.Atan2(direction.Y, direction.X));
 
             ScreenManager.Instance.Camera.CenterOn(Image);
+        }
+
+        private void CheckDoors()
+        {
+            
         }
 
         public void Draw(SpriteBatch spriteBatch)

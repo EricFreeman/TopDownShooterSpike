@@ -16,13 +16,10 @@ namespace TopDownShooterSpike.World
         public Tile[,] _map;
         private readonly List<Image> _wallCaps = new List<Image>();
 
-        private List<Image> _doors = new List<Image>();
-        private List<Image> _doorCaps = new List<Image>();
+        private List<Door> _doors = new List<Door>();
 
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
-        private readonly Texture2D _doorTexture = _manager.Load<Texture2D>("gfx/door");
-        private readonly Texture2D _doorCapTexture = _manager.Load<Texture2D>("gfx/door cap");
 
         private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
@@ -129,32 +126,23 @@ namespace TopDownShooterSpike.World
 
                 if (doorPos[0] == "1")
                 {
-                    _doors.Add(new Image
-                    {
-                        Texture = _doorTexture,
-                        Position = new Vector2(x * TILE_SIZE + (WALL_SIZE / 2), y * TILE_SIZE + (WALL_SIZE / 2)),
-                        PubOffset = new Vector2(WALL_SIZE / 2, WALL_SIZE / 2)
-                    });
-                    _doorCaps.Add(new Image
-                    {
-                        Texture = _doorCapTexture,
-                        Position = new Vector2(x * TILE_SIZE, y * TILE_SIZE)
-                    });
+                    var d = new Door();
+                    d.SetupDoor(
+                        new Vector2(x * TILE_SIZE + (WALL_SIZE / 2), y * TILE_SIZE + (WALL_SIZE / 2)),  //  position
+                        new Vector2(WALL_SIZE / 2, WALL_SIZE / 2),                                      //  offset
+                        0f,                                                                             //  rotation
+                        new Vector2(x * TILE_SIZE, y * TILE_SIZE));                                     //  cap position
+                    _doors.Add(d);
                 }
                 if (doorPos[1] == "1")
                 {
-                    _doors.Add(new Image
-                    {
-                        Texture = _doorTexture,
-                        Rotation = -90f * (float)Math.PI / 180f,
-                        Position = new Vector2(x * TILE_SIZE + (WALL_SIZE / 2), y * TILE_SIZE + (WALL_SIZE / 2)),
-                        PubOffset = new Vector2(WALL_SIZE / 2, WALL_SIZE / 2)
-                    });
-                    _doorCaps.Add(new Image
-                    {
-                        Texture = _doorCapTexture,
-                        Position = new Vector2(x * TILE_SIZE, y * TILE_SIZE)
-                    });
+                    var d = new Door();
+                    d.SetupDoor(
+                        new Vector2(x * TILE_SIZE + (WALL_SIZE / 2), y * TILE_SIZE + (WALL_SIZE / 2)),  //  position
+                        new Vector2(WALL_SIZE / 2, WALL_SIZE / 2),                                      //  offset
+                        -90f * (float)Math.PI / 180f,                                                   //  rotation
+                        new Vector2(x * TILE_SIZE, y * TILE_SIZE));                                     //  cap position
+                    _doors.Add(d);
                 }
             }
         }
@@ -318,9 +306,6 @@ namespace TopDownShooterSpike.World
 
             foreach (var door in _doors)
                 door.Draw(spriteBatch);
-
-            foreach (var cap in _doorCaps)
-                cap.Draw(spriteBatch);
 
             #endregion
 

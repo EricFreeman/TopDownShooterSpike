@@ -57,6 +57,7 @@
     <Compile Include="Screens\TempGame.cs" />
     <Compile Include="Screens\TitleScreen.cs" />
     <Compile Include="Managers\XmlManager.cs" />
+    <Compile Include="World\Door.cs" />
     <Compile Include="World\Map.cs" />
     <Compile Include="World\Tile.cs" />
   </ItemGroup>
