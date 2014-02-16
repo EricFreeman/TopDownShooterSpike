@@ -49,7 +49,7 @@ namespace TopDownShooterSpike.GameHelpers
                 !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X) + (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y))))))
                 Image.Position.X += Speed;
 
-            CheckDoors();
+            CheckDoors(map);
 
             var v = ScreenManager.Instance.GraphicsDevice.Viewport;
             var direction = new Vector2(v.Width/2f, v.Height/2f) - InputManager.Instance.GetMousePostion();
@@ -58,9 +58,16 @@ namespace TopDownShooterSpike.GameHelpers
             ScreenManager.Instance.Camera.CenterOn(Image);
         }
 
-        private void CheckDoors()
+        private void CheckDoors(Map map)
         {
-            
+            foreach (var door in map.Doors)
+            {
+                if (door.DoorImage.CollidesWith(Image))
+                {
+                    Console.WriteLine(DateTime.Now.Millisecond + " collided");
+                    //push out of the way
+                }
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

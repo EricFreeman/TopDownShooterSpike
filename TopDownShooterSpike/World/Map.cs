@@ -13,10 +13,10 @@ namespace TopDownShooterSpike.World
     {
         #region Properties
 
-        public Tile[,] _map;
+        public Tile[,] Tiles;
         private readonly List<Image> _wallCaps = new List<Image>();
 
-        private List<Door> _doors = new List<Door>();
+        public List<Door> Doors = new List<Door>();
 
         private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
         private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
@@ -45,31 +45,31 @@ namespace TopDownShooterSpike.World
 
             #region Rug
 
-            rtn.Add(_map[x, y]);
+            rtn.Add(Tiles[x, y]);
 
             if (x - 1 >= 0)
-                rtn.Add(_map[x - 1, y]);
+                rtn.Add(Tiles[x - 1, y]);
 
-            if (x + 1 < _map.GetLength(0))
-                rtn.Add(_map[x + 1, y]);
+            if (x + 1 < Tiles.GetLength(0))
+                rtn.Add(Tiles[x + 1, y]);
 
             if (y - 1 >= 0)
-                rtn.Add(_map[x, y - 1]);
+                rtn.Add(Tiles[x, y - 1]);
 
             if (x - 1 >= 0 && y - 1 >= 0)
-                rtn.Add(_map[x - 1, y - 1]);
+                rtn.Add(Tiles[x - 1, y - 1]);
 
-            if (x + 1 < _map.GetLength(0) && y - 1 >= 0)
-                rtn.Add(_map[x + 1, y - 1]);
+            if (x + 1 < Tiles.GetLength(0) && y - 1 >= 0)
+                rtn.Add(Tiles[x + 1, y - 1]);
 
-            if (y + 1 < _map.GetLength(1))
-                rtn.Add(_map[x, y + 1]);
+            if (y + 1 < Tiles.GetLength(1))
+                rtn.Add(Tiles[x, y + 1]);
 
-            if (x - 1 >= 0 && y + 1 < _map.GetLength(1))
-                rtn.Add(_map[x - 1, y + 1]);
+            if (x - 1 >= 0 && y + 1 < Tiles.GetLength(1))
+                rtn.Add(Tiles[x - 1, y + 1]);
 
-            if (x + 1 < _map.GetLength(0) && y + 1 < _map.GetLength(1))
-                rtn.Add(_map[x + 1, y + 1]);
+            if (x + 1 < Tiles.GetLength(0) && y + 1 < Tiles.GetLength(1))
+                rtn.Add(Tiles[x + 1, y + 1]);
 
             #endregion
 
@@ -91,7 +91,7 @@ namespace TopDownShooterSpike.World
             var rows = level.SelectNodes("Row");
             var c = rows[0].SelectNodes("Column");
 
-            _map = new Tile[c.Count, rows.Count];
+            Tiles = new Tile[c.Count, rows.Count];
 
             for (int y = 0; y < rows.Count; y++)
             {
@@ -110,7 +110,7 @@ namespace TopDownShooterSpike.World
                     current.Item = CreateItem(currentNode);
                     CreateDoor(currentNode, x, y);
 
-                    _map[x, y] = current;
+                    Tiles[x, y] = current;
                 }
             }
 
@@ -132,7 +132,7 @@ namespace TopDownShooterSpike.World
                         new Vector2(WALL_SIZE / 2, WALL_SIZE / 2),                                      //  offset
                         0f,                                                                             //  rotation
                         new Vector2(x * TILE_SIZE, y * TILE_SIZE));                                     //  cap position
-                    _doors.Add(d);
+                    Doors.Add(d);
                 }
                 if (doorPos[1] == "1")
                 {
@@ -142,7 +142,7 @@ namespace TopDownShooterSpike.World
                         new Vector2(WALL_SIZE / 2, WALL_SIZE / 2),                                      //  offset
                         -90f * (float)Math.PI / 180f,                                                   //  rotation
                         new Vector2(x * TILE_SIZE, y * TILE_SIZE));                                     //  cap position
-                    _doors.Add(d);
+                    Doors.Add(d);
                 }
             }
         }
@@ -201,28 +201,28 @@ namespace TopDownShooterSpike.World
 
         private void FindWallCaps()
         {
-            for (int x = 0; x < _map.GetLength(0); x++)
+            for (int x = 0; x < Tiles.GetLength(0); x++)
             {
-                for (int y = 0; y < _map.GetLength(1); y++)
+                for (int y = 0; y < Tiles.GetLength(1); y++)
                 {
-                    if (_map[x, y].Walls[0] == "1")
+                    if (Tiles[x, y].Walls[0] == "1")
                     {
-                        if (_map[x, y - 1].Walls[0] != "1")
+                        if (Tiles[x, y - 1].Walls[0] != "1")
                             AddCap(new Vector2(x * TILE_SIZE, y * TILE_SIZE));
-                        if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] != "1" && _map[x - 1, y + 1].Walls[1] != "1")
+                        if (Tiles[x, y + 1].Walls[0] != "1" && Tiles[x, y + 1].Walls[1] != "1" && Tiles[x - 1, y + 1].Walls[1] != "1")
                             AddCap(new Vector2(x * TILE_SIZE, (y + 1) * TILE_SIZE - WALL_SIZE));
-                        if (_map[x, y + 1].Walls[0] != "1" && _map[x, y + 1].Walls[1] == "1")
+                        if (Tiles[x, y + 1].Walls[0] != "1" && Tiles[x, y + 1].Walls[1] == "1")
                             AddCap(new Vector2(x * TILE_SIZE, (y + 1) * TILE_SIZE));
                     }
-                    if (_map[x, y].Walls[1] == "1")
+                    if (Tiles[x, y].Walls[1] == "1")
                     {
-                        if (_map[x - 1, y].Walls[1] != "1")
+                        if (Tiles[x - 1, y].Walls[1] != "1")
                             AddCap(new Vector2(x * TILE_SIZE, y * TILE_SIZE));
-                        if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] != "1")
+                        if (Tiles[x + 1, y].Walls[1] != "1" && Tiles[x + 1, y].Walls[0] != "1" && Tiles[x + 1, y - 1].Walls[0] != "1")
                             AddCap(new Vector2((x + 1) * TILE_SIZE - WALL_SIZE, y * TILE_SIZE));
 
                         //literally only for the bottom right corner which has trouble "capping" because cap needs to be where there is no wall
-                        else if (_map[x + 1, y].Walls[1] != "1" && _map[x + 1, y].Walls[0] != "1" && _map[x + 1, y - 1].Walls[0] == "1")
+                        else if (Tiles[x + 1, y].Walls[1] != "1" && Tiles[x + 1, y].Walls[0] != "1" && Tiles[x + 1, y - 1].Walls[0] == "1")
                             AddCap(new Vector2((x + 1) * TILE_SIZE, y * TILE_SIZE));
                     }
                 }
@@ -249,32 +249,33 @@ namespace TopDownShooterSpike.World
 
         public void Update(GameTime gameTime)
         {
-
+            foreach(var door in Doors)
+                door.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             #region Floors, Walls, and Items
 
-            for (int x = 0; x < _map.GetLength(0); x++)
+            for (int x = 0; x < Tiles.GetLength(0); x++)
             {
-                for (int y = 0; y < _map.GetLength(1); y++)
+                for (int y = 0; y < Tiles.GetLength(1); y++)
                 {
                     //floor
-                    spriteBatch.Draw(_map[x, y].Image, new Vector2(x * TILE_SIZE, y * TILE_SIZE), Color.White);
+                    spriteBatch.Draw(Tiles[x, y].Image, new Vector2(x * TILE_SIZE, y * TILE_SIZE), Color.White);
 
                     //item
-                    if (_map[x, y].Item != null)
-                        spriteBatch.Draw(_map[x, y].Item.Texture, new Vector2(x * TILE_SIZE, y * TILE_SIZE) + _map[x, y].Item.Position, null,
-                            Color.White, _map[x, y].Item.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 1f);
+                    if (Tiles[x, y].Item != null)
+                        spriteBatch.Draw(Tiles[x, y].Item.Texture, new Vector2(x * TILE_SIZE, y * TILE_SIZE) + Tiles[x, y].Item.Position, null,
+                            Color.White, Tiles[x, y].Item.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 1f);
 
                     #region Walls
 
-                    if (_map[x, y].Walls[0] == "1")
+                    if (Tiles[x, y].Walls[0] == "1")
                     {
                         spriteBatch.Draw(_wall, new Vector2(x * TILE_SIZE, y * TILE_SIZE), Color.White);
                     }
-                    if (_map[x, y].Walls[1] == "1")
+                    if (Tiles[x, y].Walls[1] == "1")
                     {
                         spriteBatch.Draw(_wall, new Vector2(x * TILE_SIZE, y * TILE_SIZE + WALL_SIZE), new Rectangle(0, 0, WALL_SIZE, TILE_SIZE), Color.White,
                             (float)(Math.PI * 1.5f), Vector2.Zero, 1f, SpriteEffects.None, 1f);
@@ -284,7 +285,7 @@ namespace TopDownShooterSpike.World
 
                     #region Collision Boxes
 
-                    //                    foreach (var rec in _map[x, y].CollisionBox)
+                    //                    foreach (var rec in Tiles[x, y].CollisionBox)
                     //                    {
                     //                        var rect = new Texture2D(ScreenManager.Instance.GraphicsDevice, rec.Width, rec.Height);
                     //
@@ -304,7 +305,7 @@ namespace TopDownShooterSpike.World
 
             #region Doors
 
-            foreach (var door in _doors)
+            foreach (var door in Doors)
                 door.Draw(spriteBatch);
 
             #endregion

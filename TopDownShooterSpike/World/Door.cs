@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Managers;
@@ -12,12 +13,12 @@ namespace TopDownShooterSpike.World
 
         private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
 
-        private Image _door;
+        public Image DoorImage;
         private Image _doorCap;
 
         public Door()
         {
-            _door = new Image
+            DoorImage = new Image
             {
                 Texture = _doorTexture
             };
@@ -29,16 +30,21 @@ namespace TopDownShooterSpike.World
 
         public void SetupDoor(Vector2 position, Vector2 offset, float rotation, Vector2 capPosition)
         {
-            _door.Position = position;
-            _door.PubOffset = offset;
-            _door.Rotation = rotation;
+            DoorImage.Position = position;
+            DoorImage.PubOffset = offset;
+            DoorImage.Rotation = rotation;
 
             _doorCap.Position = capPosition;
         }
 
+        public void Update(GameTime gameTime)
+        {
+            
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            _door.Draw(spriteBatch);
+            DoorImage.Draw(spriteBatch);
             _doorCap.Draw(spriteBatch);
         }
     }
