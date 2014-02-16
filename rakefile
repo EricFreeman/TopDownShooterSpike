@@ -1,10 +1,10 @@
 require 'rake/clean'
 
-CONTENT_ASSETS = 'TopDownShooterSpike\Content'
-CONTENT_BIN = 'TopDownShooterSpike\bin\WindowsGL\Debug\Content'
+CONTENT_ASSETS = 'src\TopDownShooterSpike\Content'
+CONTENT_BIN = 'src\TopDownShooterSpike\bin\WindowsGL\Debug\Content'
 CONTENT_COMPILER_EXE = '"./lib/Content Compiler/bin/XNAContentCompiler.exe"'
 
-CLOBBER.include('**/bin/*')
+CLOBBER.include('**/bin/*', '**/obj/*', CONTENT_BIN)
 CLEAN.include("#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
