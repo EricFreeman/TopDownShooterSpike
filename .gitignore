@@ -1,6 +1,5 @@
-packages/
-obj/
-bin/
+**/obj/
+**/bin/
 *.suo
 *.csproj.user
 *.vshost.exe.*
