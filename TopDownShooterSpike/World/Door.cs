@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,9 @@ namespace TopDownShooterSpike.World
         public Image DoorImage;
         private Image _doorCap;
 
+        public float Force = 0f; // force being put on door making it swing open
+        private bool _isVertical;
+
         public Door()
         {
             DoorImage = new Image
@@ -28,18 +32,44 @@ namespace TopDownShooterSpike.World
             };
         }
 
+        /// <summary>
+        /// Push the door from position with given force
+        /// </summary>
+        /// <param name="from">Where force is coming from (bullet, player, etc)</param>
+        /// <param name="force">How much force is beign exerted</param>
+        /// <param name="spot">Spot on door where player touched it</param>
+        public void Push(Image from, float force, Vector2 spot)
+        {
+            var o1 = Vector2.Transform(spot, Matrix.CreateRotationX(DoorImage.Rotation));
+
+            if (o1.X < DoorImage.Texture.Width/2)
+                Force -= force;
+            else
+                Force += force;
+        }
+
         public void SetupDoor(Vector2 position, Vector2 offset, float rotation, Vector2 capPosition)
         {
             DoorImage.Position = position;
             DoorImage.PubOffset = offset;
             DoorImage.Rotation = rotation;
+            _isVertical = rotation == 0;
 
             _doorCap.Position = capPosition;
         }
 
         public void Update(GameTime gameTime)
         {
+            if (Force != 0f)
+                DoorImage.Rotation += Force;
+
+            if(Force > 0)
+                Force -= .01f;
+            else if (Force < 0)
+                Force += .01f;
             
+            if (Force > -.01f && Force < .01f)
+                Force = 0f;
         }
 
         public void Draw(SpriteBatch spriteBatch)

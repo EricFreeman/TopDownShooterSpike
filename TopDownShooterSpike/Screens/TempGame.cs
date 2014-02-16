@@ -38,6 +38,7 @@ namespace TopDownShooterSpike.Screens
         {
             base.Update(gameTime);
             Image.Update(gameTime);
+            Map.Update(gameTime);
             Player.Update(gameTime, Map);
         }
 

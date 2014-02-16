@@ -110,8 +110,11 @@ namespace TopDownShooterSpike
         #region Collision
 
         // For all their help with writing this code, I'd like to thank Stack Overflow, boxed wine, and...well, that's about it
-        public bool CollidesWith(Image otherImage)
+        public bool CollidesWith(Image otherImage, out Vector2 collisionSpotA, out Vector2 collisionSpotB)
         {
+            collisionSpotA = Vector2.Zero;
+            collisionSpotB = Vector2.Zero;
+
             var otherX = otherImage.Position.X;
             var otherY = otherImage.Position.Y;
             var otherRot = otherImage.Rotation;
@@ -148,7 +151,8 @@ namespace TopDownShooterSpike
                 if (IntersectPixels(otherTransform, otherTexture.Width,
                                     otherTexture.Height, otherTextureData,
                                     thisTransform, Texture.Width,
-                                    Texture.Height, thisTextureData))
+                                    Texture.Height, thisTextureData,
+                                    out collisionSpotA, out collisionSpotB))
                 {
                     return true;
                 }
@@ -158,8 +162,12 @@ namespace TopDownShooterSpike
         }
 
         public static bool IntersectPixels(Matrix transformA, int widthA, int heightA, Color[] dataA,
-                                           Matrix transformB, int widthB, int heightB, Color[] dataB)
+                                           Matrix transformB, int widthB, int heightB, Color[] dataB,
+                                           out Vector2 collisionSpotA, out Vector2 collisionSpotB)
         {
+            collisionSpotA = Vector2.Zero;
+            collisionSpotB = Vector2.Zero;
+
             // Calculate a matrix which transforms from A's local space into
             // world space and then into B's local space
             var transformAToB = transformA * Matrix.Invert(transformB);
@@ -199,6 +207,10 @@ namespace TopDownShooterSpike
                         // If both pixels are not completely transparent,
                         if (colorA.A != 0 && colorB.A != 0)
                         {
+                            // set the collision out vars
+                            collisionSpotA = new Vector2(xA, yA);
+                            collisionSpotB = new Vector2(xB, yB);
+
                             // then an intersection has been found
                             return true;
                         }
