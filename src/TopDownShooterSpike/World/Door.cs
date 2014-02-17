@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +8,8 @@ namespace TopDownShooterSpike.World
 {
     public class Door
     {
+        #region Properties
+
         private readonly Texture2D _doorTexture = _manager.Load<Texture2D>("gfx/door");
         private readonly Texture2D _doorCapTexture = _manager.Load<Texture2D>("gfx/door cap");
 
@@ -20,6 +21,10 @@ namespace TopDownShooterSpike.World
         public float Force = 0f; // force being put on door making it swing open
         private float minRot;
         private float maxRot;
+
+        #endregion
+
+        #region Constructor
 
         public Door()
         {
@@ -33,6 +38,10 @@ namespace TopDownShooterSpike.World
             };
         }
 
+        #endregion
+
+        #region Helper Methods
+
         /// <summary>
         /// Push the door from position with given force
         /// </summary>
@@ -41,7 +50,7 @@ namespace TopDownShooterSpike.World
         /// <param name="spot">Spot on door where player touched it</param>
         public void Push(Image from, float force, Vector2 spot)
         {
-            if (Math.Abs(Force) > 1f) return;
+            if (Math.Abs(Force) > .5f) return;
 
             var o1 = Vector2.Transform(spot, Matrix.CreateRotationX(DoorImage.Rotation));
 
@@ -61,6 +70,10 @@ namespace TopDownShooterSpike.World
 
             _doorCap.Position = capPosition;
         }
+
+        #endregion
+
+        #region Hooks
 
         public void Update(GameTime gameTime)
         {
@@ -83,5 +96,7 @@ namespace TopDownShooterSpike.World
             DoorImage.Draw(spriteBatch);
             _doorCap.Draw(spriteBatch);
         }
+
+        #endregion
     }
 }

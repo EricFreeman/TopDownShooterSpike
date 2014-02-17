@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,47 +32,28 @@ namespace TopDownShooterSpike.World
         #region Helper Methods
 
         /// <summary>
-        /// Return all tiles that are 1 or less tiles away
-        /// TODO: Make it work with variable length input for vision and hearing checks
+        /// Return all tiles that are within the current distance
         /// </summary>
         /// <param name="pos">Return tiles close to this position</param>
+        /// <param name="distance">Return tiles this many tiles away from position</param>
         /// <returns></returns>
-        public List<Tile> CloseTiles(Vector2 pos)
+        public List<Tile> CloseTiles(Vector2 pos, int distance = 1)
         {
-            var x = (int)pos.X / TILE_SIZE;
-            var y = (int)pos.Y / TILE_SIZE;
+            var pX = (int)pos.X / TILE_SIZE;
+            var pY = (int)pos.Y / TILE_SIZE;
+            var maxX = Tiles.GetLength(0);
+            var maxY = Tiles.GetLength(1);
 
             var rtn = new List<Tile>();
 
-            #region Rug
-
-            rtn.Add(Tiles[x, y]);
-
-            if (x - 1 >= 0)
-                rtn.Add(Tiles[x - 1, y]);
-
-            if (x + 1 < Tiles.GetLength(0))
-                rtn.Add(Tiles[x + 1, y]);
-
-            if (y - 1 >= 0)
-                rtn.Add(Tiles[x, y - 1]);
-
-            if (x - 1 >= 0 && y - 1 >= 0)
-                rtn.Add(Tiles[x - 1, y - 1]);
-
-            if (x + 1 < Tiles.GetLength(0) && y - 1 >= 0)
-                rtn.Add(Tiles[x + 1, y - 1]);
-
-            if (y + 1 < Tiles.GetLength(1))
-                rtn.Add(Tiles[x, y + 1]);
-
-            if (x - 1 >= 0 && y + 1 < Tiles.GetLength(1))
-                rtn.Add(Tiles[x - 1, y + 1]);
-
-            if (x + 1 < Tiles.GetLength(0) && y + 1 < Tiles.GetLength(1))
-                rtn.Add(Tiles[x + 1, y + 1]);
-
-            #endregion
+            for (int y = pY - distance; y <= pY + distance; y++)
+            {
+                for (int x = pX - distance; x <= pX + distance; x++)
+                {
+                    if(x >= 0 && x < maxX && y >= 0 && y < maxY)
+                        rtn.Add(Tiles[x, y]);
+                }
+            }
 
             return rtn;
         }
