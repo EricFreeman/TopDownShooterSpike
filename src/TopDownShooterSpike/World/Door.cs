@@ -18,7 +18,8 @@ namespace TopDownShooterSpike.World
         private Image _doorCap;
 
         public float Force = 0f; // force being put on door making it swing open
-        private bool _isVertical;
+        private float minRot;
+        private float maxRot;
 
         public Door()
         {
@@ -40,6 +41,8 @@ namespace TopDownShooterSpike.World
         /// <param name="spot">Spot on door where player touched it</param>
         public void Push(Image from, float force, Vector2 spot)
         {
+            if (Math.Abs(Force) > 1f) return;
+
             var o1 = Vector2.Transform(spot, Matrix.CreateRotationX(DoorImage.Rotation));
 
             if (o1.X < DoorImage.Texture.Width/2)
@@ -53,7 +56,8 @@ namespace TopDownShooterSpike.World
             DoorImage.Position = position;
             DoorImage.PubOffset = offset;
             DoorImage.Rotation = rotation;
-            _isVertical = rotation == 0;
+            minRot = rotation - (float)(120 * Math.PI / 180);
+            maxRot = rotation + (float)(120 * Math.PI / 180);
 
             _doorCap.Position = capPosition;
         }
@@ -63,6 +67,8 @@ namespace TopDownShooterSpike.World
             if (Force != 0f)
                 DoorImage.Rotation += Force;
 
+            DoorImage.Rotation = MathHelper.Clamp(DoorImage.Rotation, minRot, maxRot);
+            
             if(Force > 0)
                 Force -= .01f;
             else if (Force < 0)

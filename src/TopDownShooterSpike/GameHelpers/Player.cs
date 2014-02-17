@@ -28,7 +28,7 @@ namespace TopDownShooterSpike.GameHelpers
                 PubOffset = new Vector2(16, 16)
             };
 
-            Speed = 5;
+            Speed = 3;
         }
 
         public void Update(GameTime gameTime, Map map)
