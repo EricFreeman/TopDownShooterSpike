@@ -61,11 +61,11 @@ namespace TopDownShooterSpike.GameHelpers
         {
             foreach (var door in map.Doors)
             {
-                Vector2 collisionSpotA;
-                Vector2 collisionSpotB;
-                if (door.DoorImage.CollidesWith(Image, out collisionSpotA, out collisionSpotB))
+                var res = door.DoorImage.CollidesWith(Image);
+                if (res.IsSuccessful)
                 {
-                    door.Push(Image, .05f, collisionSpotB);
+                    door.Push(Image, .05f, res.SpotB);
+                    return;
                 }
             }
         }
