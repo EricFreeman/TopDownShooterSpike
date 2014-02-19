@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.GameHelpers;
@@ -16,6 +17,9 @@ namespace TopDownShooterSpike.Screens
         [XmlIgnore] 
         public Player Player;
 
+        [XmlIgnore] 
+        public List<Enemy> Enemies; 
+
         public override void LoadContent()
         {
             base.LoadContent();
@@ -27,11 +31,9 @@ namespace TopDownShooterSpike.Screens
             Player = new Player();
             Player.LoadContent();
             Player.Image.Position = new Vector2(200, 200);
-        }
 
-        public override void UnloadContent()
-        {
-            base.UnloadContent();
+            Enemies = new List<Enemy>();
+            Enemies.Add(new Enemy());
         }
 
         public override void Update(GameTime gameTime)
@@ -39,6 +41,10 @@ namespace TopDownShooterSpike.Screens
             base.Update(gameTime);
             Image.Update(gameTime);
             Map.Update(gameTime);
+            foreach (var enemy in Enemies)
+            {
+                enemy.Update(gameTime);
+            }
             Player.Update(gameTime, Map);
         }
 
@@ -47,6 +53,10 @@ namespace TopDownShooterSpike.Screens
             base.Draw(spriteBatch);
             Image.Draw(spriteBatch);
             Map.Draw(spriteBatch);
+            foreach (var enemy in Enemies)
+            {
+                enemy.Draw(spriteBatch);
+            }
             Player.Draw(spriteBatch);
         }
     }

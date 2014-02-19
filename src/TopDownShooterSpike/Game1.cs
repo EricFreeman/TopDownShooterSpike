@@ -1,12 +1,8 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.GamerServices;
 using TopDownShooterSpike.Managers;
 
 #endregion
@@ -22,7 +18,6 @@ namespace TopDownShooterSpike
         SpriteBatch _spriteBatch;
 
         public Game1()
-            : base()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -66,7 +61,7 @@ namespace TopDownShooterSpike
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, null, null, null, null, ScreenManager.Instance.Camera.GetTransformation());
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, ScreenManager.Instance.Camera.GetTransformation());
             ScreenManager.Instance.Draw(_spriteBatch);
             _spriteBatch.End();
 

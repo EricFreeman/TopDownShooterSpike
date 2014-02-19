@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="GameHelpers\Camera.cs" />
+    <Compile Include="GameHelpers\Enemy.cs" />
     <Compile Include="GameHelpers\Player.cs" />
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Effects\FadeEffect.cs" />
@@ -79,6 +80,7 @@
     </Content>
     <Content Include="Content\gfx\door cap.png" />
     <Content Include="Content\gfx\door.png" />
+    <Content Include="Content\gfx\Enemy.png" />
     <Content Include="Content\gfx\FadeImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
