@@ -110,11 +110,24 @@ namespace TopDownShooterSpike
         #region Collision
 
         // For all their help with writing this code, I'd like to thank Stack Overflow, boxed wine, and...well, that's about it
-        public bool CollidesWith(Image otherImage, out Vector2 collisionSpotA, out Vector2 collisionSpotB)
-        {
-            collisionSpotA = Vector2.Zero;
-            collisionSpotB = Vector2.Zero;
 
+        /// <summary>
+        /// Returns true or false on if there was a collision between the images
+        /// </summary>
+        /// <param name="otherImage"></param>
+        /// <returns></returns>
+        public bool CollidesWithSimple(Image otherImage)
+        {
+            return CollidesWith(otherImage).IsSuccessful;
+        }
+
+        /// <summary>
+        /// Returns a simple object showing where the collision happened on the two images in addition to saying if there was a collision or not
+        /// </summary>
+        /// <param name="otherImage"></param>
+        /// <returns></returns>
+        public CollisionResult CollidesWith(Image otherImage)
+        {            
             var otherX = otherImage.Position.X;
             var otherY = otherImage.Position.Y;
             var otherRot = otherImage.Rotation;
@@ -148,26 +161,19 @@ namespace TopDownShooterSpike
             if (otherRectangle.Intersects(thisRectangle))
             {
                 // if simple collision passed, now check on a per pixel basis
-                if (IntersectPixels(otherTransform, otherTexture.Width,
+                return IntersectPixels(otherTransform, otherTexture.Width,
                                     otherTexture.Height, otherTextureData,
                                     thisTransform, Texture.Width,
-                                    Texture.Height, thisTextureData,
-                                    out collisionSpotA, out collisionSpotB))
-                {
-                    return true;
-                }
+                                    Texture.Height, thisTextureData);
             }
 
-            return false;
+            return new CollisionResult { IsSuccessful = false };
         }
 
-        public static bool IntersectPixels(Matrix transformA, int widthA, int heightA, Color[] dataA,
-                                           Matrix transformB, int widthB, int heightB, Color[] dataB,
-                                           out Vector2 collisionSpotA, out Vector2 collisionSpotB)
+        // the pixel perfect collision detection half
+        public CollisionResult IntersectPixels(Matrix transformA, int widthA, int heightA, Color[] dataA,
+                                           Matrix transformB, int widthB, int heightB, Color[] dataB)
         {
-            collisionSpotA = Vector2.Zero;
-            collisionSpotB = Vector2.Zero;
-
             // Calculate a matrix which transforms from A's local space into
             // world space and then into B's local space
             var transformAToB = transformA * Matrix.Invert(transformB);
@@ -207,12 +213,13 @@ namespace TopDownShooterSpike
                         // If both pixels are not completely transparent,
                         if (colorA.A != 0 && colorB.A != 0)
                         {
-                            // set the collision out vars
-                            collisionSpotA = new Vector2(xA, yA);
-                            collisionSpotB = new Vector2(xB, yB);
-
-                            // then an intersection has been found
-                            return true;
+                            // An itsection has been found!
+                            return new CollisionResult
+                            {
+                                IsSuccessful = true,
+                                SpotA = new Vector2(xA, yA),
+                                SpotB = new Vector2(xB, yB)
+                            };
                         }
                     }
 
@@ -225,7 +232,7 @@ namespace TopDownShooterSpike
             }
 
             // No intersection found
-            return false;
+            return new CollisionResult {IsSuccessful = false};
         }
 
         public static Rectangle CalculateBoundingRectangle(Rectangle rectangle, Matrix transform)
@@ -327,4 +334,15 @@ namespace TopDownShooterSpike
 
         #endregion
     }
+
+    #region Helper Class
+
+    public struct CollisionResult
+    {
+        public bool IsSuccessful;
+        public Vector2 SpotA;
+        public Vector2 SpotB;
+    }
+
+    #endregion
 }
