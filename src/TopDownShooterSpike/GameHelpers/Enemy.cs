@@ -34,6 +34,8 @@ namespace TopDownShooterSpike.GameHelpers
             Waypoints.Add(_image.Position);
             Waypoints.Add(new Vector2(100f, 400f));
             Waypoints.Add(new Vector2(100f, 350f));
+            Waypoints.Add(new Vector2(200f, 400f));
+            Waypoints.Add(new Vector2(200f, 350f));
             currentPoint = 0;
         }
 
@@ -43,17 +45,36 @@ namespace TopDownShooterSpike.GameHelpers
             {
                 var dis = _image.Position - Waypoints[currentPoint];
                 if (Math.Abs(dis.X) < _patrolSpeed && Math.Abs(dis.Y) < _patrolSpeed)
-                    if (Waypoints.Count - 1 > currentPoint)
-                        currentPoint++;
-                    else
-                        currentPoint = 0;
+                    currentPoint = Waypoints.Count - 1 > currentPoint ? currentPoint + 1 : 0;
 
                 var move = Waypoints[currentPoint] - _image.Position;
                 move.Normalize();
 
                 _image.Position += move * _patrolSpeed;
-                _image.Rotation = (float)Math.Atan2(move.Y, move.X) + (float)Math.PI;
+                _image.Rotation = RotateTowards(move, _image.Rotation, .1f);
             }
+        }
+
+        private static float RotateTowards(Vector2 move, float curr, float tween)
+        {
+            var shouldBe = (float)Math.Atan2(move.Y, move.X) + (float)Math.PI;
+            if (Math.Abs(curr - shouldBe) < tween || Math.Abs(curr - shouldBe + Math.PI * 2) < tween || Math.Abs(curr - shouldBe - Math.PI * 2) < tween)
+                curr = shouldBe;
+
+            float rotationDifference = curr - shouldBe;
+
+            //if difference is greater than 180 degrees, reverse rotating direction
+            //by adding or subtracting 360 degrees
+            if (Math.Abs(rotationDifference) > Math.PI)
+                rotationDifference += rotationDifference > 0f ? (float)(-1 * Math.PI * 2) : (float)(Math.PI * 2);
+
+            //based on difference, rotate enemy angle
+            if (rotationDifference < 0)
+                curr += tween;
+            else if (rotationDifference > 0)
+                curr -= tween;
+
+            return curr;
         }
 
         public void Draw(SpriteBatch spriteBatch)
