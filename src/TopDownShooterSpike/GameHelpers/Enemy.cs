@@ -114,8 +114,16 @@ namespace TopDownShooterSpike.GameHelpers
 
 
             // no walls between player and enemy
-            var tilePos = GetPointsOnLine((int)enemyPosition.X, (int)enemyPosition.Y, (int)playerPosition.X, (int)playerPosition.Y);
-            return CheckPointsForWalls(tilePos, map);
+            var tilePos = GetPointsOnLine((int)enemyPosition.X, (int)enemyPosition.Y, (int)playerPosition.X, (int)playerPosition.Y, 4);
+            var noWallsBetween = CheckPointsForWalls(tilePos, map);
+            if (!noWallsBetween) return false;
+
+
+            // no doors between player and enemy (TODO: make sure to check several points from player instead of just player position.  otherwise we can't be sure a shoulder isn't poking out)
+            var noDoorsBetween = CheckPointsForDoors(tilePos, map);
+            if (!noDoorsBetween) return false;
+
+            return true;
         }
 
         public bool CheckPointsForWalls(List<Point> points, Map map)
@@ -123,8 +131,27 @@ namespace TopDownShooterSpike.GameHelpers
             return points.All(point => !map.Tiles[point.X/64, point.Y/64].IsVisionCollision(point));
         }
 
+        public bool CheckPointsForDoors(List<Point> points, Map map)
+        {
+            var check = new Image { Texture = new Texture2D(ScreenManager.Instance.GraphicsDevice, 1, 1) };
+            var data = new Color[check.Texture.Width * check.Texture.Height];
+            data[0] = Color.Black;
+            check.Texture.SetData(data);
+
+            foreach (var point in points)
+            {
+                check.Position = new Vector2(point.X, point.Y);
+                var doors = map.Doors.Where(door => Vector2.Distance(door.DoorImage.Position, new Vector2(point.X, point.Y)) < 128);
+
+                if (doors.Any(door => door.DoorImage.CollidesWith(check).IsSuccessful))
+                    return false;
+            }
+
+            return true;
+        }
+
         // Bresenham's Line Algorithm
-        public List<Point> GetPointsOnLine(int x0, int y0, int x1, int y1)
+        public List<Point> GetPointsOnLine(int x0, int y0, int x1, int y1, int step)
         {
             bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
             if (steep)
@@ -154,7 +181,7 @@ namespace TopDownShooterSpike.GameHelpers
             int y = y0;
 
             var rtn = new List<Point>();
-            for (int x = x0; x <= x1; x+=16)
+            for (int x = x0; x <= x1; x += step)
             {
                 rtn.Add(new Point((steep ? y : x), (steep ? x : y)));
                 error = error - dy;
