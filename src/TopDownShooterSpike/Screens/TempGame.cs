@@ -3,6 +3,7 @@ using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.GameHelpers;
+using TopDownShooterSpike.Managers;
 using TopDownShooterSpike.World;
 
 namespace TopDownShooterSpike.Screens
@@ -43,7 +44,7 @@ namespace TopDownShooterSpike.Screens
             Map.Update(gameTime);
             foreach (var enemy in Enemies)
             {
-                enemy.Update(gameTime);
+                enemy.Update(gameTime, Player);
             }
             Player.Update(gameTime, Map);
         }

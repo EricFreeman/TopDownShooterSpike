@@ -20,6 +20,8 @@ namespace TopDownShooterSpike.GameHelpers
         private float _runSpeed = 1.25f;
         private float _woundedSpeed = .33f;
 
+        private float coneAngle = 60f;
+
         public Enemy()
         {
             _image = new Image
@@ -39,7 +41,7 @@ namespace TopDownShooterSpike.GameHelpers
             currentPoint = 0;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Player player)
         {
             if (State == EnemyState.Patrolling)
             {
@@ -52,10 +54,26 @@ namespace TopDownShooterSpike.GameHelpers
 
                 _image.Position += move * _patrolSpeed;
                 _image.Rotation = RotateTowards(move, _image.Rotation, .1f);
+
+                if (CanEnemySeePlayer(RadianToVector2(_image.Rotation), _image.Position, player.Image.Position, coneAngle))
+                    State = EnemyState.Attack;
+            }
+            else if(State == EnemyState.Attack)
+            {
+                var move = player.Image.Position - _image.Position;
+                move.Normalize();
+
+                _image.Position += move * _patrolSpeed;
+                _image.Rotation = RotateTowards(move, _image.Rotation, .1f);
             }
         }
 
-        private static float RotateTowards(Vector2 move, float curr, float tween)
+        private Vector2 RadianToVector2(float myAngleInRadians)
+        {
+            return new Vector2((float) Math.Cos(myAngleInRadians), -(float) Math.Sin(myAngleInRadians));
+        }
+
+        private float RotateTowards(Vector2 move, float curr, float tween)
         {
             var shouldBe = (float)Math.Atan2(move.Y, move.X) + (float)Math.PI;
             if (Math.Abs(curr - shouldBe) < tween || Math.Abs(curr - shouldBe + Math.PI * 2) < tween || Math.Abs(curr - shouldBe - Math.PI * 2) < tween)
@@ -76,6 +94,13 @@ namespace TopDownShooterSpike.GameHelpers
 
             return curr;
         }
+
+        public bool CanEnemySeePlayer(Vector2 enemyLookAtDirection, Vector2 enemyPosition, Vector2 playerPosition, float cone)
+        {
+            Vector2 directionEnemyToPlayer = playerPosition - enemyPosition;
+            directionEnemyToPlayer.Normalize();
+            return (Vector2.Dot(directionEnemyToPlayer, enemyLookAtDirection) > (float)Math.Cos(MathHelper.ToRadians(cone / 2f)));
+        } 
 
         public void Draw(SpriteBatch spriteBatch)
         {
