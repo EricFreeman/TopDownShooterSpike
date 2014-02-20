@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Managers;
+using TopDownShooterSpike.World;
 
 namespace TopDownShooterSpike.GameHelpers
 {
@@ -21,6 +22,7 @@ namespace TopDownShooterSpike.GameHelpers
         private float _woundedSpeed = .33f;
 
         private float coneAngle = 60f;
+        private float viewDistance = 400f;
 
         public Enemy()
         {
@@ -41,7 +43,7 @@ namespace TopDownShooterSpike.GameHelpers
             currentPoint = 0;
         }
 
-        public void Update(GameTime gameTime, Player player)
+        public void Update(GameTime gameTime, Player player, Map map)
         {
             if (State == EnemyState.Patrolling)
             {
@@ -55,7 +57,7 @@ namespace TopDownShooterSpike.GameHelpers
                 _image.Position += move * _patrolSpeed;
                 _image.Rotation = RotateTowards(move, _image.Rotation, .1f);
 
-                if (CanEnemySeePlayer(RadianToVector2(_image.Rotation), _image.Position, player.Image.Position, coneAngle))
+                if (CanEnemySeePlayer(RadianToVector2(_image.Rotation), _image.Position, player.Image.Position, coneAngle, map))
                     State = EnemyState.Attack;
             }
             else if(State == EnemyState.Attack)
@@ -95,12 +97,74 @@ namespace TopDownShooterSpike.GameHelpers
             return curr;
         }
 
-        public bool CanEnemySeePlayer(Vector2 enemyLookAtDirection, Vector2 enemyPosition, Vector2 playerPosition, float cone)
+        public bool CanEnemySeePlayer(Vector2 enemyLookAtDirection, Vector2 enemyPosition, Vector2 playerPosition, float cone, Map map)
         {
+            // player close enough to enemy
+            var inDistance = Vector2.Distance(enemyPosition, playerPosition) < viewDistance;
+            if (!inDistance) return false;
+
+
+            // player in enemy view cone
             Vector2 directionEnemyToPlayer = playerPosition - enemyPosition;
             directionEnemyToPlayer.Normalize();
-            return (Vector2.Dot(directionEnemyToPlayer, enemyLookAtDirection) > (float)Math.Cos(MathHelper.ToRadians(cone / 2f)));
-        } 
+            var inCone = (Vector2.Dot(directionEnemyToPlayer, enemyLookAtDirection) > (float)Math.Cos(MathHelper.ToRadians(cone / 2f)));
+            if (!inCone) return false;
+
+
+            // no walls between player and enemy
+            var tilePos = GetPointsOnLine((int)enemyPosition.X, (int)enemyPosition.Y, (int)playerPosition.X, (int)playerPosition.Y);
+            return CheckPointsForWalls(tilePos, map);
+        }
+
+        public bool CheckPointsForWalls(List<Point> points, Map map)
+        {
+            return false;
+        }
+
+        // Bresenham's Line Algorithm
+        public List<Point> GetPointsOnLine(int x0, int y0, int x1, int y1)
+        {
+            bool steep = Math.Abs(y1 - y0) > Math.Abs(x1 - x0);
+            if (steep)
+            {
+                int t;
+                t = x0; // swap x0 and y0
+                x0 = y0;
+                y0 = t;
+                t = x1; // swap x1 and y1
+                x1 = y1;
+                y1 = t;
+            }
+            if (x0 > x1)
+            {
+                int t;
+                t = x0; // swap x0 and x1
+                x0 = x1;
+                x1 = t;
+                t = y0; // swap y0 and y1
+                y0 = y1;
+                y1 = t;
+            }
+            int dx = x1 - x0;
+            int dy = Math.Abs(y1 - y0);
+            int error = dx / 2;
+            int ystep = (y0 < y1) ? 1 : -1;
+            int y = y0;
+
+            var rtn = new List<Point>();
+            for (int x = x0; x <= x1; x+=16)
+            {
+                rtn.Add(new Point((steep ? y : x), (steep ? x : y)));
+                error = error - dy;
+                if (error < 0)
+                {
+                    y += ystep;
+                    error += dx;
+                }
+            }
+
+            return rtn;
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {

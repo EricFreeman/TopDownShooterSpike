@@ -44,7 +44,7 @@ namespace TopDownShooterSpike.Screens
             Map.Update(gameTime);
             foreach (var enemy in Enemies)
             {
-                enemy.Update(gameTime, Player);
+                enemy.Update(gameTime, Player, Map);
             }
             Player.Update(gameTime, Map);
         }
