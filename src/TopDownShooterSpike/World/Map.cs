@@ -84,7 +84,8 @@ namespace TopDownShooterSpike.World
                     {
                         Image = _manager.Load<Texture2D>("gfx/Tiles/" + currentNode.SelectSingleNode("Tile").InnerText + ".png"),
                         Walls = currentNode.SelectSingleNode("Walls") != null ? currentNode.SelectSingleNode("Walls").InnerText.Split(',') : new string[2],
-                        CollisionBox = new List<Rectangle>()
+                        CollisionBox = new List<Rectangle>(),
+                        VisionBox = new List<Rectangle>()
                     };
 
                     CreateCollision(currentNode, current, x, y);
@@ -136,6 +137,8 @@ namespace TopDownShooterSpike.World
             {
                 //full tiles
                 current.CollisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+
+                // TODO: Create way to add vision box here
             }
             else
             {
@@ -145,13 +148,21 @@ namespace TopDownShooterSpike.World
                     var col = currentNode.SelectSingleNode("Collision").InnerText.Split(',');
                     current.CollisionBox.Add(new Rectangle((x * TILE_SIZE) + int.Parse(col[0]), (y * TILE_SIZE) + int.Parse(col[1]),
                         int.Parse(col[2]), int.Parse(col[3])));
+
+                    // TODO: Create way to add vision box here as well
                 }
 
                 //walls
                 if (current.Walls[0] == "1")
-                    current.CollisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, WALL_SIZE, TILE_SIZE));
+                {
+                    current.CollisionBox.Add(new Rectangle(x*TILE_SIZE, y*TILE_SIZE, WALL_SIZE, TILE_SIZE));
+                    current.VisionBox.Add(new Rectangle(x*TILE_SIZE, y*TILE_SIZE, WALL_SIZE, TILE_SIZE));
+                }
                 if (current.Walls[1] == "1")
-                    current.CollisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, WALL_SIZE));
+                {
+                    current.CollisionBox.Add(new Rectangle(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, WALL_SIZE));
+                    current.VisionBox.Add(new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, WALL_SIZE));
+                }
             }
         }
 

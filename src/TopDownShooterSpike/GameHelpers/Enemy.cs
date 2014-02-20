@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Managers;
@@ -118,7 +120,7 @@ namespace TopDownShooterSpike.GameHelpers
 
         public bool CheckPointsForWalls(List<Point> points, Map map)
         {
-            return false;
+            return points.All(point => !map.Tiles[point.X/64, point.Y/64].IsVisionCollision(point));
         }
 
         // Bresenham's Line Algorithm

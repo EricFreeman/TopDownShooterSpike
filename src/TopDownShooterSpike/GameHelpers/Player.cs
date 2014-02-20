@@ -36,16 +36,16 @@ namespace TopDownShooterSpike.GameHelpers
             var tiles = map.CloseTiles(Image.Position);
 
             if (InputManager.Instance.KeyDown(Keys.W, Keys.Up) &&
-                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X), (int)Math.Round(Image.Position.Y) - (int)Math.Round((Speed + CharacterWidth)))))))
+                !tiles.Any(x => x.IsBlockingCollision(new Point((int)Math.Round(Image.Position.X), (int)Math.Round(Image.Position.Y) - (int)Math.Round((Speed + CharacterWidth))))))
                 Image.Position.Y -= Speed;
             if (InputManager.Instance.KeyDown(Keys.S, Keys.Down) &&
-                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X), (int)Math.Round(Image.Position.Y) + (int)Math.Round((Speed + CharacterWidth)))))))
+                !tiles.Any(x => x.IsBlockingCollision(new Point((int)Math.Round(Image.Position.X), (int)Math.Round(Image.Position.Y) + (int)Math.Round((Speed + CharacterWidth))))))
                 Image.Position.Y += Speed;
             if (InputManager.Instance.KeyDown(Keys.A, Keys.Left) &&
-                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X) - (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y))))))
+                !tiles.Any(x => x.IsBlockingCollision(new Point((int)Math.Round(Image.Position.X) - (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y)))))
                 Image.Position.X -= Speed;
             if (InputManager.Instance.KeyDown(Keys.D, Keys.Right) &&
-                !tiles.Any(x => x.CollisionBox.Any(y => y.Contains(new Point((int)Math.Round(Image.Position.X) + (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y))))))
+                !tiles.Any(x => x.IsBlockingCollision(new Point((int)Math.Round(Image.Position.X) + (int)Math.Round((Speed + CharacterWidth)), (int)Math.Round(Image.Position.Y)))))
                 Image.Position.X += Speed;
 
             CheckDoors(map);
