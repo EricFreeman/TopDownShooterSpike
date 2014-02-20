@@ -1,6 +1,7 @@
 require 'rake/clean'
 require 'albacore'
 
+
 CONTENT_ASSETS = 'src\TopDownShooterSpike\Content'
 CONTENT_BIN = 'src\TopDownShooterSpike\bin\WindowsGL\Debug\Content'
 CONTENT_COMPILER_EXE = '"./lib/Content Compiler/bin/XNAContentCompiler.exe"'
@@ -9,7 +10,7 @@ CLOBBER.include('**/bin/*', '**/obj/*', CONTENT_BIN)
 CLEAN.include("#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
-task :default => ['compile:solution', 'compile:content']
+task :default => ['clobber', 'compile:solution', 'compile:content_solution', 'compile:content']
 
 desc 'Watches for content file changes'
 task :watch => ['compile:watch']
@@ -24,7 +25,6 @@ end
 
 desc 'travis build task'
 task 'travis-ci' => ['ci:solution'] do
-  
 end
 
 namespace :compile do
@@ -43,6 +43,10 @@ namespace :compile do
     msb.solution = 'src/TopDownShooterSpike.sln'
   end
 
+  msbuild :content_solution do |msb|
+    msb.targets = [:Clean, :Build]
+    msb.solution = './lib/Content Compiler/XNAContentCompiler.sln'
+  end
 
 end
 

@@ -124,7 +124,6 @@
     <Content Include="Content\sfx\Menu Theme.wav" />
     <Content Include="Icon.ico" />
     <Content Include="Content\Screens\SplashScreen.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
