@@ -21,8 +21,6 @@ namespace TopDownShooterSpike
 
         public virtual void LoadContent()
         {
-            Content = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
-
             if(Music != string.Empty)
                 AudioManager.Instance.FadeInBackgroundMusic(Music);
             else

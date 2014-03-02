@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.World
 {
@@ -10,10 +8,8 @@ namespace TopDownShooterSpike.World
     {
         #region Properties
 
-        private readonly Texture2D _doorTexture = _manager.Load<Texture2D>("gfx/door");
-        private readonly Texture2D _doorCapTexture = _manager.Load<Texture2D>("gfx/door cap");
-
-        private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+        private readonly Texture2D _doorTexture; //= _manager.Load<Texture2D>("gfx/door");
+        private readonly Texture2D _doorCapTexture;// = _manager.Load<Texture2D>("gfx/door cap");
 
         public Image DoorImage;
         private Image _doorCap;
@@ -26,8 +22,11 @@ namespace TopDownShooterSpike.World
 
         #region Constructor
 
-        public Door()
+        public Door(Texture2D doorTexture, Texture2D doorCapTexture)
         {
+            _doorTexture = doorTexture;
+            _doorCapTexture = doorCapTexture;
+
             DoorImage = new Image
             {
                 Texture = _doorTexture

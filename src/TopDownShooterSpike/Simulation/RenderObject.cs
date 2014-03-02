@@ -11,7 +11,17 @@ namespace TopDownShooterSpike.Simulation
 
     public class RenderContext
     {
-        public SpriteBatch SpriteBatch { get; }
-        public Camera Camera { get; }
+        private Camera _camera;
+        private SpriteBatch _spriteBatch;
+
+        public SpriteBatch SpriteBatch
+        {
+            get { return _spriteBatch; }
+        }
+
+        public Camera Camera
+        {
+            get { return _camera; }
+        }
     }
 }

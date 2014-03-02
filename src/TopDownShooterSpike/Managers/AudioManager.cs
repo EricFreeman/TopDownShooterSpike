@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 
 namespace TopDownShooterSpike.Managers
 {
@@ -9,20 +8,12 @@ namespace TopDownShooterSpike.Managers
     {
         #region Properties
 
-        private List<SoundEffectInstance> _backgroundMusic = new List<SoundEffectInstance>(); // list of current background music - 0 is current 1 is the music being faded in
+        private readonly List<SoundEffectInstance> _backgroundMusic = new List<SoundEffectInstance>(); // list of current background music - 0 is current 1 is the music being faded in
         private string _lastSong;
 
         private float _currentFadeTicks; // ticks until new song is faded in
         public int FadeTicks; // ticks it takes to fade in/out in seconds
         private bool _isFading; // set to true when you are fading in new song
-
-        private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
-
-        private static AudioManager _instance;
-        public static AudioManager Instance
-        {
-            get { return _instance ?? (_instance = new AudioManager(Game)); }
-        }
 
         #endregion
 
@@ -39,7 +30,7 @@ namespace TopDownShooterSpike.Managers
         /// <param name="name"></param>
         public void PlaySound(string name)
         {
-            var b = _manager.Load<SoundEffect>("sfx/" + name);
+            var b = Game.Content.Load<SoundEffect>("sfx/" + name);
             b.Play();
         }
 
@@ -57,7 +48,7 @@ namespace TopDownShooterSpike.Managers
             else if (_backgroundMusic.Count > 0 && _lastSong == name)
                 return;
 
-            _backgroundMusic.Add(_manager.Load<SoundEffect>("sfx/" + name).CreateInstance());
+            _backgroundMusic.Add(Game.Content.Load<SoundEffect>("sfx/" + name).CreateInstance());
             var index = _backgroundMusic.Count - 1;
 
             _backgroundMusic[index].Volume = 0;
@@ -68,6 +59,8 @@ namespace TopDownShooterSpike.Managers
             _lastSong = name;
         }
 
+
+
         /// <summary>
         /// Play a background song
         /// </summary>
@@ -75,13 +68,16 @@ namespace TopDownShooterSpike.Managers
         public void PlayBackgroundMusic(string name, bool isLooped = true)
         {
             _backgroundMusic.Clear();
-            _backgroundMusic.Add(_manager.Load<SoundEffect>("sfx/" + name).CreateInstance());
+            _backgroundMusic.Add(Game.Content.Load<SoundEffect>("sfx/" + name).CreateInstance());
             _backgroundMusic[0].Volume = 100;
             _backgroundMusic[0].IsLooped = isLooped;
             _backgroundMusic[0].Play();
             _isFading = false;
             _lastSong = name;
         }
+
+
+
 
         /// <summary>
         /// Fade out any currently playing background music
@@ -132,7 +128,6 @@ namespace TopDownShooterSpike.Managers
         public void UnloadContent()
         {
             _backgroundMusic.Clear();
-            _instance = null;
         }
 
         #endregion

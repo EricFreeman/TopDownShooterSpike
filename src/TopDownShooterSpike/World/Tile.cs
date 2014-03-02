@@ -1,15 +1,16 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Runtime.InteropServices;
 
 namespace TopDownShooterSpike.World
 {
-    public class Tile
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Tile
     {
-        public Texture2D Image;
-        public Image Item; // the optional item you can place in a tile
+        [FieldOffset(0)] 
+        public ushort TileType;
 
-        public string[] Walls;
-        public List<Rectangle> CollisionBox;
+        public static ushort EMPTY = 0x0000;
+        public static ushort FLOOR = 0x0001;
+        public static ushort WALL = 0x0002;
+        public static ushort DOOR = 0x0003;
     }
 }

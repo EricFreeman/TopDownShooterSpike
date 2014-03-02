@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Xml;
-using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.World
 {
@@ -18,15 +16,18 @@ namespace TopDownShooterSpike.World
 
         public List<Door> Doors = new List<Door>();
 
-        private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
-        private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
-
-        private static readonly ContentManager _manager = new ContentManager(ScreenManager.Instance.Content.ServiceProvider, "Content");
+//        private readonly Texture2D _wall = _manager.Load<Texture2D>("gfx/wall");
+//        private readonly Texture2D _wallCap = _manager.Load<Texture2D>("gfx/wall cap");
 
         private const int TILE_SIZE = 64;
         private const int WALL_SIZE = 16;
 
         #endregion
+
+        public Map(int width = 256, int height = 256)
+        {
+            Tiles = new Tile[width,height];
+        }
 
         #region Helper Methods
 
@@ -82,13 +83,12 @@ namespace TopDownShooterSpike.World
                     var currentNode = rows[y].SelectNodes("Column")[x];
                     var current = new Tile
                     {
-                        Image = _manager.Load<Texture2D>("gfx/Tiles/" + currentNode.SelectSingleNode("Tile").InnerText + ".png"),
-                        Walls = currentNode.SelectSingleNode("Walls") != null ? currentNode.SelectSingleNode("Walls").InnerText.Split(',') : new string[2],
-                        CollisionBox = new List<Rectangle>()
+//                        Image = _manager.Load<Texture2D>("gfx/Tiles/" + currentNode.SelectSingleNode("Tile").InnerText + ".png"),
+                          TileType = Tile.EMPTY
                     };
 
                     CreateCollision(currentNode, current, x, y);
-                    current.Item = CreateItem(currentNode);
+//                    current.Item = CreateItem(currentNode);
                     CreateDoor(currentNode, x, y);
 
                     Tiles[x, y] = current;

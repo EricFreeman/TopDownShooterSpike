@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Simulation
 {
     public abstract class Actor : IDisposable, IComparable<Actor>
     {
+        private readonly ActorManager _actorManager;
         private static int _staticId = int.MinValue;
         private readonly int _id = _staticId++;
 
@@ -15,7 +17,12 @@ namespace TopDownShooterSpike.Simulation
 
         #endregion
 
-        ~Actor(){ OnDispose(false);}
+        protected Actor(ActorManager actorManager)
+        {
+            _actorManager = actorManager;
+        }
+
+        ~Actor() { OnDispose(false);}
 
         public void Dispose()
         {

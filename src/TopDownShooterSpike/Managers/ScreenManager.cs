@@ -11,6 +11,8 @@ namespace TopDownShooterSpike.Managers
 {
     public class ScreenManager : GameComponent
     {
+        private readonly GraphicsDeviceManager _graphics;
+
         #region Properties
 
         private static ScreenManager _instance;
@@ -34,9 +36,9 @@ namespace TopDownShooterSpike.Managers
 
         #endregion
 
-        public ScreenManager(Game game) : base(game)
+        public ScreenManager(Game game, GraphicsDeviceManager graphics) : base(game)
         {
-            
+            _graphics = graphics;
         }
 
         #region Initializer
