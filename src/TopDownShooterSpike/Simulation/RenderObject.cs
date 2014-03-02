@@ -3,6 +3,7 @@ using TopDownShooterSpike.GameHelpers;
 
 namespace TopDownShooterSpike.Simulation
 {
+
     public abstract class RenderObject
     {
         public abstract void Draw(RenderContext context);

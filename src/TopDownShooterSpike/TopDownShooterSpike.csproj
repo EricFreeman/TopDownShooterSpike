@@ -46,10 +46,12 @@
     <Compile Include="GameScreen.cs" />
     <Compile Include="Image.cs" />
     <Compile Include="Effects\ImageEffect.cs" />
+    <Compile Include="Managers\EntityManager.cs" />
     <Compile Include="Managers\InputManager.cs" />
+    <Compile Include="Managers\RenderManager.cs" />
     <Compile Include="Menus\Menu.cs" />
     <Compile Include="Menus\MenuItem.cs" />
-    <Compile Include="Managers\MenuManager.cs" />
+    <Compile Include="Menus\MenuManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Managers\ScreenManager.cs" />
@@ -57,6 +59,8 @@
     <Compile Include="Screens\TempGame.cs" />
     <Compile Include="Screens\TitleScreen.cs" />
     <Compile Include="Managers\XmlManager.cs" />
+    <Compile Include="Simulation\Actor.cs" />
+    <Compile Include="Simulation\RenderObject.cs" />
     <Compile Include="World\Door.cs" />
     <Compile Include="World\Map.cs" />
     <Compile Include="World\Tile.cs" />
@@ -139,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Graphics\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
