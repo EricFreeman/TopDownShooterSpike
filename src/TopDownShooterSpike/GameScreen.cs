@@ -11,9 +11,12 @@ namespace TopDownShooterSpike
         public string XmlPath;
         public string Music;
 
-        public GameScreen()
+        protected Game Game;
+
+        public GameScreen(Game game)
         {
             XmlPath = "Content/Screens/" + GetType().Name + ".xml";
+            Game = game;
         }
 
         public virtual void LoadContent()

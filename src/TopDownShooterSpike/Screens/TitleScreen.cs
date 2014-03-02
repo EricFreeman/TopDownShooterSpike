@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TopDownShooterSpike.Menus;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Screens
 {
@@ -8,9 +8,9 @@ namespace TopDownShooterSpike.Screens
     {
         private MenuManager _menuManager;
 
-        public TitleScreen()
+        public TitleScreen(Game game) : base(game)
         {
-            _menuManager = new MenuManager();
+            _menuManager = new MenuManager(Game);
         }
 
         public override void LoadContent()

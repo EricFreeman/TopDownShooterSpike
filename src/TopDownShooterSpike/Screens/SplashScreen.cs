@@ -9,6 +9,11 @@ namespace TopDownShooterSpike.Screens
     {
         public Image Image;
 
+        public SplashScreen(Game game) : base(game)
+        {
+            
+        }
+
         public override void LoadContent()
         {
             base.LoadContent();

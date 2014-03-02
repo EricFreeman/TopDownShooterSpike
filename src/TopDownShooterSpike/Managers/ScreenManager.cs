@@ -9,7 +9,7 @@ using TopDownShooterSpike.Screens;
 
 namespace TopDownShooterSpike.Managers
 {
-    public class ScreenManager
+    public class ScreenManager : GameComponent
     {
         #region Properties
 
@@ -32,24 +32,23 @@ namespace TopDownShooterSpike.Managers
         [XmlIgnore] 
         public Camera Camera;
 
-        public static ScreenManager Instance
-        {
-            get { return _instance ?? (_instance = Initialize()); }
-        }
-
         #endregion
+
+        public ScreenManager(Game game) : base(game)
+        {
+            
+        }
 
         #region Initializer
 
-        private static ScreenManager Initialize()
+        public override void Initialize()
         {
-            var xml = new XmlManager<ScreenManager>();
+            var xml = new XmlManager<ScreenManager>(Game);
             var s = xml.Load("Content/Config/ScreenManager.xml");
-            s.XmlGameScreenManager = new XmlManager<GameScreen>();
+            s.XmlGameScreenManager = new XmlManager<GameScreen>(Game);
             s.XmlGameScreenManager.Type = typeof (TempGame);
             s.CurrentScreen = s.XmlGameScreenManager.Load("Content/Screens/TempGame.xml");
             s.Camera = new Camera();
-            return s;
         }
 
         #endregion

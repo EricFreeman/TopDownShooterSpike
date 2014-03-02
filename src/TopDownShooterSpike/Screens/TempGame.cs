@@ -16,6 +16,11 @@ namespace TopDownShooterSpike.Screens
         [XmlIgnore] 
         public Player Player;
 
+        public TempGame(Game game) : base(game)
+        {
+            
+        }
+
         public override void LoadContent()
         {
             base.LoadContent();

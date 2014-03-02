@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TopDownShooterSpike.Managers
 {
-    public class InputManager
+    public class InputManager : GameComponent
     {
         #region Properties
 
@@ -18,6 +18,11 @@ namespace TopDownShooterSpike.Managers
         }
 
         #endregion
+
+        public InputManager(Game game) : base(game)
+        {
+            
+        }
 
         #region Hooks
 

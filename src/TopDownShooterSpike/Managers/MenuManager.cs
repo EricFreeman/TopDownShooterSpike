@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TopDownShooterSpike.Managers;
+using TopDownShooterSpike.Menus;
 
-namespace TopDownShooterSpike.Menus
+namespace TopDownShooterSpike.Managers
 {
-    public class MenuManager
+    public class MenuManager : GameComponent
     {
         #region Properties
 
@@ -18,7 +17,7 @@ namespace TopDownShooterSpike.Menus
 
         #region Constructor
 
-        public MenuManager()
+        public MenuManager(Game game) : base(game)
         {
             _menu = new Menu();
             _menu.OnMenuChange += menu_OnMenuChange;
@@ -30,7 +29,7 @@ namespace TopDownShooterSpike.Menus
 
         private void menu_OnMenuChange(object sender, EventArgs e)
         {
-            var xmlManager = new XmlManager<Menu>();
+            var xmlManager = new XmlManager<Menu>(Game);
             _menu.UnloadContent();
             _menu = xmlManager.Load(_menu.Id);
             _menu.LoadContent();

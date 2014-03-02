@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace TopDownShooterSpike.Managers
 {
-    public class AudioManager
+    public class AudioManager : GameComponent
     {
         #region Properties
 
@@ -21,10 +21,15 @@ namespace TopDownShooterSpike.Managers
         private static AudioManager _instance;
         public static AudioManager Instance
         {
-            get { return _instance ?? (_instance = new AudioManager()); }
+            get { return _instance ?? (_instance = new AudioManager(Game)); }
         }
 
         #endregion
+
+        public AudioManager(Game game) : base(game)
+        {
+            
+        }
 
         #region Play
 

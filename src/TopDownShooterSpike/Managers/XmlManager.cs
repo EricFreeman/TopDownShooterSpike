@@ -1,14 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
 
 namespace TopDownShooterSpike.Managers
 {
-    public class XmlManager<T>
+    public class XmlManager<T> : GameComponent
     {
         public Type Type { get; set; }
 
-        public XmlManager()
+        public XmlManager(Game game) : base(game)
         {
             Type = typeof (T);
         }
