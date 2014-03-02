@@ -1,12 +1,14 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Simulation
 {
     public abstract class Actor : IDisposable, IComparable<Actor>
     {
-        private readonly ActorManager _actorManager;
+        private readonly IActorManager _actorManager;
+        private readonly IServiceProvider _services;
         private static int _staticId = int.MinValue;
         private readonly int _id = _staticId++;
 
@@ -17,9 +19,11 @@ namespace TopDownShooterSpike.Simulation
 
         #endregion
 
-        protected Actor(ActorManager actorManager)
+        protected Actor(IActorManager actorManager, IServiceProvider services)
         {
             _actorManager = actorManager;
+            _services = services;
+            Enabled = true;
         }
 
         ~Actor() { OnDispose(false);}
@@ -30,9 +34,16 @@ namespace TopDownShooterSpike.Simulation
             GC.SuppressFinalize(this);
         }
 
+        public void Update(GameTime gameTime)
+        {
+            Tick(gameTime);
+        }
+
+
         #region Overrides
 
         protected virtual void OnDispose(bool disposing) { }
+        protected virtual void Tick(GameTime gameTime) { } 
 
         public override bool Equals(object obj)
         {
@@ -74,5 +85,13 @@ namespace TopDownShooterSpike.Simulation
             set { _position = value; }
         }
 
+        public int Id
+        {
+            get { return _id; }
+        }
+
+        public bool Enabled { get; set; }
+
+        public RenderObject RenderObject { get; set; }
     }
 }
