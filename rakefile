@@ -8,8 +8,10 @@ CONTENT_ASSETS = 'src\TopDownShooterSpike\Content'
 CONTENT_BIN = 'src\TopDownShooterSpike\bin\WindowsGL\Debug\Content'
 CONTENT_COMPILER_EXE = %{"#{LIB}/Content Compiler/bin/XNAContentCompiler.exe"}
 
+CONTENT_SLN = './lib/Content Compiler/XNAContentCompiler.sln'
+TDS_SLN = 'src/TopDownShooterSpike.sln'
 
-CLOBBER.include('**/bin/*', '**/obj/*', CONTENT_BIN)
+CLOBBER.include('src/**/bin/*', '**/obj/*', CONTENT_BIN)
 CLEAN.include("#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
@@ -44,17 +46,22 @@ namespace :compile do
     sh %{#{CONTENT_COMPILER_EXE} watch #{CONTENT_ASSETS} #{CONTENT_BIN}}
   end
 
-  msbuild :solution do |msb|
-    msb.targets = [:Clean, :Build]
-    msb.solution = 'src/TopDownShooterSpike.sln'
+  task :solution  do
+    Rake::Task['compile:build_solution'].invoke "#{TDS_SLN}"
   end
 
-  desc 'builds content tool'
-  msbuild :content_solution do |msb|
-    msb.targets = [:Clean, :Build]
-    msb.solution = './lib/Content Compiler/XNAContentCompiler.sln'
+  task :content_solution do
+    Rake::Task['compile:build_solution'].invoke "#{CONTENT_SLN}"
   end
 
+  msbuild :build_solution, [:path] do |msb, args|
+    if args.path == nil
+      raise "path cannot be empty"
+    end
+
+    msb.targets = [:Clean, :Build]
+    msb.solution = args.path;
+  end
 end
 
 namespace :ci do
