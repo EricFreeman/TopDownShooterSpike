@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 using TopDownShooterSpike.Simulation;
 
@@ -8,24 +9,45 @@ namespace TopDownShooterSpike.Managers
 {
     public interface IActorManager
     {
-        T CreateActor<T>() where T : Actor;
+        T CreateActor<T>(Func<IActorManager, T> create) where T : Actor;
         void DestroyActor(Actor actor);
+        void TearDown();
         IList<Actor> Actors { get; }
     }
 
-    public class ActorManager : GameComponent, IActorManager
+    public interface IActorService
+    {
+        World PhysicsSystem { get; }
+        IActorEventAggregator EventAggregator { get; }
+    }
+
+    public class ActorManager : IActorManager, IActorService
     {
         private readonly Dictionary<int, Actor> _actorMap;
         private readonly List<Actor> _actorList;
+        private readonly ActorEventAggregator _eventAggregator;
+        private readonly World _physicsWorld;
 
-        public ActorManager(Game game) : base(game)
+        public ActorManager()
         {
+            _physicsWorld = new World(Vector2.Zero);
+            _eventAggregator = new ActorEventAggregator();
             _actorMap = new Dictionary<int, Actor>();
             _actorList = new List<Actor>();
         }
 
-        public override void Update(GameTime gameTime)
+        public void TearDown()
         {
+            _actorList.Clear();
+            _actorMap.Clear();
+
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            _physicsWorld.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             for (int index = _actorList.Count - 1; index >= 0; index--)
             {
                 var actor = _actorList[index];
@@ -35,10 +57,9 @@ namespace TopDownShooterSpike.Managers
             }
         }
 
-        public T CreateActor<T>() where T : Actor
+        public T CreateActor<T>(Func<IActorManager, T> create) where T : Actor
         {
-            var actorType = typeof (T);
-            var actor = Activator.CreateInstance(actorType, this, Game.Services) as T;
+            var actor = create(this);
 
             if (actor != null)
             {
@@ -62,6 +83,16 @@ namespace TopDownShooterSpike.Managers
         public IList<Actor> Actors
         {
             get { return new ReadOnlyCollection<Actor>(_actorList); }
+        }
+
+        public IActorEventAggregator EventAggregator
+        {
+            get { return _eventAggregator; }
+        }
+
+        public FarseerPhysics.Dynamics.World PhysicsSystem
+        {
+            get { return _physicsWorld; }
         }
     }
 }

@@ -38,34 +38,28 @@
     <StartupObject>TopDownShooterSpike.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GameHelpers\Camera.cs" />
-    <Compile Include="GameHelpers\Player.cs" />
+    <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\PrimitiveBatch.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
+    <Compile Include="Managers\ActorMessage.cs" />
+    <Compile Include="Managers\IActorEventAggregator.cs" />
     <Compile Include="Managers\AudioManager.cs" />
-    <Compile Include="Effects\FadeEffect.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameScreen.cs" />
-    <Compile Include="Image.cs" />
-    <Compile Include="Effects\ImageEffect.cs" />
+    <Compile Include="Simulation\Map.cs" />
+    <Compile Include="Simulation\Objects\Entity.cs" />
+    <Compile Include="State\GameState.cs" />
     <Compile Include="Managers\ActorManager.cs" />
-    <Compile Include="Managers\InputManager.cs" />
-    <Compile Include="Managers\MenuManager.cs" />
+    <Compile Include="Managers\IViewportManager.cs" />
+    <Compile Include="Managers\PhysicsManager.cs" />
     <Compile Include="Managers\RenderManager.cs" />
-    <Compile Include="Menus\Menu.cs" />
-    <Compile Include="Menus\MenuItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Managers\ScreenManager.cs" />
-    <Compile Include="Screens\SplashScreen.cs" />
-    <Compile Include="Screens\TempGame.cs" />
-    <Compile Include="Screens\TitleScreen.cs" />
+    <Compile Include="Managers\GameStateStack.cs" />
+    <Compile Include="State\GameplayState.cs" />
     <Compile Include="Managers\XmlManager.cs" />
     <Compile Include="Simulation\Actor.cs" />
-    <Compile Include="World\Door.cs" />
-    <Compile Include="World\Map.cs" />
-    <Compile Include="World\Tile.cs" />
+    <Compile Include="Simulation\KActor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FarseerPhysics MonoGame">

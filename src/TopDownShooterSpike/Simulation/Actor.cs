@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
@@ -7,23 +8,28 @@ namespace TopDownShooterSpike.Simulation
 {
     public abstract class Actor : IDisposable, IComparable<Actor>
     {
-        private readonly IActorManager _actorManager;
-        private readonly IServiceProvider _services;
         private static int _staticId = int.MinValue;
+
         private readonly int _id = _staticId++;
+        protected readonly IActorManager ActorManager;
+        protected readonly IActorService ActorService;
+        private readonly IList<RenderObject> _renderObject;
 
         #region Fields
 
-        private float _rotation;
-        private Vector2 _position;
+        protected Transform2D _transform;
 
         #endregion
 
-        protected Actor(IActorManager actorManager, IServiceProvider services)
+        protected Actor(IActorManager actorManager, IActorService actorService)
         {
-            _actorManager = actorManager;
-            _services = services;
+            _renderObject = new List<RenderObject>(8);
+
+            Transform = Transform2D.Zero;
             Enabled = true;
+
+            ActorManager = actorManager;
+            ActorService = actorService;
         }
 
         ~Actor() { OnDispose(false);}
@@ -39,11 +45,17 @@ namespace TopDownShooterSpike.Simulation
             Tick(gameTime);
         }
 
+        public void Destroy(Actor instigator = null)
+        {
+            OnDestroy(instigator);
+            ActorManager.DestroyActor(this);
+        }
 
         #region Overrides
 
         protected virtual void OnDispose(bool disposing) { }
         protected virtual void Tick(GameTime gameTime) { } 
+        protected virtual void OnDestroy(Actor instigator) { } 
 
         public override bool Equals(object obj)
         {
@@ -73,18 +85,6 @@ namespace TopDownShooterSpike.Simulation
 
         #endregion
 
-        public virtual float Rotation
-        {
-            get { return _rotation; }
-            set { _rotation = value; }
-        }
-
-        public virtual Vector2 Position
-        {
-            get { return _position; }
-            set { _position = value; }
-        }
-
         public int Id
         {
             get { return _id; }
@@ -92,6 +92,15 @@ namespace TopDownShooterSpike.Simulation
 
         public bool Enabled { get; set; }
 
-        public RenderObject RenderObject { get; set; }
+        public IList<RenderObject> RenderObject
+        {
+            get { return _renderObject; }
+        }
+
+        public virtual Transform2D Transform
+        {
+            get { return _transform; }
+            set { _transform = value; }
+        }
     }
 }

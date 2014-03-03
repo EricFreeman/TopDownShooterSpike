@@ -21,6 +21,9 @@ task :watch => ['compile:watch']
 desc 'builds the solution'
 task :build => ['compile:solution']
 
+desc 'builds the content solution'
+task :build_tool => ['compile:content_solution']
+
 desc 'opens content compiler gui'
 task :tool do
   sh %{#{CONTENT_COMPILER_EXE}}
@@ -46,6 +49,7 @@ namespace :compile do
     msb.solution = 'src/TopDownShooterSpike.sln'
   end
 
+  desc 'builds content tool'
   msbuild :content_solution do |msb|
     msb.targets = [:Clean, :Build]
     msb.solution = './lib/Content Compiler/XNAContentCompiler.sln'

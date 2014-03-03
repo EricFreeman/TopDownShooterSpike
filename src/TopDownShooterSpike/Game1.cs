@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using TopDownShooterSpike.Managers;
+using TopDownShooterSpike.State;
 
 #endregion
 
@@ -18,14 +19,12 @@ namespace TopDownShooterSpike
     /// </summary>
     public class Game1 : Game
     {
-        private ScreenManager _screenManager;
 
         readonly GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
-        private AudioManager _audioManager;
-        private InputManager _inputManager;
         private RenderManager _renderManager;
         private ActorManager _actorManager;
+        private GameStateStack _gameStateManager;
 
         public Game1() : base()
         {
@@ -35,13 +34,24 @@ namespace TopDownShooterSpike
 
         protected override void Initialize()
         {
-            _screenManager = new ScreenManager(this, _graphics);
-            _audioManager = new AudioManager(this);
-            _inputManager = new InputManager(this);
-            _renderManager = new RenderManager(this);
-            _actorManager = new ActorManager(this);
+//            _screenManager = new ScreenManager(this, _graphics);
+            _gameStateManager = new GameStateStack(this);
+//            var audioManager = new AudioManager(this);
+//            var inputManager = new InputManager(this);
 
-            Services.AddService(typeof(IActorManager), _actorManager);
+//            var renderManager = new RenderManager(this);
+//            var actorManager = new ActorManager();
+
+            Services.AddService(typeof(ContentManager), Content);
+            Services.AddService(typeof(IGameStateStack), _gameStateManager);
+//            Services.AddService(typeof(AudioManager), audioManager);
+//            Services.AddService(typeof(InputManager), inputManager);
+
+            Components.Add(_gameStateManager);
+//            Components.Add(inputManager);
+//            Components.Add(audioManager);
+
+
 
             base.Initialize();
         }
@@ -49,6 +59,8 @@ namespace TopDownShooterSpike
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _gameStateManager.Push(new GameplayState(Content, _spriteBatch));
 //            ScreenManager.Instance.GraphicsDevice = GraphicsDevice;
 //            ScreenManager.Instance.SpriteBatch = _spriteBatch;
 //            ScreenManager.Instance.LoadContent(Content);
@@ -59,6 +71,7 @@ namespace TopDownShooterSpike
         {
         }
     }
+
 
     public static class ServiceProviderExtensions
     {

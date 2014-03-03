@@ -1,48 +1,36 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Graphics;
-using TopDownShooterSpike.Simulation;
 
 namespace TopDownShooterSpike.Managers
 {
-    public interface IRenderManager
-    {
-        
-    }
+    public interface IRenderManager { }
 
-    public class RenderManager : DrawableGameComponent, IRenderManager
+    public class RenderManager : IRenderManager
     {
-        private readonly IServiceProvider _serviceProvider;
-        private IActorManager _actorManager;
-        private RenderContext _context;
+        private readonly IActorManager _actorManager;
+        private readonly RenderContext _context;
 
-        public RenderManager(Game game) : base(game)
+        public RenderManager(IActorManager actorManager, SpriteBatch spriteBatch, ContentManager content)
         {
-            _serviceProvider = game.Services;
+            _actorManager = actorManager;
+            _context = new RenderContext(spriteBatch, content);
         }
 
-        public override void Initialize()
+        public void SetActiveCamera(Camera camera)
         {
-            _actorManager = _serviceProvider.GetService<IActorManager>();
-            var spriteBatch = _serviceProvider.GetService<SpriteBatch>();
-
-            _context = new RenderContext(spriteBatch, Game.Content);
+            _context.Camera = camera;
         }
 
-        public override void Draw(GameTime gameTime)
+        private void RenderObjectsForActor(IEnumerable<RenderObject> renderObject)
         {
-            _context.GameTime = gameTime;
-
-            var actorsToRender = _actorManager.Actors;
-            for (int index = 0; index < actorsToRender.Count; index++)
+            foreach (var obj in renderObject)
             {
-                var actor = actorsToRender[index];
-                var renderObject = actor.RenderObject;
-
-                if (actor.Enabled && renderObject.Visible)
+                if (obj.Visible)
                 {
-                    if (renderObject.Lit)
+                    if (obj.Lit)
                     {
                         
                     }
@@ -51,9 +39,35 @@ namespace TopDownShooterSpike.Managers
                         
                     }
 
-                    renderObject.Draw(_context);
+                    obj.Draw(_context);
                 }
             }
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            _context.GameTime = gameTime;
+
+            _context.SpriteBatch.Begin(SpriteSortMode.Deferred, 
+                                       BlendState.Additive, 
+                                       SamplerState.LinearWrap, 
+                                       DepthStencilState.Default, 
+                                       RasterizerState.CullClockwise, 
+                                       null, _context.Camera.Transform.Combine());
+
+            var actorsToRender = _actorManager.Actors;
+            for (int index = 0; index < actorsToRender.Count; index++)
+            {
+                var actor = actorsToRender[index];
+                var renderObject = actor.RenderObject;
+
+                if (actor.Enabled)
+                {
+                    RenderObjectsForActor(renderObject);
+                }
+            }
+
+            _context.SpriteBatch.End();
         }
     }
 }
