@@ -6,7 +6,10 @@ using TopDownShooterSpike.Graphics;
 
 namespace TopDownShooterSpike.Managers
 {
-    public interface IRenderManager { }
+    public interface IRenderManager
+    {
+        
+    }
 
     public class RenderManager : IRenderManager
     {

@@ -1,4 +1,6 @@
-﻿using FarseerPhysics.Dynamics;
+﻿using System.Collections.Generic;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using TopDownShooterSpike.Managers;
 
@@ -10,13 +12,32 @@ namespace TopDownShooterSpike.Simulation.Objects
 
         public Entity(IActorManager actorManager, IActorService service) : base(actorManager, service)
         {
-            InitializeFixture((w, b) =>
-            {
-                _mainCollision = FixtureFactory.AttachCircle(0.25f, 1, b, this);
-            });
+            InitializeFixture(CreateFixtures);
 
             MainBody.Mass = 30;
         }
 
+        private IEnumerable<Fixture> CreateFixtures(World world , Body body)
+        {
+            yield return FixtureFactory.AttachCircle(0.25f, 1, body, this);
+        }
+
+        protected override bool PreCollision(Fixture a, Fixture b)
+        {
+            return true;
+        }
+
+        protected override void PostCollision(Fixture a, Fixture b, Contact contact, ContactVelocityConstraint impulse)
+        {
+        }
+
+        protected override bool Collision(Fixture a, Fixture b, Contact contact)
+        {
+            return true;
+        }
+
+        protected override void Separation(Fixture a, Fixture b)
+        {
+        }
     }
 }
