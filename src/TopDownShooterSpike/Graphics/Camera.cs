@@ -25,5 +25,6 @@ namespace TopDownShooterSpike.Graphics
         {
             _transform.Rotation = absoluteRotation;
         }
+        
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.CodeDom;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Simulation;
 

@@ -58,6 +58,7 @@
     <Compile Include="Simulation\Kilogram.cs" />
     <Compile Include="Simulation\Objects\Wall.cs" />
     <Compile Include="Simulation\SimulationSettings.cs" />
+    <Compile Include="Simulation\WorldUnitConverter.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="Managers\ActorManager.cs" />
     <Compile Include="Managers\IViewportManager.cs" />

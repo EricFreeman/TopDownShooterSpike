@@ -6,13 +6,13 @@ namespace TopDownShooterSpike.Graphics
 {
     public class RenderContext
     {
+        private readonly PrimitiveBatch _primitiveBatch;
         private readonly SpriteBatch _spriteBatch;
-//        private PrimitiveBatch _primitiveBatch;
-
         private readonly SimulationSettings _simSettings;
 
-        public RenderContext( SpriteBatch spriteBatch)
+        public RenderContext(PrimitiveBatch primitiveBatch, SpriteBatch spriteBatch)
         {
+            _primitiveBatch = primitiveBatch;
             _spriteBatch = spriteBatch;
             _simSettings = new SimulationSettings();
             Camera = new Camera
@@ -27,6 +27,11 @@ namespace TopDownShooterSpike.Graphics
         public SimulationSettings SimulationSettings { get { return _simSettings; } }
         public GameTime GameTime { get; set; }
         public Camera Camera { get; set; }
+
+        public PrimitiveBatch PrimitiveBatch
+        {
+            get { return _primitiveBatch; }
+        }
 
         public SpriteBatch SpriteBatch
         {
