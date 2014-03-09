@@ -17,8 +17,19 @@ namespace TopDownShooterSpike.Managers
 
     public interface IActorService
     {
-        World PhysicsSystem { get; }
         IActorEventAggregator EventAggregator { get; }
+        SimulationSettings SimulationSettings { get; }
+        World PhysicsSystem { get; }
+    }
+
+    public class SimulationSettings
+    {
+        public SimulationSettings()
+        {
+            TileSize = new Meter(1);
+        }
+
+        public float TileSize { get; set; }
     }
 
     public class ActorManager : IActorManager, IActorService
@@ -27,6 +38,7 @@ namespace TopDownShooterSpike.Managers
         private readonly List<Actor> _actorList;
         private readonly ActorEventAggregator _eventAggregator;
         private readonly World _physicsWorld;
+        private SimulationSettings _simulationSettings;
 
         public ActorManager()
         {
@@ -34,6 +46,7 @@ namespace TopDownShooterSpike.Managers
             _eventAggregator = new ActorEventAggregator();
             _actorMap = new Dictionary<int, Actor>();
             _actorList = new List<Actor>();
+            _simulationSettings = new SimulationSettings();
         }
 
         public void TearDown()
@@ -88,6 +101,11 @@ namespace TopDownShooterSpike.Managers
         public IActorEventAggregator EventAggregator
         {
             get { return _eventAggregator; }
+        }
+
+        public SimulationSettings SimulationSettings
+        {
+            get { return _simulationSettings; }
         }
 
         public FarseerPhysics.Dynamics.World PhysicsSystem

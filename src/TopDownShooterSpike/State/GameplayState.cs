@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Managers;
+using TopDownShooterSpike.Simulation;
 
 namespace TopDownShooterSpike.State
 {
@@ -9,8 +10,11 @@ namespace TopDownShooterSpike.State
     {
         private readonly ContentManager _content;
         private readonly SpriteBatch _spriteBatch;
+
         private ActorManager _actorManager;
         private RenderManager _renderManager;
+
+        
 
         public GameplayState(ContentManager content, SpriteBatch spriteBatch)
         {
@@ -22,7 +26,7 @@ namespace TopDownShooterSpike.State
 
         public void InitializeWorld(IActorManager manager, IActorService _service)
         {
-            
+              
         }
 
         #endregion

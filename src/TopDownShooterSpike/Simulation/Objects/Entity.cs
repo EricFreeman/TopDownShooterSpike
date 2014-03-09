@@ -54,7 +54,7 @@ namespace TopDownShooterSpike.Simulation.Objects
 
         private IEnumerable<Fixture> CreateFixtures(World world , Body body)
         {
-            yield return _mainCollision = FixtureFactory.AttachCircle(0.25f, 1, body, this);
+            yield return _mainCollision = FixtureFactory.AttachCircle(Meter.FromInches(18), 1, body, this);
         }
 
         protected override bool PreCollision(Fixture a, Fixture b)

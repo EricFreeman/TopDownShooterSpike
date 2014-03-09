@@ -1,0 +1,6 @@
+C:\Projects\OSF\TopDownShooterSpike\Packages\Farseer Physics Engine 3.5\bin\WindowsGL\Debug\Content\Font.xnb
+C:\Projects\OSF\TopDownShooterSpike\Packages\Farseer Physics Engine 3.5\bin\WindowsGL\Debug\DebugView MonoGame.dll
+C:\Projects\OSF\TopDownShooterSpike\Packages\Farseer Physics Engine 3.5\bin\WindowsGL\Debug\DebugView MonoGame.pdb
+C:\Projects\OSF\TopDownShooterSpike\Packages\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\obj\x86\Debug\DebugView MonoGame.csprojResolveAssemblyReference.cache
+C:\Projects\OSF\TopDownShooterSpike\Packages\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\obj\x86\Debug\DebugView MonoGame.dll
+C:\Projects\OSF\TopDownShooterSpike\Packages\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\obj\x86\Debug\DebugView MonoGame.pdb

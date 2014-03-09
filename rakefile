@@ -67,7 +67,7 @@ end
 namespace :ci do
 
   task :solution do 
-    sh 'xbuild "src/TopDownShooterSpike.sln"'
+    sh "xbuild #{TDS_SLN}"
   end
 
   task :build_dependencies do

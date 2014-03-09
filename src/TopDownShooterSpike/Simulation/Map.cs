@@ -3,22 +3,30 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.Xna.Framework;
+using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Simulation
 {
-    public class Map
+    public sealed class Map : Actor
     {
         private Tile[,] _data;
 
-        public Map() : this(64, 64)
+        public Map(IActorManager manager, IActorService service) : this(manager, service, 64, 64)
         {
             this.FillRect(0, 0, Width, Height, false, Tile.Wall);
-
         }
 
-        public Map(int width, int height)
+        public Map(IActorManager manager, IActorService service, int width, int height) : base(manager, service)
         {
             _data = new Tile[width, height];
+            var simSettings = service.SimulationSettings;
+
+            var transform = Transform;
+
+            transform.Position = new Vector2(simSettings.TileSize * width / 2.0f, simSettings.TileSize * height / 2.0f);
+
+            Transform = transform;
         }
 
         public override string ToString()
@@ -37,7 +45,7 @@ namespace TopDownShooterSpike.Simulation
             return builder.ToString();
         }
 
-        public static Map FromString(string mapData)
+        public static Map FromString(IActorManager manager, IActorService service, string mapData)
         {
             var rows = mapData.Split('\n');
 
@@ -46,7 +54,7 @@ namespace TopDownShooterSpike.Simulation
             var width = dimensions[0];
             var height = dimensions[1];
 
-            var result = new Map(width, height);
+            var result = new Map(manager, service, width, height);
 
             var data = rows.Skip(1)
                         .AsParallel()
@@ -80,6 +88,7 @@ namespace TopDownShooterSpike.Simulation
         {
             get { return _data.GetLength(0); }
         }
+
         public int Width
         {
             get { return _data.GetLength(1); }
