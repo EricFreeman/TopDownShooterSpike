@@ -42,12 +42,15 @@
     <Compile Include="Graphics\PrimitiveBatch.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
+    <Compile Include="Graphics\Transform2D.cs" />
     <Compile Include="Managers\ActorMessage.cs" />
     <Compile Include="Managers\IActorEventAggregator.cs" />
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Simulation\Map.cs" />
     <Compile Include="Simulation\Objects\Entity.cs" />
+    <Compile Include="Simulation\Meter.cs" />
+    <Compile Include="Simulation\Kilogram.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="Managers\ActorManager.cs" />
     <Compile Include="Managers\IViewportManager.cs" />

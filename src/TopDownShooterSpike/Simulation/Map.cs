@@ -8,7 +8,7 @@ namespace TopDownShooterSpike.Simulation
 {
     public class Map
     {
-        private byte[,] _data;
+        private Tile[,] _data;
 
         public Map() : this(64, 64)
         {
@@ -18,7 +18,7 @@ namespace TopDownShooterSpike.Simulation
 
         public Map(int width, int height)
         {
-            _data = new byte[width, height];
+            _data = new Tile[width, height];
         }
 
         public override string ToString()
@@ -50,10 +50,14 @@ namespace TopDownShooterSpike.Simulation
 
             var data = rows.Skip(1)
                         .AsParallel()
-                        .Select(row => row.ToCharArray().Select(item => item.ToString(CultureInfo.InvariantCulture)).Select(byte.Parse))
+                        .Select(row => row.ToCharArray().Select(item =>
+                        {
+                            var @byte = byte.Parse(item.ToString(CultureInfo.InvariantCulture));
+                            return new Tile(@byte);
+                        }))
                         .Select((row, index) => new {Index = index, Item = row.ToArray()})
                         .ToArray()
-                        .Aggregate(new byte[width, height], (acc, tuple) =>
+                        .Aggregate(new Tile[width, height], (acc, tuple) =>
                         {
                             for (var index = 0; index < tuple.Item.Length; index++)
                                 acc[tuple.Index, index] = tuple.Item[index];
@@ -66,7 +70,7 @@ namespace TopDownShooterSpike.Simulation
             return result;
         }
 
-        public byte this[int x, int y]
+        public Tile this[int x, int y]
         {
             get { return _data[x, y]; }
             set { _data[x, y] = value; }

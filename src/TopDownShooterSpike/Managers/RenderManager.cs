@@ -33,6 +33,7 @@ namespace TopDownShooterSpike.Managers
             {
                 if (obj.Visible)
                 {
+                    // this is dumb and faggy
                     if (obj.Lit)
                     {
                         
