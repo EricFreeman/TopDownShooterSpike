@@ -9,7 +9,7 @@ namespace TopDownShooterSpike.Managers
 {
     public interface IActorManager
     {
-        T CreateActor<T>(Func<IActorManager, T> create) where T : Actor;
+        T CreateActor<T>(Func<IActorManager, IActorService, T> create) where T : Actor;
         void DestroyActor(Actor actor);
         void TearDown();
         IList<Actor> Actors { get; }
@@ -22,23 +22,13 @@ namespace TopDownShooterSpike.Managers
         World PhysicsSystem { get; }
     }
 
-    public class SimulationSettings
-    {
-        public SimulationSettings()
-        {
-            TileSize = new Meter(1);
-        }
-
-        public float TileSize { get; set; }
-    }
-
     public class ActorManager : IActorManager, IActorService
     {
         private readonly Dictionary<int, Actor> _actorMap;
         private readonly List<Actor> _actorList;
         private readonly ActorEventAggregator _eventAggregator;
         private readonly World _physicsWorld;
-        private SimulationSettings _simulationSettings;
+        private readonly SimulationSettings _simulationSettings;
 
         public ActorManager()
         {
@@ -70,9 +60,9 @@ namespace TopDownShooterSpike.Managers
             }
         }
 
-        public T CreateActor<T>(Func<IActorManager, T> create) where T : Actor
+        public T CreateActor<T>(Func<IActorManager, IActorService, T> create) where T : Actor
         {
-            var actor = create(this);
+            var actor = create(this, this);
 
             if (actor != null)
             {

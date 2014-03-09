@@ -39,9 +39,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\ITileProvider.cs" />
     <Compile Include="Graphics\PrimitiveBatch.cs" />
     <Compile Include="Graphics\RenderContext.cs" />
     <Compile Include="Graphics\RenderObject.cs" />
+    <Compile Include="Graphics\SpriteRenderObject.cs" />
     <Compile Include="Graphics\Transform2D.cs" />
     <Compile Include="Managers\ActorMessage.cs" />
     <Compile Include="Managers\IActorEventAggregator.cs" />
@@ -51,6 +53,7 @@
     <Compile Include="Simulation\Objects\Entity.cs" />
     <Compile Include="Simulation\Meter.cs" />
     <Compile Include="Simulation\Kilogram.cs" />
+    <Compile Include="Simulation\SimulationSettings.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="Managers\ActorManager.cs" />
     <Compile Include="Managers\IViewportManager.cs" />

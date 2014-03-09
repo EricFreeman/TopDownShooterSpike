@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Xna.Framework;
+using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Simulation
@@ -12,9 +13,10 @@ namespace TopDownShooterSpike.Simulation
     {
         private Tile[,] _data;
 
-        public Map(IActorManager manager, IActorService service) : this(manager, service, 64, 64)
+        public Map(IActorManager manager, IActorService service, ITileProvider provider) : this(manager, service, 64, 64)
         {
-            this.FillRect(0, 0, Width, Height, false, Tile.Wall);
+            this.FillRect(0, 0, Width-1, Height-1, false, Tile.Wall);
+            RenderObject.Add(new MapRenderObject(this, provider));
         }
 
         public Map(IActorManager manager, IActorService service, int width, int height) : base(manager, service)
@@ -24,7 +26,7 @@ namespace TopDownShooterSpike.Simulation
 
             var transform = Transform;
 
-            transform.Position = new Vector2(simSettings.TileSize * width / 2.0f, simSettings.TileSize * height / 2.0f);
+            transform.Position = new Vector2(simSettings.TileDimension * width / 2.0f, simSettings.TileDimension * height / 2.0f);
 
             Transform = transform;
         }

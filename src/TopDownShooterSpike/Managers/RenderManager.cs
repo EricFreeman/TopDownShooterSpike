@@ -8,7 +8,7 @@ namespace TopDownShooterSpike.Managers
 {
     public interface IRenderManager
     {
-        
+        void SetActiveCamera(Camera camera);
     }
 
     public class RenderManager : IRenderManager
@@ -52,23 +52,24 @@ namespace TopDownShooterSpike.Managers
         {
             _context.GameTime = gameTime;
 
-            _context.SpriteBatch.Begin(SpriteSortMode.Deferred, 
-                                       BlendState.Additive, 
-                                       SamplerState.LinearWrap, 
-                                       DepthStencilState.Default, 
-                                       RasterizerState.CullClockwise, 
-                                       null, _context.Camera.Transform.Combine());
+            _context.SpriteBatch.Begin(SpriteSortMode.Deferred,
+                                       BlendState.AlphaBlend,
+                                       SamplerState.LinearWrap,
+                                       DepthStencilState.None,
+                                       RasterizerState.CullCounterClockwise,
+                                       null, 
+                                       _context.Camera.Transform.Combine());
+                                       
 
             var actorsToRender = _actorManager.Actors;
+
             for (int index = 0; index < actorsToRender.Count; index++)
             {
                 var actor = actorsToRender[index];
                 var renderObject = actor.RenderObject;
 
                 if (actor.Enabled)
-                {
                     RenderObjectsForActor(renderObject);
-                }
             }
 
             _context.SpriteBatch.End();

@@ -3,6 +3,7 @@
     public struct Meter
     {
         private float _value;
+        private const float INCHES_PER_METER = 39.3701f;
 
         public Meter(float value)
         {
@@ -16,7 +17,7 @@
 
         public static Meter FromInches(float inches)
         {
-            return new Meter(inches / 39.3701f);
+            return new Meter(inches / INCHES_PER_METER);
         }
 
         public float Centimeters
@@ -30,5 +31,6 @@
             get { return _value; } 
             set { _value = value; }
         }
+
     }
 }

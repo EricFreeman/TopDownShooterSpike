@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 using TopDownShooterSpike.Simulation;
 
@@ -14,8 +15,6 @@ namespace TopDownShooterSpike.State
         private ActorManager _actorManager;
         private RenderManager _renderManager;
 
-        
-
         public GameplayState(ContentManager content, SpriteBatch spriteBatch)
         {
             _content = content;
@@ -24,9 +23,9 @@ namespace TopDownShooterSpike.State
 
         #region initialization
 
-        public void InitializeWorld(IActorManager manager, IActorService _service)
+        public void InitializeWorld()
         {
-              
+            _actorManager.CreateActor((man, serv) => new Map(man, serv, new DefaultTileProvider(_content)));
         }
 
         #endregion
@@ -39,7 +38,7 @@ namespace TopDownShooterSpike.State
             _renderManager = new RenderManager(_actorManager, _spriteBatch, _content);
 
             // initialize game here
-            InitializeWorld(_actorManager, _actorManager);
+            InitializeWorld();
         }
 
         public override void TearDown()
