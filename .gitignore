@@ -1,5 +1,6 @@
-src/**/obj/
+*/obj/
 src/**/bin/
+lib/**/bin/
 *.suo
 *.csproj.user
 *.vshost.exe.*
