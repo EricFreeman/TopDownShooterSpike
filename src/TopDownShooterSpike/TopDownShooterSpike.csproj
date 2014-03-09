@@ -96,6 +96,12 @@
     </Content>
     <Content Include="Content\gfx\door cap.png" />
     <Content Include="Content\gfx\door.png" />
+    <Content Include="Content\gfx\Enemies\Enemy1\enemy_arm_left.png" />
+    <Content Include="Content\gfx\Enemies\Enemy1\enemy_arm_right.png" />
+    <Content Include="Content\gfx\Enemies\Enemy1\enemy_body.png" />
+    <Content Include="Content\gfx\Enemies\Enemy1\enemy_head.png" />
+    <Content Include="Content\gfx\Enemies\Enemy1\enemy_leg_left.png" />
+    <Content Include="Content\gfx\Enemies\Enemy1\enemy_leg_right.png" />
     <Content Include="Content\gfx\FadeImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -111,6 +117,12 @@
     <Content Include="Content\gfx\Player.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\gfx\Player\hero_arm_left.png" />
+    <Content Include="Content\gfx\Player\hero_arm_right.png" />
+    <Content Include="Content\gfx\Player\hero_body.png" />
+    <Content Include="Content\gfx\Player\hero_head.png" />
+    <Content Include="Content\gfx\Player\hero_leg_left.png" />
+    <Content Include="Content\gfx\Player\hero_leg_right.png" />
     <Content Include="Content\gfx\Tiles\0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
