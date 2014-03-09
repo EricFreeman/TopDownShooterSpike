@@ -11,7 +11,7 @@ CONTENT_COMPILER_EXE = %{"#{LIB}/Content Compiler/bin/XNAContentCompiler.exe"}
 CONTENT_SLN = './lib/Content Compiler/XNAContentCompiler.sln'
 TDS_SLN = 'src/TopDownShooterSpike.sln'
 
-CLOBBER.include('src/**/bin/*', '**/obj/*', CONTENT_BIN)
+CLOBBER.include('src/**/bin/*', 'lib/**/bin', '**/obj/*', CONTENT_BIN)
 CLEAN.include("#{CONTENT_BIN}")
 
 desc 'builds the solution and compiles content'
@@ -38,7 +38,7 @@ end
 namespace :compile do
 
   desc 'compiles content assets'
-  task :content => ['clean'] do
+  task :content do
     sh %{#{CONTENT_COMPILER_EXE} build #{CONTENT_ASSETS} #{CONTENT_BIN}}
   end
 
@@ -61,6 +61,7 @@ namespace :compile do
 
     msb.targets = [:Clean, :Build]
     msb.solution = args.path;
+    Rake::Task['compile:build_solution'].reenable
   end
 end
 
