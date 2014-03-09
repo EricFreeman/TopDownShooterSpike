@@ -11,14 +11,16 @@ namespace TopDownShooterSpike.State
     {
         private readonly ContentManager _content;
         private readonly SpriteBatch _spriteBatch;
+        private readonly PrimitiveBatch _primitiveBatch;
 
         private ActorManager _actorManager;
         private RenderManager _renderManager;
 
-        public GameplayState(ContentManager content, SpriteBatch spriteBatch)
+        public GameplayState(ContentManager content, PrimitiveBatch primitiveBatch, SpriteBatch spriteBatch)
         {
             _content = content;
             _spriteBatch = spriteBatch;
+            _primitiveBatch = primitiveBatch;
         }
 
         #region initialization
@@ -35,7 +37,7 @@ namespace TopDownShooterSpike.State
         public override void Initialize()
         {
             _actorManager = new ActorManager();
-            _renderManager = new RenderManager(_actorManager, _spriteBatch, _content);
+            _renderManager = new RenderManager(_actorManager, _primitiveBatch, _spriteBatch, _content);
 
             // initialize game here
             InitializeWorld();

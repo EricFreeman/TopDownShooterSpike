@@ -6,16 +6,6 @@ namespace TopDownShooterSpike.Graphics
     {
         private Transform2D _transform;
 
-        public Transform2D Transform
-        {
-            get { return _transform; }
-            set { _transform = value; }
-        }
-
-
-
-        public Rectangle Viewport { get; set; }
-
         public void MoveTo(Vector2 absolutePosition)
         {
             _transform.Position = absolutePosition;
@@ -26,5 +16,12 @@ namespace TopDownShooterSpike.Graphics
             _transform.Rotation = absoluteRotation;
         }
         
+        public Transform2D Transform
+        {
+            get { return _transform; }
+            set { _transform = value; }
+        }
+
+        public Rectangle Viewport { get; set; }
     }
 }

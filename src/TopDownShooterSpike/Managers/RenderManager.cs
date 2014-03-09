@@ -16,10 +16,10 @@ namespace TopDownShooterSpike.Managers
         private readonly IActorManager _actorManager;
         private readonly RenderContext _context;
 
-        public RenderManager(IActorManager actorManager, SpriteBatch spriteBatch, ContentManager content)
+        public RenderManager(IActorManager actorManager, PrimitiveBatch primitiveBatch, SpriteBatch spriteBatch, ContentManager content)
         {
             _actorManager = actorManager;
-            _context = new RenderContext(spriteBatch);
+            _context = new RenderContext(primitiveBatch, spriteBatch);
         }
 
         public void SetActiveCamera(Camera camera)

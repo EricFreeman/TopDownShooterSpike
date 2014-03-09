@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 using TopDownShooterSpike.State;
 
@@ -20,6 +21,7 @@ namespace TopDownShooterSpike
     {
         readonly GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
+        PrimitiveBatch _primitiveBatch;
         private GameStateStack _gameStateManager;
 
         public Game1()
@@ -51,7 +53,7 @@ namespace TopDownShooterSpike
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _gameStateManager.Push(new GameplayState(Content, _spriteBatch));
+            _gameStateManager.Push(new GameplayState(Content, _primitiveBatch, _spriteBatch));
 //            ScreenManager.Instance.GraphicsDevice = GraphicsDevice;
 //            ScreenManager.Instance.SpriteBatch = _spriteBatch;
 //            ScreenManager.Instance.LoadContent(Content);
