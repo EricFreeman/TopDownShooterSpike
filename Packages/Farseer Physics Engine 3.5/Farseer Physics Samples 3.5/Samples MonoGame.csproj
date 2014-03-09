@@ -91,12 +91,6 @@
     <Compile Include="ScreenSystem\VirtualStick.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MonoGame.Framework">
-      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Tao.Sdl">
-      <HintPath>$(MSBuildExtensionsPath)\..\MonoGame\v3.0\Assemblies\WindowsGL\Tao.Sdl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -110,10 +104,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="C:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
-      <Link>SDL.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Content\Fonts\detailsFont.xnb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
