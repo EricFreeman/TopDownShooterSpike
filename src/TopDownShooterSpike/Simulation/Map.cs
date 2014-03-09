@@ -13,22 +13,25 @@ namespace TopDownShooterSpike.Simulation
     {
         private Tile[,] _data;
 
-        public Map(IActorManager manager, IActorService service, ITileProvider provider) : this(manager, service, 64, 64)
+        public Map(IActorManager manager, IActorService service, ITileProvider provider) : this(manager, service, provider, 64, 64)
         {
-            this.FillRect(0, 0, Width-1, Height-1, false, Tile.Wall);
-            RenderObject.Add(new MapRenderObject(this, provider));
+            this.FillRect(0, 0, Width-1, Height-1, false, Tile.Grass);
         }
 
-        public Map(IActorManager manager, IActorService service, int width, int height) : base(manager, service)
+        public Map(IActorManager manager, IActorService service, ITileProvider provider, int width, int height) : base(manager, service)
         {
             _data = new Tile[width, height];
             var simSettings = service.SimulationSettings;
 
             var transform = Transform;
 
-            transform.Position = new Vector2(simSettings.TileDimension * width / 2.0f, simSettings.TileDimension * height / 2.0f);
+            transform.Position = new Vector2(-(simSettings.TileDimensionAsWorldUnits * width / 2.0f), -(simSettings.TileDimensionAsWorldUnits * height / 2.0f));
 
             Transform = transform;
+
+            RenderObject.Add(new MapRenderObject(this, provider));
+
+            this.OnEachRenderObject(ro => ro.Transform = Transform);
         }
 
         public override string ToString()
@@ -47,7 +50,7 @@ namespace TopDownShooterSpike.Simulation
             return builder.ToString();
         }
 
-        public static Map FromString(IActorManager manager, IActorService service, string mapData)
+        public static Map FromString(IActorManager manager, IActorService service, ITileProvider provider, string mapData)
         {
             var rows = mapData.Split('\n');
 
@@ -56,7 +59,7 @@ namespace TopDownShooterSpike.Simulation
             var width = dimensions[0];
             var height = dimensions[1];
 
-            var result = new Map(manager, service, width, height);
+            var result = new Map(manager, service, provider, width, height);
 
             var data = rows.Skip(1)
                         .AsParallel()
@@ -123,6 +126,7 @@ namespace TopDownShooterSpike.Simulation
         }
 
         public static readonly Tile Wall = new Tile(0);
+        public static readonly Tile Grass = new Tile(1);
     }
 
     public static class MapBuilderExtension

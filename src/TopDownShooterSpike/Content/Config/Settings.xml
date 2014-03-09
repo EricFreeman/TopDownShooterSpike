@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Video>
+    <screenDimensions>
+      <X>1280</X>
+      <Y>720</Y>
+    </screenDimensions>
+    <IsFullscreen>false</IsFullscreen>
+  </Video>
+  <Audio>
+    <MusicVolume>100</MusicVolume>
+    <EffectVolume>100</EffectVolume>
+  </Audio>
+</Settings>

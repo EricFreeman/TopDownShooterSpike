@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.GamerServices;
 using TopDownShooterSpike.Simulation;
 
 namespace TopDownShooterSpike.Managers

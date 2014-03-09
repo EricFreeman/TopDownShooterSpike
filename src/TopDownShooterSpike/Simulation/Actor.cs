@@ -40,6 +40,15 @@ namespace TopDownShooterSpike.Simulation
             GC.SuppressFinalize(this);
         }
 
+        protected void OnEachRenderObject(Action<RenderObject> loopAction)
+        {
+            if(loopAction == null)
+                throw new ArgumentNullException("loopAction");
+
+            foreach (var renderObject in RenderObject)
+                loopAction(renderObject);
+        }
+
         public void Update(GameTime gameTime)
         {
             Tick(gameTime);

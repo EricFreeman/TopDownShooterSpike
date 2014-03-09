@@ -25,7 +25,7 @@ namespace TopDownShooterSpike.State
 
         public void InitializeWorld()
         {
-            _actorManager.CreateActor((man, serv) => new Map(man, serv, new DefaultTileProvider(_content)));
+            _actorManager.CreateActor((man, serv) => new Map(man, serv, new DefaultTileProvider(_content), 32, 32));
         }
 
         #endregion

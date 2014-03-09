@@ -7,7 +7,7 @@
         public SimulationSettings()
         {
             TileDimension = new Meter(1);
-            _worldUnitConverter = new WorldUnitConverter(16);
+            _worldUnitConverter = new WorldUnitConverter(32);
         }
 
         public float TileDimension { get; set; }
@@ -25,10 +25,7 @@
 
     public class WorldUnitConverter
     {
-        public WorldUnitConverter() : this(16)
-        {
-            
-        }
+        public WorldUnitConverter() : this(16) { }
 
         public WorldUnitConverter(float unitsPerMeter)
         {

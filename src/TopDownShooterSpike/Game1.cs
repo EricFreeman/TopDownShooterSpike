@@ -1,6 +1,5 @@
 ﻿#region Using Statements
-using System;
-using System.Collections.Generic;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,14 +18,11 @@ namespace TopDownShooterSpike
     /// </summary>
     public class Game1 : Game
     {
-
         readonly GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
-        private RenderManager _renderManager;
-        private ActorManager _actorManager;
         private GameStateStack _gameStateManager;
 
-        public Game1() : base()
+        public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -34,10 +30,7 @@ namespace TopDownShooterSpike
 
         protected override void Initialize()
         {
-//            _screenManager = new ScreenManager(this, _graphics);
             _gameStateManager = new GameStateStack(this);
-//            var audioManager = new AudioManager(this);
-//            var inputManager = new InputManager(this);
 
 //            var renderManager = new RenderManager(this);
 //            var actorManager = new ActorManager();
@@ -50,8 +43,6 @@ namespace TopDownShooterSpike
             Components.Add(_gameStateManager);
 //            Components.Add(inputManager);
 //            Components.Add(audioManager);
-
-
 
             base.Initialize();
         }
@@ -69,29 +60,6 @@ namespace TopDownShooterSpike
 
         protected override void UnloadContent()
         {
-        }
-    }
-
-
-    public static class ServiceProviderExtensions
-    {
-        public static T GetService<T>(this IServiceProvider serviceProvider) where T : class
-        {
-            return serviceProvider.GetService(typeof (T)) as T;
-        }
-    }
-
-    public static class LinqExtensions
-    {
-        public static void For<T>(this IEnumerable<T> collection, Action<T> loopBody)
-        {
-            if(loopBody == null)
-                throw new ArgumentNullException();
-
-            foreach (var item in collection)
-            {
-                loopBody(item);
-            }
         }
     }
 }

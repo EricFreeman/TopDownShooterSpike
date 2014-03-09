@@ -12,6 +12,8 @@ namespace TopDownShooterSpike.Graphics
             set { _transform = value; }
         }
 
+
+
         public Rectangle Viewport { get; set; }
 
         public void MoveTo(Vector2 absolutePosition)
