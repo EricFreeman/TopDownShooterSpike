@@ -82,7 +82,7 @@ namespace TopDownShooterSpike.Simulation
             get { return base.Transform; }
             set
             {
-                if (_mainBody.IsStatic)
+                if (_mainBody != null)
                 {
                     base.Transform = value;
                     _mainBody.SetTransform(value.Position, value.Rotation);

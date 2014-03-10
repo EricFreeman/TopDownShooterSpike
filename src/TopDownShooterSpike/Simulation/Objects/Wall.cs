@@ -3,6 +3,9 @@ using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 
 namespace TopDownShooterSpike.Simulation.Objects
@@ -10,10 +13,29 @@ namespace TopDownShooterSpike.Simulation.Objects
     public class Wall : KActor
     {
         private Fixture _mainCollision;
+        private const float WallWidth = 32;
+        private const float WallHeight = 32;
 
         public Wall(IActorManager actorManager, IActorService service) : base(actorManager, service)
         {
             InitializeFixture(InitializeCollision);
+        }
+
+        public Wall(IActorManager actorManager, IActorService service, ContentManager content, Vector2 position) : base(actorManager, service)
+        {
+            InitializeFixture(InitializeCollision);
+            _mainCollision.Body.Position = position;
+            var renderobj = new SpriteRenderObject();
+
+            renderobj.Sprite = content.Load<Texture2D>("gfx/wall");
+            renderobj.Transform = new Transform2D
+            {
+                Position = position,
+                Rotation = 0f,
+                Scale = new Vector2(WallWidth / renderobj.Sprite.Width, WallHeight / renderobj.Sprite.Height),
+                ZIndex = 0f
+            };
+            RenderObject.Add(renderobj);
         }
 
         private IEnumerable<Fixture> InitializeCollision(World arg1, Body arg2)

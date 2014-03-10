@@ -71,12 +71,10 @@ namespace TopDownShooterSpike.Graphics
             get { return _sprite; }
             set
             {
-                
                 _sprite = value;
 
                 if(_sprite != null)
                     Origin = new Vector2(_sprite.Width / 2.0f, _sprite.Height / 2.0f);
-                
             }
         }
 
