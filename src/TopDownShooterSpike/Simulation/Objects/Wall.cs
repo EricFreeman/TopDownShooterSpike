@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using FarseerPhysics.Dynamics;
 using FarseerPhysics.Dynamics.Contacts;
 using FarseerPhysics.Factories;
@@ -14,28 +16,35 @@ namespace TopDownShooterSpike.Simulation.Objects
     {
         private Fixture _mainCollision;
         private const float WallWidth = 32;
-        private const float WallHeight = 32;
 
         public Wall(IActorManager actorManager, IActorService service) : base(actorManager, service)
         {
             InitializeFixture(InitializeCollision);
         }
 
-        public Wall(IActorManager actorManager, IActorService service, ContentManager content, Vector2 position) : base(actorManager, service)
+        public Wall(IActorManager actorManager, IActorService service, ContentManager content, Vector2 startPosition, Vector2 endPosition) : base(actorManager, service)
         {
             InitializeFixture(InitializeCollision);
-            _mainCollision.Body.Position = position;
-            var renderobj = new SpriteRenderObject();
+            _mainCollision.Body.Position = startPosition; //TODO: Make the collision correct
 
-            renderobj.Sprite = content.Load<Texture2D>("gfx/wall");
-            renderobj.Transform = new Transform2D
+            var tex = content.Load<Texture2D>("gfx/wall");
+            var needed = Vector2.Distance(startPosition, endPosition) / WallWidth;
+            var direction = Vector2.Normalize(endPosition - startPosition);
+
+            for (int i = 0; i < needed; i++)
             {
-                Position = position,
-                Rotation = 0f,
-                Scale = new Vector2(WallWidth / renderobj.Sprite.Width, WallHeight / renderobj.Sprite.Height),
-                ZIndex = 0f
-            };
-            RenderObject.Add(renderobj);
+                var renderobj = new SpriteRenderObject();
+
+                renderobj.Sprite = tex;
+                renderobj.Transform = new Transform2D
+                {
+                    Position = startPosition + direction * (WallWidth * i),
+                    Rotation = (float)Math.Atan2(startPosition.Y - endPosition.Y, startPosition.X - endPosition.X),
+                    Scale = new Vector2(WallWidth/renderobj.Sprite.Width, WallWidth/renderobj.Sprite.Height),
+                    ZIndex = 0f
+                };
+                RenderObject.Add(renderobj);
+            }
         }
 
         private IEnumerable<Fixture> InitializeCollision(World arg1, Body arg2)

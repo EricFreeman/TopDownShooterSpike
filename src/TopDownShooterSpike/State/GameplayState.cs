@@ -30,7 +30,7 @@ namespace TopDownShooterSpike.State
         public void InitializeWorld()
         {
             _actorManager.CreateActor((man, serv) => new Map(man, serv, new DefaultTileProvider(_content), 32, 32));
-            _actorManager.CreateActor((man, serv) => new Wall(man, serv, _content, new Vector2(300, 300)));
+            _actorManager.CreateActor((man, serv) => new Wall(man, serv, _content, new Vector2(300, 300), new Vector2(428, 350)));
         }
 
         #endregion
