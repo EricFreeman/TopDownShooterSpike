@@ -1,4 +1,6 @@
-**/obj/
+src/**/obj/
+lib/**/obj/
+lib/Content\ Compiler/**/obj/
 src/**/bin/
 lib/**/bin/
 *.suo
