@@ -7,19 +7,23 @@ namespace TopDownShooterSpike.Managers
     public interface IGameStateStack
     {
         void Push(GameState gameState);
+        void Push<T>() where T : GameState;
         GameState Pop();
     }
 
     public class GameStateStack : DrawableGameComponent, IGameStateStack
     {
-        private IList<GameState> _gameStates;
+        private readonly IServiceContainer _container;
+        private readonly IList<GameState> _gameStates;
 
-        public GameStateStack(Game game) : base(game)
+        public GameStateStack(IServiceContainer container, Game game) : base(game)
         {
+            _container = container;
+            _gameStates = new List<GameState>();
+
+            game.Components.Add(this);
             DrawOrder = 1;
             UpdateOrder = 1;
-
-            _gameStates = new List<GameState>();
         }
 
         #region Game Component Methods
@@ -64,6 +68,13 @@ namespace TopDownShooterSpike.Managers
             state.TearDown();
 
             return state;
+        }
+
+        public void Push<T>() where T : GameState
+        {
+            var state = _container.Create<T>();
+
+            this.Push(state);
         }
 
         #endregion

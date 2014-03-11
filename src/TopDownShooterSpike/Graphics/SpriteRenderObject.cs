@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using TopDownShooterSpike.Simulation;
+using TopDownShooterSpike.Simulation.Objects;
 
 namespace TopDownShooterSpike.Graphics
 {
@@ -45,10 +46,12 @@ namespace TopDownShooterSpike.Graphics
 
     public class SpriteRenderObject : RenderObject
     {
+        private readonly ContentManager _content;
         private Texture2D _sprite;
 
-        public SpriteRenderObject()
+        public SpriteRenderObject(ContentManager content)
         {
+            _content = content;
             SourceRectangle = null;
             Color = Color.White;
         }
@@ -86,6 +89,11 @@ namespace TopDownShooterSpike.Graphics
         {
             get { return base.Visible && _sprite != null; }
             set { base.Visible = value; }
+        }
+
+        public void LoadTexture(string path)
+        {
+            _sprite = _content.Load<Texture2D>(path);
         }
     }
 }

@@ -3,43 +3,48 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FarseerPhysics.Dynamics;
 using Microsoft.Xna.Framework;
+using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Simulation;
 
 namespace TopDownShooterSpike.Managers
 {
-    public interface IActorManager
-    {
-        T CreateActor<T>(Func<IActorManager, IActorService, T> create) where T : Actor;
-        void DestroyActor(Actor actor);
-        void TearDown();
-        IList<Actor> Actors { get; }
-    }
-
-    public interface IActorService
-    {
-        IActorEventAggregator EventAggregator { get; }
-        IDeviceInputService InputService { get; }
-        SimulationSettings SimulationSettings { get; }
-        World PhysicsSystem { get; }
-    }
-
     public class ActorManager : IActorManager, IActorService
     {
-        private readonly Dictionary<int, Actor> _actorMap;
-        private readonly List<Actor> _actorList;
-        private readonly ActorEventAggregator _eventAggregator;
         private readonly World _physicsWorld;
+        private readonly List<Actor> _actorList;
+        private readonly Dictionary<int, Actor> _actorMap;
+        private readonly ActorEventAggregator _eventAggregator;
         private readonly SimulationSettings _simulationSettings;
+        private readonly IServiceContainer _serviceContainer;
         private readonly IDeviceInputService _inputService;
 
-        public ActorManager(IDeviceInputService deviceInputService)
+        public ActorManager(IServiceContainer serviceContainer, IDeviceInputService deviceInputService)
         {
+            _serviceContainer = serviceContainer;
             _inputService = deviceInputService;
             _physicsWorld = new World(Vector2.Zero);
             _eventAggregator = new ActorEventAggregator();
             _actorMap = new Dictionary<int, Actor>();
             _actorList = new List<Actor>();
             _simulationSettings = new SimulationSettings();
+        }
+
+        ~ActorManager() { Dispose(false); }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+
+        private void Dispose(bool disposing)
+        {
+            _actorList.Clear();
+            _actorMap.Clear();
         }
 
         public void TearDown()
@@ -110,5 +115,11 @@ namespace TopDownShooterSpike.Managers
         {
             get { return _physicsWorld; }
         }
+
+        public T CreateRenderObject<T>() where T : RenderObject
+        {
+            return _serviceContainer.Create<T>();
+        }
+
     }
 }

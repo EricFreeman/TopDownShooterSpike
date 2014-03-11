@@ -9,6 +9,8 @@ namespace TopDownShooterSpike.Managers
     public interface IRenderManager
     {
         void SetActiveCamera(Camera camera);
+        void Draw(GameTime gameTime);
+        void Update(GameTime gameTime);
     }
 
     public class RenderManager : IRenderManager
@@ -25,6 +27,10 @@ namespace TopDownShooterSpike.Managers
         public void SetActiveCamera(Camera camera)
         {
             _context.Camera = camera;
+        }
+
+        public void Update(GameTime gameTime)
+        {
         }
 
         private void RenderObjectsForActor(IEnumerable<RenderObject> renderObject)
@@ -59,7 +65,6 @@ namespace TopDownShooterSpike.Managers
                                        RasterizerState.CullCounterClockwise,
                                        null, 
                                        _context.Camera.Transform.Combine());
-                                       
 
             var actorsToRender = _actorManager.Actors;
 

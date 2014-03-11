@@ -10,7 +10,7 @@ namespace TopDownShooterSpike.Simulation.Objects
     {
         private Fixture _mainCollision;
 
-        public Entity(IActorManager actorManager, IActorService service) : base(actorManager, service)
+        public Entity(IActorService service) : base(service)
         {
             InitializeFixture(CreateFixtures);
 

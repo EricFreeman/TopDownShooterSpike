@@ -14,7 +14,7 @@ namespace TopDownShooterSpike.Simulation
         protected World _world;
         private readonly Body _mainBody;
 
-        protected KActor(IActorManager actorManager, IActorService service) : base(actorManager, service)
+        protected KActor(IActorService service) : base(service)
         {
             _mainBody = BodyFactory.CreateBody(service.PhysicsSystem, Transform.Position, Transform.Rotation, this);
         }

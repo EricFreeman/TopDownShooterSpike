@@ -1,21 +1,18 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace TopDownShooterSpike.Managers
 {
-    public class InputManager : DrawableGameComponent, IDeviceInputService
+    public class InputManager : GameComponent, IDeviceInputService
     {
-        private readonly SpriteBatch _spriteBatch;
         private SpriteFont _font;
 
         private KeyboardState _newKeyboardState, _oldKeyboardState;
         private GamePadState _newGamePadState, _oldGamePadState;
 
-        public InputManager(Game game, SpriteBatch spriteBatch) : base(game)
+        public InputManager(Game game) : base(game)
         {
-            _spriteBatch = spriteBatch;
             _font = game.Content.Load<SpriteFont>("Fonts/SampleFont");
         }
 

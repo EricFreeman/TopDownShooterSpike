@@ -47,12 +47,17 @@
     <Compile Include="Graphics\Transform2D.cs" />
     <Compile Include="LinqExtensions.cs" />
     <Compile Include="Managers\ActorMessage.cs" />
-    <Compile Include="Managers\IActorEventAggregator.cs" />
+    <Compile Include="Managers\ActorEventAggregator.cs" />
+    <Compile Include="Managers\Interfaces\IActorManager.cs" />
+    <Compile Include="Managers\Interfaces\IActorService.cs" />
+    <Compile Include="Managers\Interfaces\IActorEventAggregator.cs" />
     <Compile Include="Managers\AudioManager.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Managers\Interfaces\IServiceContainer.cs" />
+    <Compile Include="Managers\ServiceContainer.cs" />
+    <Compile Include="TopDownShooterGame.cs" />
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="ServiceProviderExtensions.cs" />
-    <Compile Include="Simulation\Map.cs" />
+    <Compile Include="Simulation\Objects\Map.cs" />
     <Compile Include="Simulation\Objects\Entity.cs" />
     <Compile Include="Simulation\Meter.cs" />
     <Compile Include="Simulation\Kilogram.cs" />
@@ -61,7 +66,7 @@
     <Compile Include="Simulation\WorldUnitConverter.cs" />
     <Compile Include="State\GameState.cs" />
     <Compile Include="Managers\ActorManager.cs" />
-    <Compile Include="Managers\IViewportManager.cs" />
+    <Compile Include="Managers\Interfaces\IViewportManager.cs" />
     <Compile Include="Managers\PhysicsManager.cs" />
     <Compile Include="Managers\RenderManager.cs" />
     <Compile Include="Program.cs" />
@@ -82,6 +87,9 @@
     <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Packages\MonoGame\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\..\Packages\Ninject\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System.XML" />
     <Reference Include="System" />

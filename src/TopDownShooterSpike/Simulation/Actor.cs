@@ -11,7 +11,6 @@ namespace TopDownShooterSpike.Simulation
         private static int _staticId = int.MinValue;
 
         private readonly int _id = _staticId++;
-        protected readonly IActorManager ActorManager;
         protected readonly IActorService ActorService;
         private readonly IList<RenderObject> _renderObject;
 
@@ -21,14 +20,13 @@ namespace TopDownShooterSpike.Simulation
 
         #endregion
 
-        protected Actor(IActorManager actorManager, IActorService actorService)
+        protected Actor(IActorService actorService)
         {
             _renderObject = new List<RenderObject>(8);
 
             Transform = Transform2D.Zero;
             Enabled = true;
 
-            ActorManager = actorManager;
             ActorService = actorService;
         }
 
@@ -57,7 +55,8 @@ namespace TopDownShooterSpike.Simulation
         public void Destroy(Actor instigator = null)
         {
             OnDestroy(instigator);
-            ActorManager.DestroyActor(this);
+            //DestroyActor(this);
+            // send destroy message on event aggregator
         }
 
         #region Overrides
