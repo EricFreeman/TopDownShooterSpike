@@ -7,10 +7,9 @@
             Visible = true;
         }
 
+        public Transform2D Transform;
         public virtual bool Visible { get; set; }
         public bool Lit { get; set; }
-        public Transform2D Transform { get; set; }
-
         public abstract void Draw(RenderContext context);
     }
 }

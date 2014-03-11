@@ -17,11 +17,13 @@ namespace TopDownShooterSpike.Managers
         private readonly SimulationSettings _simulationSettings;
         private readonly IServiceContainer _serviceContainer;
         private readonly IDeviceInputService _inputService;
+        private readonly IRenderManager _renderManager;
 
-        public ActorManager(IServiceContainer serviceContainer, IDeviceInputService deviceInputService)
+        public ActorManager(IServiceContainer serviceContainer, IDeviceInputService deviceInputService, IRenderManager renderManager)
         {
             _serviceContainer = serviceContainer;
             _inputService = deviceInputService;
+            _renderManager = renderManager;
             _physicsWorld = new World(Vector2.Zero);
             _eventAggregator = new ActorEventAggregator();
             _actorMap = new Dictionary<int, Actor>();
@@ -40,11 +42,12 @@ namespace TopDownShooterSpike.Managers
             GC.SuppressFinalize(this);
         }
 
-
         private void Dispose(bool disposing)
         {
-            _actorList.Clear();
-            _actorMap.Clear();
+            if (disposing)
+            {
+                TearDown();
+            }
         }
 
         public void TearDown()
@@ -121,5 +124,9 @@ namespace TopDownShooterSpike.Managers
             return _serviceContainer.Create<T>();
         }
 
+        public IRenderManager RenderManager
+        {
+            get { return _renderManager; }
+        }
     }
 }

@@ -15,11 +15,11 @@ namespace TopDownShooterSpike.Graphics
             _primitiveBatch = primitiveBatch;
             _spriteBatch = spriteBatch;
             _simSettings = new SimulationSettings();
-            Camera = new Camera
+
+            Camera = new Camera()
             {
                 Transform = Transform2D.Zero,
-                Viewport =
-                    new Rectangle(0, 0, spriteBatch.GraphicsDevice.Viewport.Width,
+                Viewport = new Rectangle(0, 0, spriteBatch.GraphicsDevice.Viewport.Width,
                         spriteBatch.GraphicsDevice.Viewport.Height)
             };
         }

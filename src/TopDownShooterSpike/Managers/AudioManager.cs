@@ -99,7 +99,7 @@ namespace TopDownShooterSpike.Managers
         /// Update the fading in and out of songs
         /// </summary>
         /// <param name="gameTime"></param>
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (_isFading)
             {

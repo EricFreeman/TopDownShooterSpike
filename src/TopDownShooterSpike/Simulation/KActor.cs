@@ -64,30 +64,31 @@ namespace TopDownShooterSpike.Simulation
 
         #endregion
 
-        public new void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            _transform.Position = _mainBody.Position;
-            _transform.Rotation = _mainBody.Rotation;
+            Transform.Position = _mainBody.Position;
+            Transform.Rotation = _mainBody.Rotation;
             
             base.Update(gameTime);
         }
 
+        public void ApplyForce(Vector2 normal, float force)
+        {
+            Vector2 finalVector;
+            Vector2.Multiply(ref normal, force, out finalVector);
+
+            Move(finalVector);
+        }
+
+        public void Move(Vector2 forceVector)
+        {
+            _mainBody.ApplyForce(forceVector);
+        }
+
+
         public Body MainBody
         {
             get { return _mainBody; }
-        }
-
-        public override Transform2D Transform
-        {
-            get { return base.Transform; }
-            set
-            {
-                if (_mainBody != null)
-                {
-                    base.Transform = value;
-                    _mainBody.SetTransform(value.Position, value.Rotation);
-                }
-            }
         }
     }
 }

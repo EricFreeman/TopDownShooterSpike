@@ -48,17 +48,20 @@
     <Compile Include="LinqExtensions.cs" />
     <Compile Include="Managers\ActorMessage.cs" />
     <Compile Include="Managers\ActorEventAggregator.cs" />
+    <Compile Include="Managers\Interfaces\IDeviceInputService.cs" />
     <Compile Include="Managers\Interfaces\IActorManager.cs" />
     <Compile Include="Managers\Interfaces\IActorService.cs" />
     <Compile Include="Managers\Interfaces\IActorEventAggregator.cs" />
     <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Managers\Interfaces\IServiceContainer.cs" />
+    <Compile Include="Managers\Interfaces\IRenderManager.cs" />
     <Compile Include="Managers\ServiceContainer.cs" />
+    <Compile Include="Simulation\Objects\Player.cs" />
     <Compile Include="TopDownShooterGame.cs" />
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="ServiceProviderExtensions.cs" />
     <Compile Include="Simulation\Objects\Map.cs" />
-    <Compile Include="Simulation\Objects\Entity.cs" />
+    <Compile Include="Simulation\Objects\Pawn.cs" />
     <Compile Include="Simulation\Meter.cs" />
     <Compile Include="Simulation\Kilogram.cs" />
     <Compile Include="Simulation\Objects\Wall.cs" />
@@ -159,6 +162,7 @@
     <Content Include="Content\Screens\TempGame.xml" />
     <Content Include="Content\sfx\Company Theme.wav" />
     <Content Include="Content\sfx\Menu Theme.wav" />
+    <Content Include="Content\Shaders\KryptonEffect.fx" />
     <Content Include="Icon.ico" />
     <Content Include="Content\Screens\SplashScreen.xml">
       <SubType>Designer</SubType>

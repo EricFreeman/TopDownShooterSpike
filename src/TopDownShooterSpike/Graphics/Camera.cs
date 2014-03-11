@@ -6,6 +6,13 @@ namespace TopDownShooterSpike.Graphics
     {
         private Transform2D _transform;
 
+        public Camera(int width, int height)
+        {
+            Viewport = new Rectangle(0, 0, width, height);
+        }
+
+        public Camera() { }
+
         public void MoveTo(Vector2 absolutePosition)
         {
             _transform.Position = absolutePosition;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 using TopDownShooterSpike.Simulation.Objects;
@@ -27,6 +28,7 @@ namespace TopDownShooterSpike.State
         {
             _actorManager.CreateActor((man, serv) => new Map(serv, new DefaultTileProvider(_content), 32, 32));
             _actorManager.CreateActor((man, serv) => new Wall(serv));
+            _actorManager.CreateActor((man, serv) => new Player(serv));
         }
 
         #endregion
@@ -47,7 +49,7 @@ namespace TopDownShooterSpike.State
         public override void Update(GameTime gameTime)
         {
             _actorManager.Update(gameTime);
-            _renderManager.Update(gameTime);
+            _renderManager.Update(gameTime, _actorManager.Actors);
         }
 
         public override void Draw(GameTime gameTime)

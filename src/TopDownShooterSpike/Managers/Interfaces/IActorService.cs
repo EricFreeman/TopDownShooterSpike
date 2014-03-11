@@ -8,8 +8,10 @@ namespace TopDownShooterSpike.Managers
     {
         IActorEventAggregator EventAggregator { get; }
         IDeviceInputService InputService { get; }
-        SimulationSettings SimulationSettings { get; }
+        IRenderManager RenderManager { get; }
         World PhysicsSystem { get; }
+        SimulationSettings SimulationSettings { get; }
+
         T CreateRenderObject<T>() where T : RenderObject;
     }
 }

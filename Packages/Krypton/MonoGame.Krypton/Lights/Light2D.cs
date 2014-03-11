@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Krypton.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using Microsoft.Xna.Framework.Input;
 
-using Krypton.Common;
-
 namespace Krypton.Lights
 {
-    public enum ShadowType
-    {
-        Solid = 1,
-        Illuminated = 2,
-        Occluded = 3
-    };
-
     public class Light2D : ILight2D
     {
         private bool mIsOn = true;

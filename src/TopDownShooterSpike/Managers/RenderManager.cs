@@ -1,26 +1,20 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using TopDownShooterSpike.Graphics;
+using TopDownShooterSpike.Simulation;
 
 namespace TopDownShooterSpike.Managers
 {
-    public interface IRenderManager
-    {
-        void SetActiveCamera(Camera camera);
-        void Draw(GameTime gameTime);
-        void Update(GameTime gameTime);
-    }
-
     public class RenderManager : IRenderManager
     {
-        private readonly IActorManager _actorManager;
+        private readonly GraphicsDevice _graphicsDevice;
+        private IList<Actor> _actors;
         private readonly RenderContext _context;
 
-        public RenderManager(IActorManager actorManager, PrimitiveBatch primitiveBatch, SpriteBatch spriteBatch, ContentManager content)
+        public RenderManager(GraphicsDevice graphicsDevice, PrimitiveBatch primitiveBatch, SpriteBatch spriteBatch)
         {
-            _actorManager = actorManager;
+            _graphicsDevice = graphicsDevice;
             _context = new RenderContext(primitiveBatch, spriteBatch);
         }
 
@@ -29,9 +23,11 @@ namespace TopDownShooterSpike.Managers
             _context.Camera = camera;
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, IList<Actor> actors)
         {
+            _actors = actors;
         }
+
 
         private void RenderObjectsForActor(IEnumerable<RenderObject> renderObject)
         {
@@ -58,6 +54,8 @@ namespace TopDownShooterSpike.Managers
         {
             _context.GameTime = gameTime;
 
+            _graphicsDevice.Clear(Color.Black);
+
             _context.SpriteBatch.Begin(SpriteSortMode.Deferred,
                                        BlendState.AlphaBlend,
                                        SamplerState.LinearWrap,
@@ -66,7 +64,7 @@ namespace TopDownShooterSpike.Managers
                                        null, 
                                        _context.Camera.Transform.Combine());
 
-            var actorsToRender = _actorManager.Actors;
+            var actorsToRender = _actors;
 
             for (int index = 0; index < actorsToRender.Count; index++)
             {
@@ -78,6 +76,11 @@ namespace TopDownShooterSpike.Managers
             }
 
             _context.SpriteBatch.End();
+        }
+
+        public Camera ActiveCamera
+        {
+            get { return _context.Camera; }
         }
     }
 }

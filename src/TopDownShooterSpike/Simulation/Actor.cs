@@ -16,15 +16,13 @@ namespace TopDownShooterSpike.Simulation
 
         #region Fields
 
-        protected Transform2D _transform;
+        protected Transform2D Transform;
 
         #endregion
 
         protected Actor(IActorService actorService)
         {
             _renderObject = new List<RenderObject>(8);
-
-            Transform = Transform2D.Zero;
             Enabled = true;
 
             ActorService = actorService;
@@ -47,10 +45,11 @@ namespace TopDownShooterSpike.Simulation
                 loopAction(renderObject);
         }
 
-        public void Update(GameTime gameTime)
-        {
-            Tick(gameTime);
-        }
+        public virtual void Update(GameTime gameTime)
+        { Tick(gameTime); }
+
+        public void Draw(GameTime gameTime)
+        { BeginDraw(gameTime); }
 
         public void Destroy(Actor instigator = null)
         {
@@ -63,6 +62,7 @@ namespace TopDownShooterSpike.Simulation
 
         protected virtual void OnDispose(bool disposing) { }
         protected virtual void Tick(GameTime gameTime) { } 
+        protected virtual void BeginDraw(GameTime gameTime) { }
         protected virtual void OnDestroy(Actor instigator) { } 
 
         public override bool Equals(object obj)
@@ -103,12 +103,6 @@ namespace TopDownShooterSpike.Simulation
         public IList<RenderObject> RenderObject
         {
             get { return _renderObject; }
-        }
-
-        public virtual Transform2D Transform
-        {
-            get { return _transform; }
-            set { _transform = value; }
         }
     }
 }

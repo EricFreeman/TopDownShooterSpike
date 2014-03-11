@@ -16,8 +16,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\Packages\Krypton\</OutputPath>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,19 +32,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MonoGame.Framework, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\MonoGame\WindowsGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\BoundingRect.cs" />
+    <Compile Include="Core\BoundingRect.cs" />
     <Compile Include="KryptonEngine.cs" />
-    <Compile Include="KryptonRenderHelper.cs" />
+    <Compile Include="Core\KryptonRenderHelper.cs" />
+    <Compile Include="LightingEngine.cs" />
+    <Compile Include="Core\LightMapSize.cs" />
     <Compile Include="Lights\ILight2D.cs" />
     <Compile Include="Lights\Light2D.cs" />
-    <Compile Include="LightTextureBuilder.cs" />
+    <Compile Include="Lights\ShadowType.cs" />
+    <Compile Include="Core\LightTextureBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ShadowHull.cs" />
-    <Compile Include="ShadowHullPoint.cs" />
-    <Compile Include="ShadowHullVertex.cs" />
+    <Compile Include="Core\ShadowHull.cs" />
+    <Compile Include="Core\ShadowHullPoint.cs" />
+    <Compile Include="Core\ShadowHullVertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\KryptonEffect.fx" />

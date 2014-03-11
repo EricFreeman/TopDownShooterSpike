@@ -1,19 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace TopDownShooterSpike.Managers
 {
     public class InputManager : GameComponent, IDeviceInputService
     {
-        private SpriteFont _font;
-
         private KeyboardState _newKeyboardState, _oldKeyboardState;
         private GamePadState _newGamePadState, _oldGamePadState;
 
         public InputManager(Game game) : base(game)
         {
-            _font = game.Content.Load<SpriteFont>("Fonts/SampleFont");
+            game.Components.Add(this);
         }
 
         public override void Update(GameTime gameTime)
@@ -39,12 +36,5 @@ namespace TopDownShooterSpike.Managers
         {
             return _newKeyboardState.IsKeyUp(key) && _oldKeyboardState.IsKeyDown(key);
         }
-    }
-
-    public interface IDeviceInputService
-    {
-        bool KeyDown(Keys key);
-        bool KeyUp(Keys key);
-        bool KeyPress(Keys key);
     }
 }

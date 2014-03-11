@@ -1,27 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Krypton.Core;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-
 using Krypton.Lights;
-using Krypton.Common;
 
 
 namespace Krypton
 {
-    public enum LightMapSize
-    {
-        Full = 1,
-        Fourth = 2,
-        Eighth = 4,
-    }
-
     /// <summary>
     /// A GPU-based 2D lighting engine
     /// </summary>
@@ -343,7 +329,7 @@ namespace Krypton
         /// <param name="matrix">the WorldViewProjection matrix being used to render</param>
         /// <param name="targetSize">The rendertarget's size</param>
         /// <returns></returns>
-        private static Rectangle ScissorRectCreateForLight(ILight2D light, Microsoft.Xna.Framework.Matrix matrix, Vector2 targetSize)
+        private static Rectangle ScissorRectCreateForLight(ILight2D light, Matrix matrix, Vector2 targetSize)
         {
             // This needs refining, but it works as is (I believe)
             var lightBounds = light.Bounds;
