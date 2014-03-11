@@ -18,6 +18,7 @@ namespace TopDownShooterSpike.Managers
     public interface IActorService
     {
         IActorEventAggregator EventAggregator { get; }
+        IDeviceInputService InputService { get; }
         SimulationSettings SimulationSettings { get; }
         World PhysicsSystem { get; }
     }
@@ -29,9 +30,11 @@ namespace TopDownShooterSpike.Managers
         private readonly ActorEventAggregator _eventAggregator;
         private readonly World _physicsWorld;
         private readonly SimulationSettings _simulationSettings;
+        private readonly IDeviceInputService _inputService;
 
-        public ActorManager()
+        public ActorManager(IDeviceInputService deviceInputService)
         {
+            _inputService = deviceInputService;
             _physicsWorld = new World(Vector2.Zero);
             _eventAggregator = new ActorEventAggregator();
             _actorMap = new Dictionary<int, Actor>();
@@ -93,12 +96,17 @@ namespace TopDownShooterSpike.Managers
             get { return _eventAggregator; }
         }
 
+        public IDeviceInputService InputService
+        {
+            get { return _inputService; }
+        }
+
         public SimulationSettings SimulationSettings
         {
             get { return _simulationSettings; }
         }
 
-        public FarseerPhysics.Dynamics.World PhysicsSystem
+        public World PhysicsSystem
         {
             get { return _physicsWorld; }
         }

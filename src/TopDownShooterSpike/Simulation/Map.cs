@@ -31,7 +31,7 @@ namespace TopDownShooterSpike.Simulation
 
             RenderObject.Add(new MapRenderObject(this, provider));
 
-            this.OnEachRenderObject(ro => ro.Transform = Transform);
+            OnEachRenderObject(ro => ro.Transform = Transform);
         }
 
         public override string ToString()
