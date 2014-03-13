@@ -3,6 +3,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 using TopDownShooterSpike.State;
@@ -36,7 +37,17 @@ namespace TopDownShooterSpike
             Content.RootDirectory = "Content";
         }
 
-        protected override void Initialize()
+
+        private void PostGameBootstrap()
+        {
+            _container.Create<IGameStateStack>();
+            var input = _container.Create<IPlayerInputAggregator>();
+
+            // exits the game on escape key
+            input.Combine().Down(Keys.Escape).Apply(Exit);
+        }
+
+        private void BootstrapGame()
         {
             _container.Inject<PrimitiveBatch, PrimitiveBatch>();
             _container.Inject<SpriteBatch, SpriteBatch>();
@@ -46,7 +57,7 @@ namespace TopDownShooterSpike
             // make sure if you add a game component that 
             // it adds itself to the components collection in the constructor
             // the code is cleaner this way
-            _container.Inject<IDeviceInputService, InputManager>(ObjectScope.Singleton);
+            _container.Inject<IPlayerInputAggregator, PlayerInputAggregator>(ObjectScope.Singleton);
 //            _container.Inject<IAudioManager, AudioManager>(ObjectScope.Singleton);
 
             _container.Inject<IGameStateStack, GameStateStack>(s =>
@@ -64,14 +75,23 @@ namespace TopDownShooterSpike
 
             _container.Inject<IActorManager, ActorManager>(ObjectScope.Singleton);
             _container.Inject<IRenderManager, RenderManager>(ObjectScope.Singleton);
+        }
+
+        protected override void Initialize()
+        {
+            BootstrapGame();
 
             base.Initialize();
+
+            PostGameBootstrap();
         }
 
         protected override void LoadContent()
-        { _container.Create<IGameStateStack>(); }
+        {  }
 
         protected override void UnloadContent()
-        { _container.Dispose(); }
+        {
+            _container.Dispose();
+        }
     }
 }

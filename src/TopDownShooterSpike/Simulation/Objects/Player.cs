@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using TopDownShooterSpike.Graphics;
 using TopDownShooterSpike.Managers;
 
@@ -33,22 +32,22 @@ namespace TopDownShooterSpike.Simulation.Objects
             base.Tick(gameTime);
 
             var movementDelta = Vector2.Zero;
-            var inputService = ActorService.InputService;
-
-            if (inputService.KeyDown(Keys.W))
-                movementDelta.Y += movementAmount;
-            else if (inputService.KeyDown(Keys.S)) 
-                movementDelta.Y -= movementAmount;
-
-            if (inputService.KeyDown(Keys.A))
-                movementDelta.X += movementAmount;
-            else if (inputService.KeyDown(Keys.D)) 
-                movementDelta.X -= movementAmount;
-
-            if (inputService.KeyDown(Keys.Q))
-                Transform.Rotation += 0.01f;
-            else if (inputService.KeyDown(Keys.E))
-                Transform.Rotation -= 0.01f;
+//            var inputService = ActorService.InputService;
+//
+//            if (inputService.KeyDown(Keys.W))
+//                movementDelta.Y += movementAmount;
+//            else if (inputService.KeyDown(Keys.S)) 
+//                movementDelta.Y -= movementAmount;
+//
+//            if (inputService.KeyDown(Keys.A))
+//                movementDelta.X += movementAmount;
+//            else if (inputService.KeyDown(Keys.D)) 
+//                movementDelta.X -= movementAmount;
+//
+//            if (inputService.KeyDown(Keys.Q))
+//                Transform.Rotation += 0.01f;
+//            else if (inputService.KeyDown(Keys.E))
+//                Transform.Rotation -= 0.01f;
 
             if (movementDelta != Vector2.Zero)
             {

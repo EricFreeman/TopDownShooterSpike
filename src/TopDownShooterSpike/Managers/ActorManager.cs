@@ -16,13 +16,11 @@ namespace TopDownShooterSpike.Managers
         private readonly ActorEventAggregator _eventAggregator;
         private readonly SimulationSettings _simulationSettings;
         private readonly IServiceContainer _serviceContainer;
-        private readonly IDeviceInputService _inputService;
         private readonly IRenderManager _renderManager;
 
-        public ActorManager(IServiceContainer serviceContainer, IDeviceInputService deviceInputService, IRenderManager renderManager)
+        public ActorManager(IServiceContainer serviceContainer, IRenderManager renderManager)
         {
             _serviceContainer = serviceContainer;
-            _inputService = deviceInputService;
             _renderManager = renderManager;
             _physicsWorld = new World(Vector2.Zero);
             _eventAggregator = new ActorEventAggregator();
@@ -102,11 +100,6 @@ namespace TopDownShooterSpike.Managers
         public IActorEventAggregator EventAggregator
         {
             get { return _eventAggregator; }
-        }
-
-        public IDeviceInputService InputService
-        {
-            get { return _inputService; }
         }
 
         public SimulationSettings SimulationSettings
